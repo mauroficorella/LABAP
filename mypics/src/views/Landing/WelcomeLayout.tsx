@@ -4,13 +4,13 @@ import { SxProps } from '@mui/system';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
-const ProductHeroLayoutRoot = styled('section')(({ theme }) => ({
+const WelcomeLayoutRoot = styled('section')(({ theme }) => ({
   color: theme.palette.common.white,
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
   [theme.breakpoints.up('sm')]: {
-    height: '80vh',
+    height: '95vh',
     minHeight: 500,
     maxHeight: 1300,
   },
@@ -27,17 +27,17 @@ const Background = styled(Box)({
   zIndex: -2,
 });
 
-interface ProductHeroLayoutProps {
+interface WelcomeLayoutProps {
   sxBackground: SxProps<Theme>;
 }
 
 export default function ProductHeroLayout(
-  props: React.HTMLAttributes<HTMLDivElement> & ProductHeroLayoutProps,
+  props: React.HTMLAttributes<HTMLDivElement> & WelcomeLayoutProps,
 ) {
   const { sxBackground, children } = props;
 
   return (
-    <ProductHeroLayoutRoot>
+    <WelcomeLayoutRoot>
       <Container
         sx={{
           mt: 3,
@@ -63,6 +63,6 @@ export default function ProductHeroLayout(
         />
         <Background sx={sxBackground} />
       </Container>
-    </ProductHeroLayoutRoot>
+    </WelcomeLayoutRoot>
   );
 }

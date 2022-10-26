@@ -1,14 +1,14 @@
 import * as React from "react";
 import Button from "../../components/Landing/Button";
 import Typography from "../../components/Landing/Typography";
-import ProductHeroLayout from "./WelcomeLayout";
+import WelcomeLayout from "./WelcomeLayout";
 
 const backgroundImage =
   "https://images.unsplash.com/photo-1534131707746-25d604851a1f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80";
 
 export default function ProductHero() {
   return (
-    <ProductHeroLayout
+    <WelcomeLayout
       sxBackground={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundColor: "#7fc7d9", // Average color of the background image.
@@ -42,6 +42,6 @@ export default function ProductHero() {
       >
         Register
       </Button>
-    </ProductHeroLayout>
+    </WelcomeLayout>
   );
 }
