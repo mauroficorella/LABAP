@@ -9,7 +9,7 @@ class User(BaseModel):
     email: str
     password: str
 
-cred_obj = firebase_admin.credentials.Certificate('mypics/labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
+cred_obj = firebase_admin.credentials.Certificate('api/labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
 default_app = firebase_admin.initialize_app(cred_obj, {
 	'databaseURL':'https://labap-785cc-default-rtdb.europe-west1.firebasedatabase.app/'
 	})
@@ -35,6 +35,10 @@ async def create_user(user: User):
         }})
     return {"status":200}
     
+@router.get("/users")
+async def get_user():
+    print("Hello world!")
+    return {"status":200}
 
 if __name__ == "__main__":
     uvicorn.run(router, host="127.0.0.1", port=8000)
