@@ -6,6 +6,10 @@ import Home from "./views/Landing/Home";
 import SignIn from "./views/Landing/SignIn";
 import SignUp from "./views/Landing/SignUp";
 import ForgotPassword from "./views/Landing/ForgotPassword";
+import Homepage from "./views/Homepage";
+import UserProfile from "./views/UserProfile";
+import Pic from "./views/Pic";
+import AddPic from "./views/AddPic";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,6 +21,10 @@ root.render(
       <Route path="/sign-up/" element={<SignUp />} />
       <Route path="/sign-in/" element={<SignIn />} />
       <Route path="/forgot-password/" element={<ForgotPassword />} />
+      <Route path="/homepage/" element={<Homepage />} />
+      <Route path="/user-profile/" element={<UserProfile />} />
+      <Route path="/pic/" element={<Pic />} />
+      <Route path="/add-pic/" element={<AddPic />} />
     </Routes>
   </BrowserRouter>
 );

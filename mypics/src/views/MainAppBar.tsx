@@ -14,11 +14,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-const rightLink = {
-  fontSize: 16,
-  color: "common.white",
-  ml: 3,
-};
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -76,7 +72,7 @@ function MainAppBar() {
           variant="h6"
           underline="none"
           color="inherit"
-          href="/"
+          href="/homepage/"
           sx={{ fontSize: 24 }}
         >
           {"MyPics"}
@@ -86,6 +82,7 @@ function MainAppBar() {
             size="large"
             aria-label="settings of account"
             color="inherit"
+            href="/homepage/"
           >
             <HomeIcon />
           </IconButton>
@@ -93,10 +90,9 @@ function MainAppBar() {
             size="large"
             edge="end"
             aria-label="account of current user"
-            //aria-controls={menuId}
             aria-haspopup="true"
-            //onClick={handleProfileMenuOpen}
             color="inherit"
+            href="/pic/"
           >
             <AddCircleOutlineIcon />
           </IconButton>
@@ -137,6 +133,7 @@ function MainAppBar() {
             aria-haspopup="true"
             //onClick={handleProfileMenuOpen}
             color="inherit"
+            href="/user-profile/"
           >
             <AccountCircle />
           </IconButton>
