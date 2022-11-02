@@ -9,7 +9,7 @@ class User(BaseModel):
     email: str
     password: str
 
-cred_obj = firebase_admin.credentials.Certificate('api/labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
+cred_obj = firebase_admin.credentials.Certificate('mypics/api/labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
 default_app = firebase_admin.initialize_app(cred_obj, {
 	'databaseURL':'https://labap-785cc-default-rtdb.europe-west1.firebasedatabase.app/'
 	})
