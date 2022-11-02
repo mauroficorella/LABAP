@@ -20,8 +20,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
+import Badge from "@mui/material/Badge";
 
 export default function Homepage() {
   return (
@@ -85,7 +84,11 @@ export default function Homepage() {
                 </Box>
                 <Box sx={{ justifyContent: "flex-end" }}>
                   <IconButton aria-label="comment">
-                    <ChatBubbleOutlineIcon />
+                    <Badge badgeContent={17} color="secondary"
+                    //TODO scegliere colore
+                    > 
+                      <ChatBubbleOutlineIcon />
+                    </Badge>
                   </IconButton>
                   <IconButton aria-label="add to favorites">
                     <FavoriteIcon />

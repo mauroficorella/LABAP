@@ -9,7 +9,7 @@ import UserProfile from "../UserProfile";
 function Index() {
   return (
     <React.Fragment>
-      <UserProfile />
+      <Homepage />
       <MainAppBar />
     </React.Fragment>
   );
