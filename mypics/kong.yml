@@ -1,0 +1,13 @@
+ _format_version: "3.0"
+ _transform: true
+
+ services:
+ - host: 127.0.0.1
+   name: users_api
+   port: 8000
+   protocol: http
+   routes:
+   - name: add_users_route
+     paths:
+     - /users
+     strip_path: true
