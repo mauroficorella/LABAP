@@ -9,13 +9,14 @@ import UserProfile from "../UserProfile";
 function Index() {
   return (
     <React.Fragment>
-      <Homepage />
-      <MainAppBar />
+      <AppAppBar />
+      <Welcome />
+      
     </React.Fragment>
   );
 }
 
 export default withRoot(Index);
 
-/*<AppAppBar />
-      <Welcome />*/
+/*<Homepage />
+      <MainAppBar />*/

@@ -114,7 +114,7 @@ function MainAppBar() {
             aria-label="show 17 new notifications"
             color="inherit"
           >
-            <Badge badgeContent={17} color="error">
+            <Badge badgeContent={17} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -122,6 +122,7 @@ function MainAppBar() {
             size="large"
             aria-label="settings of account"
             color="inherit"
+            href="/user-settings/"
           >
             <SettingsIcon />
           </IconButton>
@@ -129,9 +130,7 @@ function MainAppBar() {
             size="large"
             edge="end"
             aria-label="account of current user"
-            //aria-controls={menuId}
             aria-haspopup="true"
-            //onClick={handleProfileMenuOpen}
             color="inherit"
             href="/user-profile/"
           >

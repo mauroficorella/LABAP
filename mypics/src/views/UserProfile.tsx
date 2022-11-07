@@ -41,7 +41,7 @@ export default function Homepage() {
               flex: 1,
               display: "flex",
               justifyContent: "center",
-              width: 1 / 4,
+              width: 1 / 5,
             }}
           >
             <Box
@@ -52,19 +52,22 @@ export default function Homepage() {
               <Typography color="inherit">N. Following</Typography>
             </Box>
           </Container>
-          <Box sx={{ bgcolor: "background.paper", pt: 2, pb: 2 }}></Box>
+          <Box sx={{ bgcolor: "background.paper", pt: 5, pb: 2 }}></Box>
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <ButtonGroup
               variant="contained"
-              color="error" //TODO scegliere il colore
+              color="secondary"
               aria-label="medium secondary button group"
+              size="large"
             >
               <Button>Your Pics</Button>
               <Button>Saved</Button>
             </ButtonGroup>
           </Box>
           <Box sx={{ bgcolor: "background.paper", pt: 2, pb: 2 }}></Box>
-          <Box sx={{ m: 5 }}><ImageList /></Box>
+          <Box sx={{ mr: 3, ml: 3 }}>
+            <ImageList />
+          </Box>
         </main>
       </React.Fragment>
     </ThemeProvider>

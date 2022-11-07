@@ -6,21 +6,29 @@ import Link from "@mui/material/Link";
 
 export default function TitlebarBelowImageList() {
   return (
-    <ImageList cols={7} gap={8}>
+    <ImageList
+      sx={{width: "100%"}}
+      //variant="masonry"
+      cols={7}
+      gap={8}
+    >
       {itemData.map((item) => (
-        <ImageListItem key={item.img}>
-            <img
-              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={item.title}
-              loading="lazy"
-            />
+      <Link href="/pic/">
+        <ImageListItem key={item.img}>          
+           <img
+            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            alt={item.title}
+            loading="lazy"
+          /> 
+          
           <ImageListItemBar
             title={item.title}
             subtitle={<span>by: {item.author}</span>}
             position="below"
           />
         </ImageListItem>
+        </Link>
       ))}
     </ImageList>
   );

@@ -17,7 +17,7 @@ function SignUp() {
 
   const validate = (values: { [index: string]: string }) => {
     const errors = required(
-      ["firstName", "lastName", "email", "password"],
+      ["username", "email", "password"],
       values
     );
 
@@ -61,31 +61,16 @@ function SignUp() {
               noValidate
               sx={{ mt: 6 }}
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
                   <Field
                     autoFocus
                     component={RFTextField}
                     disabled={submitting || sent}
-                    autoComplete="given-name"
+                    autoComplete="given-username"
                     fullWidth
-                    label="First name"
-                    name="firstName"
+                    label="Username"
+                    name="username"
                     required
                   />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={RFTextField}
-                    disabled={submitting || sent}
-                    autoComplete="family-name"
-                    fullWidth
-                    label="Last name"
-                    name="lastName"
-                    required
-                  />
-                </Grid>
-              </Grid>
               <Field
                 autoComplete="email"
                 component={RFTextField}
