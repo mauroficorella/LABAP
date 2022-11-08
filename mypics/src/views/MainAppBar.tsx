@@ -13,8 +13,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
-
+import Tooltip from "@mui/material/Tooltip";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -86,16 +85,18 @@ function MainAppBar() {
           >
             <HomeIcon />
           </IconButton>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-haspopup="true"
-            color="inherit"
-            href="/pic/"
-          >
-            <AddCircleOutlineIcon />
-          </IconButton>
+          <Tooltip title="Add a pic">
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="add a pic"
+              aria-haspopup="true"
+              color="inherit"
+              href="/add-pic/"
+            >
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
         <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
           <Search>
@@ -118,24 +119,28 @@ function MainAppBar() {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton
-            size="large"
-            aria-label="settings of account"
-            color="inherit"
-            href="/user-settings/"
-          >
-            <SettingsIcon />
-          </IconButton>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-haspopup="true"
-            color="inherit"
-            href="/user-profile/"
-          >
-            <AccountCircle />
-          </IconButton>
+          <Tooltip title="Settings">
+            <IconButton
+              size="large"
+              aria-label="settings of account"
+              color="inherit"
+              href="/user-settings/"
+            >
+              <SettingsIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Profile">
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-haspopup="true"
+              color="inherit"
+              href="/user-profile/"
+            >
+              <AccountCircle />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>

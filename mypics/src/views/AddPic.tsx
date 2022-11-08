@@ -23,13 +23,13 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import ButtonBase from "@mui/material/ButtonBase";
+import Button from "@mui/material/Button";
 //import { DropzoneArea } from "material-ui-dropzone";
 
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
+const MyPaper = styled(Paper)({
+  borderRadius: 20,
+  //borderColor: "#000",
+  padding: 20,
 });
 
 export default function Homepage() {
@@ -39,25 +39,83 @@ export default function Homepage() {
       <React.Fragment>
         <MainAppBar />
         <main>
-          <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}></Box>
-          <Box sx={{ m: 1 }}>
+          <Box sx={{ ml: 3, mt: 15 }}>
             <IconButton aria-label="back">
-              <ArrowBackIcon
-                sx={{
-                  color: "28282a",
-                }}
-              />
+              <ArrowBackIcon sx={{ color: "28282a" }} />
             </IconButton>
           </Box>
           <Container
             sx={{
-              flex: 1,
               display: "flex",
-              justifyContent: "center",
-              width: 1 / 3,
+              justifyContent: "Space-between",
+              width: 1600,
+              //height: 900,
             }}
           >
-            
+            <MyPaper sx={{ m: 2 }} elevation={15}>
+              <Grid container spacing={0}>
+                <Grid item xs={6}>
+                  <Typography>
+                    INSERIRE DROPZONE QUI
+                    ...............................................................................................................
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Container
+                    sx={{
+                      display: "flex",
+                      ml: 2,
+                      flexDirection: "column",
+                      alignItems: "end",
+                    }}
+                  >
+                    <Box
+                      //sx={{ ml: 2 }}
+                      component="form"
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        fullWidth
+                        label="Add a title"
+                        id="title"
+                        variant="standard"
+                        inputProps={{ style: { fontSize: 40 } }}
+                        InputLabelProps={{ style: { fontSize: 40 } }}
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        width: "99%",
+                        maxWidth: "100%",
+                        mt: 3,
+                        ml: 2,
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        label="Add a description"
+                        id="description"
+                        multiline
+                        rows={8}
+                      />
+                    </Box>
+                    <Box sx={{ mt: 3, ml: 2 }}>
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        size="large"
+                        component="a"
+                        //href="//"
+                        sx={{ minWidth: 200 }}
+                      >
+                        Save
+                      </Button>
+                    </Box>
+                  </Container>
+                </Grid>
+              </Grid>
+            </MyPaper>
           </Container>
         </main>
       </React.Fragment>
