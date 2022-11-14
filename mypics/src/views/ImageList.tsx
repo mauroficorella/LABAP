@@ -3,28 +3,40 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import Link from "@mui/material/Link";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function TitlebarBelowImageList() {
+
+  const [itemData, setItemData] = useState<any[]>([]);
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/published/abcdef95").then((response) => {
+      setItemData(response.data);
+      console.log(response.data);
+    });
+  }, []);
+
   return (
     <ImageList
-      sx={{width: "100%"}}
+      //sx={{width: "100%"}}
       //variant="masonry"
       cols={7}
       gap={8}
     >
       {itemData.map((item) => (
       <Link href="/pic/">
-        <ImageListItem key={item.img}>          
+        <ImageListItem key={item.fb_img_url}>          
            <img
-            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.title}
+            src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
+            srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            alt={item.description}
             loading="lazy"
           /> 
           
           <ImageListItemBar
-            title={item.title}
-            subtitle={<span>by: {item.author}</span>}
+            title={item.description}
+            subtitle={<span>by: {item.username}</span>}
             position="below"
           />
         </ImageListItem>
@@ -34,7 +46,7 @@ export default function TitlebarBelowImageList() {
   );
 }
 
-const itemData = [
+/*const itemData = [
   {
     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
     title: "Breakfast",
@@ -96,3 +108,4 @@ const itemData = [
     author: "@southside_customs",
   },
 ];
+*/

@@ -11,7 +11,7 @@ import ImageList from "./ImageList";
 import MainAppBar from "./MainAppBar";
 import theme from "./Landing/theme";
 import React from "react";
-
+import TitlebarBelowImageList from "./ImageList";
 
 export default function Homepage() {
   return (
@@ -66,7 +66,7 @@ export default function Homepage() {
           </Box>
           <Box sx={{ bgcolor: "background.paper", pt: 2, pb: 2 }}></Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList />
+            <ImageList/>
           </Box>
         </main>
       </React.Fragment>
