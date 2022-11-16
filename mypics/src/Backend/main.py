@@ -5,8 +5,6 @@ from pydantic import BaseModel
 import logging
 import uvicorn
 import uuid
-import datetime
-import pytz
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -619,8 +617,8 @@ async def get_all_published(user_id: str):
 
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+'''if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8080)'''
 
 
 

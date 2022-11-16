@@ -41,7 +41,7 @@ async def get_user():
     return {"status":200}
 
 if __name__ == "__main__":
-    uvicorn.run(router, host="127.0.0.1", port=8000)
+    uvicorn.run(router, host="localhost", port=8080)
 #per entrare nella pagina dove provare le post bisogna andare all'indirizzo dove runna il server /docs
 
 

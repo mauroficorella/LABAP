@@ -1,0 +1,4 @@
+comando per buildare: docker build -t nomeimmagine .
+comando per runnare: docker run -d --name nomecontainer -p 80:80 nomeimmagine
+-> 80:80 è la porta in questo caso ma si possono usare anche altre porte
+-> entrambi vanno runnati dalla cartella root dove si trova il dockerfile

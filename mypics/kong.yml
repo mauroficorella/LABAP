@@ -1,13 +1,17 @@
  _format_version: "3.0"
- _transform: true
 
  services:
- - host: 127.0.0.1
-   name: users_api
-   port: 8000
-   protocol: http
+ - name: users-api
+   url: http://host.docker.internal:80
    routes:
-   - name: add_users_route
+   - name: add-users-route
      paths:
      - /users
-     strip_path: true
+     strip_path: false
+ - name: social-api
+   url: http://host.docker.internal:80
+   routes:
+   - name: published-users
+     paths:
+     - /published
+     strip_path: false
