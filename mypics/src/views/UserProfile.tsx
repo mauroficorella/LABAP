@@ -10,10 +10,24 @@ import Container from "@mui/material/Container";
 import ImageList from "./ImageList";
 import MainAppBar from "./MainAppBar";
 import theme from "./Landing/theme";
-import React from "react";
+import React, {useState} from "react";
 import TitlebarBelowImageList from "./ImageList";
 
 export default function Homepage() {
+
+  const [imageListType, setImageListType] = useState("profile");
+
+  const showSavedImageList = () => {
+    console.log("Executing showSavedImageList")
+    setImageListType("saved")
+  }
+
+  const showProfileImageList = () => {
+    console.log("Executing showProfileImageList")
+    setImageListType("profile")
+  }
+
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -60,13 +74,13 @@ export default function Homepage() {
               aria-label="medium secondary button group"
               size="large"
             >
-              <Button>Your Pics</Button>
-              <Button>Saved</Button>
+              <Button onClick={showProfileImageList}>Your Pics</Button>
+              <Button onClick={showSavedImageList}>Saved</Button>
             </ButtonGroup>
           </Box>
           <Box sx={{ bgcolor: "background.paper", pt: 2, pb: 2 }}></Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList/>
+            <ImageList list_type={imageListType}></ImageList>
           </Box>
         </main>
       </React.Fragment>

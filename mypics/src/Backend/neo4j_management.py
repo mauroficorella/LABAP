@@ -348,12 +348,12 @@ async def get_all_saved(user_id: str):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
-            "MATCH (u:User)-[:SAVED]->(p:Post) WHERE u.user_id = $u_id "
-            "RETURN p"
+            "MATCH (u1:User)-[:SAVED]->(p:Post)<-[:PUBLISHED]-(u2:User) WHERE u1.user_id = $u_id "
+            "RETURN u2, p, TRUE as saved, EXISTS((u1)-[:LIKES]->(p)) as liked, EXISTS((u1)-[:PUBLISHED]->(p)) as published"
             )
     try:
         result = session.run(query, u_id = user_id)
-        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"]} 
+        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"], "user_id": record["u2"]["user_id"],"username": record["u2"]["username"], "published":record["published"], "liked":record["liked"], "saved":record["saved"]} 
                     for record in result]
 
     except Neo4jError as exception:
@@ -368,12 +368,12 @@ async def get_all_published(user_id: str):
     session = neo4j_driver.session()
     query = (
             "MATCH (u:User)-[:PUBLISHED]->(p:Post) WHERE u.user_id = $u_id "
-            "RETURN u, p "
+            "RETURN u, p, TRUE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved "
             "ORDER BY p.datetime DESC"
             )
     try:
         result = session.run(query, u_id = user_id)
-        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"], "datetime":record["p"]["datetime"],"user_id":record["u"]["user_id"], "username":record["u"]["username"]} 
+        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"], "datetime":record["p"]["datetime"],"user_id":record["u"]["user_id"], "username":record["u"]["username"], "published":record["published"], "liked":record["liked"], "saved":record["saved"]} 
                     for record in result]
 
     except Neo4jError as exception:
@@ -579,7 +579,7 @@ async def get_all_published(user_id: str):
     session = neo4j_driver.session()
     query = (
             "MATCH (u1:User)-[:FOLLOWS]->(u2:User)-[:PUBLISHED]->(p:Post) WHERE u1.user_id = $u_id "
-            "RETURN u2, p"
+            "RETURN u2, p, FALSE as published, EXISTS((u1)-[:LIKES]->(p)) as liked, EXISTS((u1)-[:SAVED]->(p)) as saved"
             )
     try:
         result = session.run(query, u_id = user_id)
@@ -593,20 +593,21 @@ async def get_all_published(user_id: str):
 
 
 
-@app.get("/popularposts/{num_posts}") #ritorno i post più popolari (con il maggior numero di like)
-async def get_all_published(num_posts: int):
+@app.get("/popularposts/{user_id}") #ritorno i 50 post più popolari (con il maggior numero di like)
+async def get_all_published(user_id: str): 
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
-            "MATCH (u:User)-[:PUBLISHED]->(p:Post)<-[r:LIKES]->(u:User) "
-            "WITH count(r) AS num_likes "
-            "ORDER BY num_likes "
-            "RETURN u, p "
-            "LIMIT $limit "
+            "MATCH (u1:User)-[:PUBLISHED]->(p:Post)<-[r:LIKES]-(u:User) "
+            "MATCH (u2:User) WHERE u2.user_id = $u_id "
+            "WITH count(r) AS num_likes, u1, p, u2 " # ! se nella WITH clause non avessi messo anche u1 e p non me li avrebbe fatti ritornare nella RETURN perché avrebbe detto che non erano definiti come variabili, quindi quando uso la WITH metterci tutte le variabili che servono dopo
+            "ORDER BY num_likes DESC "
+            "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKED]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
+            "LIMIT 50 "
             )
     try:
-        result = session.run(query, limit = num_posts)
-        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"], "user_id":record["u2"]["user_id"], "username":record["u2"]["username"]} 
+        result = session.run(query, u_id = user_id)
+        return [{"post_id": record["p"]["post_id"],"fb_img_url": record["p"]["fb_img_url"] ,"description": record["p"]["description"], "user_id":record["u1"]["user_id"], "username":record["u1"]["username"], "num_likes":record["num_likes"],"published":record["published"], "liked":record["liked"], "saved":record["saved"]} 
                     for record in result]
 
     except Neo4jError as exception:

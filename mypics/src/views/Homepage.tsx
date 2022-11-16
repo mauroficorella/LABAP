@@ -22,7 +22,7 @@ export default function Homepage() {
             }}
           ></Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList />
+            <ImageList list_type="popular"></ImageList>
           </Box>
         </main>
       </React.Fragment>

@@ -6,16 +6,31 @@ import Link from "@mui/material/Link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function TitlebarBelowImageList() {
+//source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
+interface ImageListProps {
+  list_type: string;
+}
 
+export default function TitlebarBelowImageList(props: ImageListProps) {
   const [itemData, setItemData] = useState<any[]>([]);
+  var url: string;
+
+  if (props.list_type == "profile") {
+    url = "http://127.0.0.1:8000/published/abcdef95";
+  } else if (props.list_type == "popular") {
+    url = "http://127.0.0.1:8000/popularposts/abcdef95";
+  } else if (props.list_type == "followed") {
+    url = "http://127.0.0.1:8000/followedposts/abcdef95";
+  } else if (props.list_type == "saved") {
+    url = "http://127.0.0.1:8000/saved/abcdef95";
+  }
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/published/abcdef95").then((response) => {
+    axios.get(url).then((response) => {
       setItemData(response.data);
       console.log(response.data);
     });
-  }, []);
+  }, [props.list_type]);
 
   return (
     <ImageList
@@ -25,21 +40,21 @@ export default function TitlebarBelowImageList() {
       gap={8}
     >
       {itemData.map((item) => (
-      <Link href="/pic/">
-        <ImageListItem key={item.fb_img_url}>          
-           <img
-            src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
-            srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.description}
-            loading="lazy"
-          /> 
-          
-          <ImageListItemBar
-            title={item.description}
-            subtitle={<span>by: {item.username}</span>}
-            position="below"
-          />
-        </ImageListItem>
+        <Link href="/pic/" key={item.post_id}>
+          <ImageListItem>
+            <img
+              src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
+              srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+              alt={item.description}
+              loading="lazy"
+            />
+
+            <ImageListItemBar
+              title={item.description}
+              subtitle={<span>by: {item.username}</span>}
+              position="below"
+            />
+          </ImageListItem>
         </Link>
       ))}
     </ImageList>
