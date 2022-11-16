@@ -8,18 +8,21 @@ import uuid
 from fastapi.middleware.cors import CORSMiddleware
 
 
-uri = "neo4j+s://9b232952.databases.neo4j.io"
+uri = "neo4j+s://a86a7def.databases.neo4j.io"
 user = "neo4j"
-password = "ERkpMgISHD1hksqu2wCkU5weSF2e5_cqlCOXShRFN6I"
+password = "6uowMnHXgnMMijqhMgzSAbtCne2j-lSwlby-ouiEA-c"
 
 class PublishedPost(BaseModel):
     fb_img_url: str
     description: str
     user_id: str
 
-class User(BaseModel): #TODO: aggiungere profile_pic se serve
+class User(BaseModel):
     user_id:str
     username:str
+    password:str
+    email:str
+    profile_pic:str
 
 class LikeModel(BaseModel):
     user_id: str
@@ -42,26 +45,19 @@ class Comment(BaseModel):
 
 app = FastAPI()
 
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:3000",
-    "http://localhost:8000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @app.get("/")
 def default():
     return {"response":"You are in the root path"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
 
 @app.post("/post")
 async def create_post(published_post: PublishedPost): #quando creo un post devo creare sia il nodo Post, ma anche la relazione "Published" con l'utente che ha creato il post

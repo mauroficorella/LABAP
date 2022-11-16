@@ -11,7 +11,75 @@
  - name: social-api
    url: http://host.docker.internal:80
    routes:
-   - name: published-users
+   - name: create-remove-post
+     paths:
+     - /post
+     strip_path: false
+   - name: create-remove-user
+     paths:
+     - /user
+     strip_path: false
+   - name: create-remove-comment
+     paths:
+     - /comment
+     strip_path: false
+   - name: create-remove-like
+     paths:
+     - /likes
+     strip_path: false
+   - name: create-remove-follows
+     paths:
+     - /follows
+     strip_path: false
+   - name: create-remove-saved
+     paths:
+     - /saved
+     strip_path: false
+   - name: published-posts
      paths:
      - /published
+     strip_path: false
+   - name: people-who-liked
+     paths:
+     - /peoplewholiked
+     strip_path: false
+   - name: get-comments
+     paths:
+     - /comments
+     strip_path: false
+   - name: get-followers
+     paths:
+     - /followers
+     strip_path: false
+   - name: get-followed
+     paths:
+     - /followed
+     strip_path: false
+   - name: get-num-followers
+     paths:
+     - /numfollowers
+     strip_path: false
+   - name: get-num-followerd
+     paths:
+     - /numfollowerd
+     strip_path: false
+   - name: get-num-likes
+     paths:
+     - /numlikes
+     strip_path: false
+   - name: get-num-published
+     paths:
+     - /numpublished
+     strip_path: false
+   - name: get-num-saved
+     paths:
+     - /numsaved
+     strip_path: false
+   - name: get-followed-posts
+     paths:
+     - /followedposts
+     strip_path: false
+   - name: get-popular-posts
+     paths:
+     - /popularposts
      strip_path: false

@@ -16,13 +16,13 @@ export default function TitlebarBelowImageList(props: ImageListProps) {
   var url: string;
 
   if (props.list_type == "profile") {
-    url = "http://127.0.0.1:8000/published/abcdef95";
+    url = "http://localhost:8000/published/abcdef95";
   } else if (props.list_type == "popular") {
-    url = "http://127.0.0.1:8000/popularposts/abcdef95";
+    url = "http://localhost:8000/popularposts/abcdef95";
   } else if (props.list_type == "followed") {
-    url = "http://127.0.0.1:8000/followedposts/abcdef95";
+    url = "http://localhost:8000/followedposts/abcdef95";
   } else if (props.list_type == "saved") {
-    url = "http://127.0.0.1:8000/saved/abcdef95";
+    url = "http://localhost:8000/saved/abcdef95";
   }
 
   useEffect(() => {
