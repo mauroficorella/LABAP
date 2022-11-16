@@ -18,7 +18,6 @@ class PublishedPost(BaseModel):
     user_id: str
 
 class User(BaseModel):
-    user_id:str
     username:str
     password:str
     email:str
@@ -107,12 +106,12 @@ async def create_user(user_model: User): #ho messo user_model perché user era g
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
-            "CREATE (u:User { user_id: $u_id, username: $u_name}) " #TODO: aggiungere profile_pic se serve
+            "CREATE (u:User { user_id: $u_id, username: $u_name, password: $u_pswd, email: $u_email, profile_pic: $u_pic}) "
             "RETURN u"
             )
-    result = session.run(query, u_id = user_model.user_id, u_name = user_model.username)
+    result = session.run(query, u_id = str(uuid.uuid4()), u_name = user_model.username, u_pswd = user_model.password, u_email = user_model.email, u_pic = user_model.profile_pic)
     try:
-        return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"]} 
+        return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"], "email": record["u"]["email"], "profile_pic": record["u"]["profile_pic"]} 
                     for record in result]
 
     except Neo4jError as exception:
