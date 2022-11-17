@@ -5,13 +5,14 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import Link from "@mui/material/Link";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Card from "@mui/material/Card";
 
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
   list_type: string;
 }
 
-export default function TitlebarBelowImageList(props: ImageListProps) {
+export default function MasornyImageList(props: ImageListProps) {
   const [itemData, setItemData] = useState<any[]>([]);
   var url: string;
 
@@ -34,14 +35,24 @@ export default function TitlebarBelowImageList(props: ImageListProps) {
 
   return (
     <ImageList
-      //sx={{width: "100%"}}
-      //variant="masonry"
-      cols={7}
-      gap={8}
+      sx={{
+        columnCount: {
+          xs: "1 !important",
+          sm: "2 !important",
+          md: "3 !important",
+          lg: "4 !important",
+          xl: "5 !important",
+        },
+      }}
+      variant="masonry"
+      gap={12}
     >
       {itemData.map((item) => (
-        <Link href="/pic/" key={item.post_id}>
-          <ImageListItem>
+        <Card key={item.post_id} elevation={5} sx={{ mb: 2 }}>
+          <ImageListItem
+            sx={{ height: "100% !important", mb: 0 }}
+            style={{ margin: 0 }}
+          >
             <img
               src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
               srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -52,10 +63,10 @@ export default function TitlebarBelowImageList(props: ImageListProps) {
             <ImageListItemBar
               title={item.description}
               subtitle={<span>by: {item.username}</span>}
-              position="below"
+              //position="below"
             />
           </ImageListItem>
-        </Link>
+        </Card>
       ))}
     </ImageList>
   );

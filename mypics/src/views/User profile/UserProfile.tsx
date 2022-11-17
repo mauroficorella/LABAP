@@ -7,26 +7,24 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
-import ImageList from "./ImageList";
-import MainAppBar from "./MainAppBar";
-import theme from "./Landing/theme";
-import React, {useState} from "react";
-import TitlebarBelowImageList from "./ImageList";
+import ImageList from "./StandardImageList";
+import MainAppBar from "../MainAppBar";
+import theme from "../Landing/theme";
+import React, { useState } from "react";
+import TitlebarBelowImageList from "./StandardImageList";
 
 export default function Homepage() {
-
   const [imageListType, setImageListType] = useState("profile");
 
   const showSavedImageList = () => {
-    console.log("Executing showSavedImageList")
-    setImageListType("saved")
-  }
+    console.log("Executing showSavedImageList");
+    setImageListType("saved");
+  };
 
   const showProfileImageList = () => {
-    console.log("Executing showProfileImageList")
-    setImageListType("profile")
-  }
-
+    console.log("Executing showProfileImageList");
+    setImageListType("profile");
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,8 +64,7 @@ export default function Homepage() {
               <Typography color="inherit">N. Following</Typography>
             </Box>
           </Container>
-          <Box sx={{ bgcolor: "background.paper", pt: 5, pb: 2 }}></Box>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center", mt: 5, mb: 5 }}>
             <ButtonGroup
               variant="contained"
               color="secondary"
@@ -78,7 +75,6 @@ export default function Homepage() {
               <Button onClick={showSavedImageList}>Saved</Button>
             </ButtonGroup>
           </Box>
-          <Box sx={{ bgcolor: "background.paper", pt: 2, pb: 2 }}></Box>
           <Box sx={{ mr: 3, ml: 3 }}>
             <ImageList list_type={imageListType}></ImageList>
           </Box>

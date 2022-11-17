@@ -1,26 +1,19 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import MainAppBar from "./MainAppBar";
-import theme from "./Landing/theme";
+import MainAppBar from "../MainAppBar";
+import theme from "../Landing/theme";
 import React from "react";
 import Badge from "@mui/material/Badge";
 import CreateIcon from "@mui/icons-material/Create";
-import Paper from "@mui/material/Paper";
-import AppForm from "./Landing/AppForm";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import SettingsForm from "./SettingsForm";
 
-const MyPaper = styled(Paper)({
-  borderRadius: 20,
-  //borderColor: "#000",
-  padding: 20,
-});
 
 export default function UserSettings() {
   return (
@@ -62,7 +55,12 @@ export default function UserSettings() {
                 />
               </Badge>
             </Box>
-            <Grid container spacing={2} alignItems="center">
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+            >
               <Grid item xs={9}>
                 <Container
                   sx={{
@@ -96,7 +94,12 @@ export default function UserSettings() {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container spacing={2} alignItems="center">
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+            >
               <Grid item xs={9}>
                 <Container
                   sx={{
@@ -130,7 +133,12 @@ export default function UserSettings() {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container spacing={2} alignItems="center">
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              justifyContent="center"
+            >
               <Grid item xs={9}>
                 <Container
                   sx={{
@@ -170,6 +178,7 @@ export default function UserSettings() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                width: "80%",
               }}
             >
               <Button

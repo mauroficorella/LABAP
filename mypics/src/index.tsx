@@ -6,11 +6,11 @@ import Home from "./views/Landing/Home";
 import SignIn from "./views/Landing/SignIn";
 import SignUp from "./views/Landing/SignUp";
 import ForgotPassword from "./views/Landing/ForgotPassword";
-import Homepage from "./views/Homepage";
-import UserProfile from "./views/UserProfile";
+import UserProfile from "./views/User profile/UserProfile";
 import Pic from "./views/Pic";
-import AddPic from "./views/AddPic";
-import UserSettings from "./views/UserSettings";
+import AddPic from "./views/AddPic/AddPic";
+import UserSettings from "./views/UserSettings/UserSettings";
+import Homepage from "./views/Homepage/Homepage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

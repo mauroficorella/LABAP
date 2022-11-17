@@ -2,9 +2,6 @@ import * as React from "react";
 import Welcome from "./Welcome";
 import AppAppBar from "./AppAppBar";
 import withRoot from "./withRoot";
-import Homepage from "../Homepage";
-import MainAppBar from "../MainAppBar";
-import UserProfile from "../UserProfile";
 
 function Index() {
   return (
@@ -17,6 +14,3 @@ function Index() {
 }
 
 export default withRoot(Index);
-
-/*<Homepage />
-      <MainAppBar />*/

@@ -1,12 +1,12 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import { ThemeProvider } from "@mui/material/styles";
-import MainAppBar from "./MainAppBar";
 import React, {useState} from "react";
-import theme from "./Landing/theme";
-import ImageList from "./ImageList";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
+import theme from "../Landing/theme";
+import MainAppBar from "../MainAppBar";
+import MasornyImageList from "./MasornyImageList";
 
 export default function Homepage() {
 
@@ -36,7 +36,7 @@ export default function Homepage() {
               pb: 3,
             }}
           ></Box>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center", mt: 3, mb: 4 }}>
             <ButtonGroup
               variant="contained"
               color="secondary"
@@ -48,7 +48,7 @@ export default function Homepage() {
             </ButtonGroup>
           </Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList list_type={imageListType}></ImageList>
+            <MasornyImageList list_type={imageListType}></MasornyImageList>
           </Box>
         </main>
       </React.Fragment>

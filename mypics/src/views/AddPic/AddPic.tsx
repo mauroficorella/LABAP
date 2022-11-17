@@ -3,8 +3,8 @@ import Box from "@mui/material/Box";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import MainAppBar from "./MainAppBar";
-import theme from "./Landing/theme";
+import MainAppBar from "../MainAppBar";
+import theme from "../Landing/theme";
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import { StyledDropzone } from "./Dropzone";
 //import { DropzoneArea } from "material-ui-dropzone";
 
 const MyPaper = styled(Paper)({
@@ -35,7 +36,7 @@ export default function Homepage() {
           <Container
             sx={{
               display: "flex",
-              justifyContent: "Space-between",
+              justifyContent: "center",
               width: 1600,
               //height: 900,
             }}
@@ -43,10 +44,7 @@ export default function Homepage() {
             <MyPaper sx={{ m: 2 }} elevation={15}>
               <Grid container spacing={0}>
                 <Grid item xs={6}>
-                  <Typography>
-                    INSERIRE DROPZONE QUI
-                    ...............................................................................................................
-                  </Typography>
+                  <StyledDropzone />
                 </Grid>
                 <Grid item xs={6}>
                   <Container

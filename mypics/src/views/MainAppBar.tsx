@@ -77,14 +77,16 @@ function MainAppBar() {
           {"MyPics"}
         </Link>
         <Box sx={{ display: { xs: "none", md: "flex", margin: 10 } }}>
-          <IconButton
-            size="large"
-            aria-label="settings of account"
-            color="inherit"
-            href="/homepage/"
-          >
-            <HomeIcon />
-          </IconButton>
+          <Tooltip title="Homepage">
+            <IconButton
+              size="large"
+              aria-label="settings of account"
+              color="inherit"
+              href="/homepage/"
+            >
+              <HomeIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Add a pic">
             <IconButton
               size="large"
