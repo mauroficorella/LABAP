@@ -2,7 +2,7 @@ import * as React from "react";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
@@ -18,10 +18,6 @@ export default function StandardImageList(props: ImageListProps) {
 
   if (props.list_type == "profile") {
     url = "http://localhost:8000/published/abcdef95";
-  } else if (props.list_type == "popular") {
-    url = "http://localhost:8000/popularposts/abcdef95";
-  } else if (props.list_type == "followed") {
-    url = "http://localhost:8000/followedposts/abcdef95";
   } else if (props.list_type == "saved") {
     url = "http://localhost:8000/saved/abcdef95";
   }
@@ -43,17 +39,24 @@ export default function StandardImageList(props: ImageListProps) {
     >
       {itemData.map((item) => (
         <Card key={item.post_id} elevation={5} sx={{ mb: 2, ml: 1, mr: 1 }}>
-          <ImageListItem
-            sx={{ height: "100% !important", mb: 0 }}
-            style={{ margin: 0 }}
+          <Link
+            style={{ color: "black" }}
+            to="/pic/"
+            state={item}
+            key={item.post_id}
           >
-            <img
-              src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
-              srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={item.description}
-              loading="lazy"
-            />            
-          </ImageListItem>
+            <ImageListItem
+              sx={{ height: "100% !important", mb: 0 }}
+              style={{ margin: 0 }}
+            >
+              <img
+                src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
+                srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                alt={item.title}
+                loading="lazy"
+              />
+            </ImageListItem>
+          </Link>
         </Card>
       ))}
     </ImageList>

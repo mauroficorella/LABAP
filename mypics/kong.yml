@@ -59,9 +59,9 @@
      paths:
      - /numfollowers
      strip_path: false
-   - name: get-num-followerd
+   - name: get-num-followed
      paths:
-     - /numfollowerd
+     - /numfollowed
      strip_path: false
    - name: get-num-likes
      paths:
@@ -82,4 +82,12 @@
    - name: get-popular-posts
      paths:
      - /popularposts
+     strip_path: false
+   - name: get-post-info
+     paths:
+     - /postinfo
+     strip_path: false
+   - name: get-followage-info
+     paths:
+     - /followageinfo
      strip_path: false

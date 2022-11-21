@@ -10,21 +10,46 @@ import Container from "@mui/material/Container";
 import ImageList from "./StandardImageList";
 import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TitlebarBelowImageList from "./StandardImageList";
+import axios from "axios";
 
 export default function Homepage() {
   const [imageListType, setImageListType] = useState("profile");
+  const [followageInfo, setFollowageInfo] = useState<{ [key: string]: any }>(
+    {}
+  );
+  const [numFollowers, setNumFollowers] = useState("");
+  const [numFollowing, setNumFollowing] = useState("");
+  const [currentUserData, setCurrentUserData] = useState({
+    username: "Valentina",
+    profile_pic:
+      "https://64.media.tumblr.com/e00dfbcb28061317d0907c98a7adcfd8/808526bb8fef50e1-2b/s400x600/59f45ee753c7b197f517151c142501b0da5b8ce8.jpg",
+  }); //TODO
 
   const showSavedImageList = () => {
-    console.log("Executing showSavedImageList");
     setImageListType("saved");
   };
 
   const showProfileImageList = () => {
-    console.log("Executing showProfileImageList");
     setImageListType("profile");
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/followageinfo/abcdef95")
+      .then((response) => {
+        setFollowageInfo(response.data[0]);
+        setNumFollowers(
+          (response.data[0]["num_followers"] = 1
+            ? response.data[0]["num_followers"] + "  Follower"
+            : response.data[0]["num_followers"] + "  Followers")
+        );
+        setNumFollowing(response.data[0]["num_following"] + "  Following");
+      });
+    //TODO AGGIUNGERE LE GET PER L'USERNAME E L'IMMAGINE DEL PROFILO, PER IL MOMENTO SONO DEFINITI SOPRA E NON VENGONO PRESI DALLE API
+  }, []);
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -36,7 +61,7 @@ export default function Homepage() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Avatar
               alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg" //TODO Mettere immagine qui
+              src={currentUserData.profile_pic} //TODO Mettere immagine qui
               sx={{ width: 128, height: 128 }}
             />
           </Box>{" "}
@@ -46,7 +71,7 @@ export default function Homepage() {
             variant="h5"
             sx={{ mb: 2, mt: { sx: 1, sm: 2 } }}
           >
-            Username
+            {currentUserData.username}
           </Typography>
           <Container
             sx={{
@@ -59,9 +84,9 @@ export default function Homepage() {
             <Box
               sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}
             >
-              <Typography color="inherit">N. Followers</Typography>
+              <Typography color="inherit">{numFollowers}</Typography>
               <Divider orientation="vertical" flexItem />
-              <Typography color="inherit">N. Following</Typography>
+              <Typography color="inherit">{numFollowing}</Typography>
             </Box>
           </Container>
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center", mt: 5, mb: 5 }}>
