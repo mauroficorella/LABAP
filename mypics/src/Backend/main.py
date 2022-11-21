@@ -24,6 +24,10 @@ class User(BaseModel):
     email:str
     profile_pic:str
 
+class CheckUser(BaseModel):
+    username:str
+    password:str
+
 class LikeModel(BaseModel):
     user_id: str
     post_id: str
@@ -114,6 +118,24 @@ async def create_user(user_model: User): #ho messo user_model perché user era g
             "RETURN u"
             )
     result = session.run(query, u_id = str(uuid.uuid4()), u_name = user_model.username, u_pswd = user_model.password, u_email = user_model.email, u_pic = user_model.profile_pic)
+    try:
+        return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"], "email": record["u"]["email"], "profile_pic": record["u"]["profile_pic"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
+@app.post("/checkuser")
+async def check_user(checkuser_model: CheckUser): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.username = $u_name and u.password = $u_pswd "
+            "RETURN u"
+            )
+    result = session.run(query, u_id = str(uuid.uuid4()), u_name = checkuser_model.username, u_pswd = checkuser_model.password)
     try:
         return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"], "email": record["u"]["email"], "profile_pic": record["u"]["profile_pic"]} 
                     for record in result]

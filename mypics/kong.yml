@@ -1,13 +1,6 @@
  _format_version: "3.0"
 
  services:
- - name: users-api
-   url: http://host.docker.internal:80
-   routes:
-   - name: add-users-route
-     paths:
-     - /users
-     strip_path: false
  - name: social-api
    url: http://host.docker.internal:80
    routes:
@@ -18,6 +11,10 @@
    - name: create-remove-user
      paths:
      - /user
+     strip_path: false
+   - name: check-user
+     paths:
+     - /checkuser
      strip_path: false
    - name: create-remove-comment
      paths:

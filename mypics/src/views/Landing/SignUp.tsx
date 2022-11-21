@@ -2,24 +2,21 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "../../components/Landing/Typography";
 import AppAppBar from "./AppAppBar";
 import AppForm from "./AppForm";
-import { email, required } from "./form/validation";
-import RFTextField from "./form/RFTextField";
-import FormButton from "./form/FormButton";
-import FormFeedback from "./form/FormFeedback";
 import withRoot from "./withRoot";
+import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 function SignUp() {
-  const [sent, setSent] = React.useState(false);
+  /*const [sent, setSent] = React.useState(false);
 
   const validate = (values: { [index: string]: string }) => {
-    const errors = required(
-      ["username", "email", "password"],
-      values
-    );
+    const errors = required(["username", "email", "password"], values);
 
     if (!errors.email) {
       const emailError = email(values.email);
@@ -29,10 +26,33 @@ function SignUp() {
     }
 
     return errors;
-  };
+  };*/
+  async function createUser(values: FormData) {
+    await axios
+      .post("http://localhost:8000/user", {
+        username: values.get("username"),
+        email: values.get("email"),
+        password: values.get("password"),
+        profile_pic:
+          "https://www.kindpng.com/picc/m/171-1712282_profile-icon-png-profile-icon-vector-png-transparent.png",
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
-  const handleSubmit = () => {
-    setSent(true);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      username: data.get("username"),
+      email: data.get("email"),
+      password: data.get("password"),
+    });
+    createUser(data)
   };
 
   return (
@@ -43,75 +63,63 @@ function SignUp() {
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Sign Up
           </Typography>
-          <Typography variant="body2" align="center">
-            <Link href="/sign-in/" underline="always">
-              Already have an account?
-            </Link>
-          </Typography>
         </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box
-              component="form"
-              onSubmit={handleSubmit2}
-              noValidate
-              sx={{ mt: 6 }}
-            >
-                  <Field
-                    autoFocus
-                    component={RFTextField}
-                    disabled={submitting || sent}
-                    autoComplete="given-username"
-                    fullWidth
-                    label="Username"
-                    name="username"
-                    required
-                  />
-              <Field
-                autoComplete="email"
-                component={RFTextField}
-                disabled={submitting || sent}
-                fullWidth
-                label="Email"
-                margin="normal"
-                name="email"
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 5 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="given-name"
+                name="username"
                 required
+                fullWidth
+                id="username"
+                label="Username"
+                autoFocus
+                color="secondary"
               />
-              <Field
-                fullWidth
-                component={RFTextField}
-                disabled={submitting || sent}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
                 required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                color="secondary"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
                 name="password"
-                autoComplete="new-password"
                 label="Password"
                 type="password"
-                margin="normal"
-              />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
-                  submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
-              <FormButton
-                sx={{ mt: 3, mb: 2 }}
-                disabled={submitting || sent}
+                id="password"
+                autoComplete="new-password"
                 color="secondary"
-                fullWidth
-              >
-                {submitting || sent ? "In progress…" : "Sign Up"}
-              </FormButton>
-            </Box>
-          )}
-        </Form>
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            size="large"
+            color="secondary"
+          >
+            Sign Up
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href="/sign-in/" variant="body2">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
       </AppForm>
     </React.Fragment>
   );

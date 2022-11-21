@@ -1,35 +1,42 @@
 import * as React from "react";
-import { Field, Form, FormSpy } from "react-final-form";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "../../components/Landing/Typography";
 import AppAppBar from "./AppAppBar";
 import AppForm from "./AppForm";
-import { email, required } from "./form/validation";
-import RFTextField from "./form/RFTextField";
-import FormButton from "./form/FormButton";
-import FormFeedback from "./form/FormFeedback";
 import withRoot from "./withRoot";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 function SignIn() {
-  const [sent, setSent] = React.useState(false);
 
-  const validate = (values: { [index: string]: string }) => {
-    const errors = required(["email", "password"], values);
+  async function checkUser(values: FormData) {
+    await axios
+      .post("http://localhost:8000/checkuser", {
+        username: values.get("username"),
+        password: values.get("password"),
+      })
+      .then(function (response) {
+        console.log(response);
+        //SE INSERISCO UN UTENTE SBAGLIATO response.data MI TORNA UN ARRAY VUOTO, ALTRIMENTI HA TUTTI I DATI
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
-    if (!errors.email) {
-      const emailError = email(values.email);
-      if (emailError) {
-        errors.email = emailError;
-      }
-    }
-
-    return errors;
-  };
-
-  const handleSubmit = () => {
-    setSent(true);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      username: data.get("username"),
+      password: data.get("password"),
+    });
+    checkUser(data);
   };
 
   return (
@@ -40,75 +47,62 @@ function SignIn() {
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Sign In
           </Typography>
-          <Typography variant="body2" align="center">
-            {"Not a member yet? "}
-            <Link href="/sign-up/" align="center" underline="always">
-              Sign Up here
-            </Link>
-          </Typography>
-        </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box
-              component="form"
-              onSubmit={handleSubmit2}
-              noValidate
-              sx={{ mt: 6 }}
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 5}}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              autoFocus
+              color="secondary"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              color="secondary"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="secondary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="secondary"
+              size="large"
             >
-              <Field
-                autoComplete="email"
-                autoFocus
-                component={RFTextField}
-                disabled={submitting || sent}
-                fullWidth
-                label="Email"
-                margin="normal"
-                name="email"
-                required
-                size="large"
-              />
-              <Field
-                fullWidth
-                size="large"
-                component={RFTextField}
-                disabled={submitting || sent}
-                required
-                name="password"
-                autoComplete="current-password"
-                label="Password"
-                type="password"
-                margin="normal"
-              />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
-                  submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
-              <FormButton
-                sx={{ mt: 3, mb: 2 }}
-                disabled={submitting || sent}
-                size="large"
-                color="secondary"
-                fullWidth
-              >
-                {submitting || sent ? "In progress…" : "Sign In"}
-              </FormButton>
-            </Box>
-          )}
-        </Form>
-        <Typography align="center">
-          <Link underline="always" href="/forgot-password/">
-            Forgot password?
-          </Link>
-        </Typography>
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </React.Fragment>
       </AppForm>
     </React.Fragment>
   );
