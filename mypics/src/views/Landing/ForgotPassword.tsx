@@ -1,33 +1,43 @@
 import * as React from "react";
-import { Field, Form, FormSpy } from "react-final-form";
 import Box from "@mui/material/Box";
 import Typography from "../../components/Landing/Typography";
 import AppAppBar from "./AppAppBar";
 import AppForm from "./AppForm";
-import { email, required } from "./form/validation";
-import RFTextField from "./form/RFTextField";
-import FormButton from "./form/FormButton";
-import FormFeedback from "./form/FormFeedback";
 import withRoot from "./withRoot";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import { Link } from "@mui/material";
+import axios from "axios";
 
 function ForgotPassword() {
-  const [sent, setSent] = React.useState(false);
+  async function updatePassword(values: FormData) {
+    await axios
+      .post("http://localhost:8000/updatepassword", {
+        username: values.get("username"),
+        password: values.get("password"),
+      })
+      .then(function (response) {
+        console.log(response);
+        //SE INSERISCO UN UTENTE SBAGLIATO response.data MI TORNA UN ARRAY VUOTO, ALTRIMENTI HA TUTTI I DATI
+        if (response.data.length === 0) {
+          return alert("Invalid username");
+        } else {
+          return alert("Password reset successfully");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
-  const validate = (values: { [index: string]: string }) => {
-    const errors = required(["email"], values);
-
-    if (!errors.email) {
-      const emailError = email(values.email);
-      if (emailError) {
-        errors.email = emailError;
-      }
-    }
-
-    return errors;
-  };
-
-  const handleSubmit = () => {
-    setSent(true);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      username: data.get("username"),
+    });
+    updatePassword(data);
   };
 
   return (
@@ -39,55 +49,52 @@ function ForgotPassword() {
             Forgot your password?
           </Typography>
           <Typography variant="body2" align="center">
-            {"Enter your email address below and we'll " +
-              "send you a link to reset your password."}
+            {
+              "Enter your username and new password below in order to reset your password."
+            }
           </Typography>
         </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
-          {({ handleSubmit: handleSubmit2, submitting }) => (
-            <Box
-              component="form"
-              onSubmit={handleSubmit2}
-              noValidate
-              sx={{ mt: 6 }}
-            >
-              <Field
-                autoFocus
-                autoComplete="email"
-                component={RFTextField}
-                disabled={submitting || sent}
-                fullWidth
-                label="Email"
-                margin="normal"
-                name="email"
-                required
-                size="large"
-              />
-              <FormSpy subscription={{ submitError: true }}>
-                {({ submitError }) =>
-                  submitError ? (
-                    <FormFeedback error sx={{ mt: 2 }}>
-                      {submitError}
-                    </FormFeedback>
-                  ) : null
-                }
-              </FormSpy>
-              <FormButton
-                sx={{ mt: 3, mb: 2 }}
-                disabled={submitting || sent}
-                size="large"
-                color="secondary"
-                fullWidth
-              >
-                {submitting || sent ? "In progress…" : "Send reset link"}
-              </FormButton>
-            </Box>
-          )}
-        </Form>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 5 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            color="secondary"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="password"
+            label="New password"
+            name="password"
+            type="password"
+            autoComplete="password"
+            color="secondary"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            color="secondary"
+            size="large"
+          >
+            Reset password
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="/sign-in/" variant="body2">
+                Remember your password?
+              </Link>
+            </Grid>
+          </Grid>
+        </Box>
       </AppForm>
     </React.Fragment>
   );

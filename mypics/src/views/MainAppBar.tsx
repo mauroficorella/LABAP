@@ -14,6 +14,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "./Homepage/Homepage";
+
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +69,9 @@ function HomeIcon(props: SvgIconProps) {
 }
 
 function MainAppBar() {
+  
+
+  const navigateTo = useNavigate();
   return (
     <AppBar position="fixed">
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -126,7 +134,13 @@ function MainAppBar() {
               size="large"
               aria-label="settings of account"
               color="inherit"
-              href="/user-settings/"
+              onClick={() => {
+                navigateTo("/user-settings/", {
+                  //COPIARE QUESTA COSA ANCHE SOTTO NELL'ICONA PER ANDARE ALLA PAGINA DELL'UTENTE
+                  //IN MODO DA PORTARSI APPRESSO IL NOME DELL'UTENTE DA USARE IN QUELLA PAGINA
+                  
+                });
+              }}
             >
               <SettingsIcon />
             </IconButton>
@@ -138,7 +152,13 @@ function MainAppBar() {
               aria-label="account of current user"
               aria-haspopup="true"
               color="inherit"
-              href="/user-profile/"
+              onClick={() => {
+                return navigateTo("/user-profile/", {
+                  //COPIARE QUESTA COSA ANCHE SOTTO NELL'ICONA PER ANDARE ALLA PAGINA DELL'UTENTE
+                  //IN MODO DA PORTARSI APPRESSO IL NOME DELL'UTENTE DA USARE IN QUELLA PAGINA
+                  //state: { username: props.username, user_id: props.user_id, profile_pic: props.profile_pic},
+                });
+              }}
             >
               <AccountCircle />
             </IconButton>

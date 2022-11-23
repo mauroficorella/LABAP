@@ -12,9 +12,13 @@
      paths:
      - /user
      strip_path: false
-   - name: check-user
+   - name: check-user-and-password
      paths:
-     - /checkuser
+     - /checkuserandpass
+     strip_path: false
+   - name: update-password
+     paths:
+     - /updatepassword
      strip_path: false
    - name: create-remove-comment
      paths:

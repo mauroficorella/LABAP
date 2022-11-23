@@ -11,18 +11,30 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
+  //serve per spostarsi da una pagina all'altra
+  const navigateTo = useNavigate();
 
-  async function checkUser(values: FormData) {
+  async function checkUserAndPass(values: FormData) {
     await axios
-      .post("http://localhost:8000/checkuser", {
+      .post("http://localhost:8000/checkuserandpass", {
         username: values.get("username"),
         password: values.get("password"),
       })
       .then(function (response) {
         console.log(response);
         //SE INSERISCO UN UTENTE SBAGLIATO response.data MI TORNA UN ARRAY VUOTO, ALTRIMENTI HA TUTTI I DATI
+        if (response.data.length === 0) {
+          return alert("Invalid username or password");
+        } else {
+          return navigateTo("/homepage/", {
+            //questo campo state serve per prendere un parametro e portarselo appresso nella pagina dove si verrà ridirezionati con navigateto
+            //in questo caso mi sono preso l'username per poterlo riusare dentro l'homepage
+            state: { username: response.data[0].username, user_id: response.data[0].user_id, profile_pic: response.data[0].profile_pic},
+          });
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -36,7 +48,7 @@ function SignIn() {
       username: data.get("username"),
       password: data.get("password"),
     });
-    checkUser(data);
+    checkUserAndPass(data);
   };
 
   return (
@@ -51,7 +63,7 @@ function SignIn() {
             component="form"
             onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 5}}
+            sx={{ mt: 5 }}
           >
             <TextField
               margin="normal"
@@ -91,12 +103,12 @@ function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="/forgot-password/" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/sign-up/" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

@@ -6,16 +6,20 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
-import React from "react";
+import React, { useContext } from "react";
 import Badge from "@mui/material/Badge";
 import CreateIcon from "@mui/icons-material/Create";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import SettingsForm from "./SettingsForm";
-
+import { AppContext } from "../Homepage/Homepage";
 
 export default function UserSettings() {
+
+  const userdata = useContext(AppContext);
+  console.log(userdata.username)
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -77,7 +81,7 @@ export default function UserSettings() {
                     Name
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    Username
+                    {userdata.username}
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>
@@ -116,7 +120,10 @@ export default function UserSettings() {
                     Email
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    email@prova.it
+                    {
+                      //SERVE LA MAIL QUI? PERCHE NON SAPREI COME PORTARMI APPRESSO LA MAIL DAL LOGIN VISTO CHE NEL LOGIN INSERIAMO SOLO USERNAME E PASSWORD, QUINDI ANDREBBE PRESA CON UNA QUERY AL DB IN QUESTO CASO
+                    }
+                    
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>

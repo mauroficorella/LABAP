@@ -13,6 +13,7 @@ import theme from "../Landing/theme";
 import React, { useState, useEffect } from "react";
 import TitlebarBelowImageList from "./StandardImageList";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export default function Homepage() {
   const [imageListType, setImageListType] = useState("profile");
@@ -21,11 +22,14 @@ export default function Homepage() {
   );
   const [numFollowers, setNumFollowers] = useState("");
   const [numFollowing, setNumFollowing] = useState("");
+  const location = useLocation();
   const [currentUserData, setCurrentUserData] = useState({
-    username: "Valentina",
+    username: location.state.username,
     profile_pic:
-      "https://64.media.tumblr.com/e00dfbcb28061317d0907c98a7adcfd8/808526bb8fef50e1-2b/s400x600/59f45ee753c7b197f517151c142501b0da5b8ce8.jpg",
+      location.state.profile_pic,
   }); //TODO
+
+  
 
   const showSavedImageList = () => {
     setImageListType("saved");
@@ -37,7 +41,7 @@ export default function Homepage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/followageinfo/abcdef95")
+      .get("http://localhost:8000/followageinfo/" + location.state.user_id)
       .then((response) => {
         setFollowageInfo(response.data[0]);
         setNumFollowers(
@@ -89,7 +93,15 @@ export default function Homepage() {
               <Typography color="inherit">{numFollowing}</Typography>
             </Box>
           </Container>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center", mt: 5, mb: 5 }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              mt: 5,
+              mb: 5,
+            }}
+          >
             <ButtonGroup
               variant="contained"
               color="secondary"
@@ -101,7 +113,10 @@ export default function Homepage() {
             </ButtonGroup>
           </Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList list_type={imageListType}></ImageList>
+            <ImageList
+              list_type={imageListType}
+              user_id={location.state.user_id}
+            ></ImageList>
           </Box>
         </main>
       </React.Fragment>

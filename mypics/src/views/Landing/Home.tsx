@@ -7,8 +7,7 @@ function Index() {
   return (
     <React.Fragment>
       <AppAppBar />
-      <Welcome />
-      
+      <Welcome />   
     </React.Fragment>
   );
 }

@@ -10,6 +10,7 @@ import Card from "@mui/material/Card";
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
   list_type: string;
+  user_id: string;
 }
 
 export default function StandardImageList(props: ImageListProps) {
@@ -17,9 +18,9 @@ export default function StandardImageList(props: ImageListProps) {
   var url: string;
 
   if (props.list_type == "profile") {
-    url = "http://localhost:8000/published/abcdef95";
+    url = "http://localhost:8000/published/" + props.user_id;
   } else if (props.list_type == "saved") {
-    url = "http://localhost:8000/saved/abcdef95";
+    url = "http://localhost:8000/saved/" + props.user_id;
   }
 
   useEffect(() => {

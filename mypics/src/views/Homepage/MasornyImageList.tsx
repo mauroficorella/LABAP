@@ -3,9 +3,10 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import {AppContext} from "./Homepage"
 
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
@@ -16,10 +17,14 @@ export default function MasornyImageList(props: ImageListProps) {
   const [itemData, setItemData] = useState<any[]>([]);
   var url: string;
 
+  const userdata = useContext(AppContext)
+
+  console.log(userdata)
+
   if (props.list_type == "popular") {
-    url = "http://localhost:8000/popularposts/abcdef95";
+    url = "http://localhost:8000/popularposts/" + userdata.user_id;
   } else if (props.list_type == "followed") {
-    url = "http://localhost:8000/followedposts/abcdef95";
+    url = "http://localhost:8000/followedposts/" + userdata.user_id;
   }
 
   useEffect(() => {
