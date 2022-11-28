@@ -13,12 +13,8 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import SettingsForm from "./SettingsForm";
-import { AppContext } from "../Homepage/Homepage";
 
 export default function UserSettings() {
-
-  const userdata = useContext(AppContext);
-  console.log(userdata.username)
 
   return (
     <ThemeProvider theme={theme}>
@@ -81,7 +77,7 @@ export default function UserSettings() {
                     Name
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    {userdata.username}
+                    TABINDA
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>

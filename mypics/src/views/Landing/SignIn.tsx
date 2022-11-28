@@ -12,10 +12,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 function SignIn() {
   //serve per spostarsi da una pagina all'altra
-  const navigateTo = useNavigate();
+  const { login } = useAuth();
+  console.log("login: " + login);
 
   async function checkUserAndPass(values: FormData) {
     await axios
@@ -29,10 +31,15 @@ function SignIn() {
         if (response.data.length === 0) {
           return alert("Invalid username or password");
         } else {
-          return navigateTo("/homepage/", {
+          /*return navigateTo("/homepage/", {
             //questo campo state serve per prendere un parametro e portarselo appresso nella pagina dove si verrà ridirezionati con navigateto
             //in questo caso mi sono preso l'username per poterlo riusare dentro l'homepage
             state: { username: response.data[0].username, user_id: response.data[0].user_id, profile_pic: response.data[0].profile_pic},
+          });*/
+          login({
+            username: response.data[0].username,
+            user_id: response.data[0].user_id,
+            profile_pic: response.data[0].profile_pic,
           });
         }
       })

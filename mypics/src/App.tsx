@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { ProtectedRoute } from "./ProtectedRoute";
 import AddPic from "./views/AddPic/AddPic";
-import Homepage, { AppContext } from "./views/Homepage/Homepage";
+import Homepage from "./views/Homepage/Homepage";
 import ForgotPassword from "./views/Landing/ForgotPassword";
 import Home from "./views/Landing/Home";
 import SignIn from "./views/Landing/SignIn";
@@ -12,24 +13,40 @@ import UserProfile from "./views/User profile/UserProfile";
 import UserSettings from "./views/UserSettings/UserSettings";
 
 function App() {
-  const userdata = useState({});
   return (
     <div className="App">
-      <BrowserRouter>
-        <AppContext.Provider value={userdata}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sign-up/" element={<SignUp />} />
-            <Route path="/sign-in/" element={<SignIn />} />
-            <Route path="/forgot-password/" element={<ForgotPassword />} />
-            <Route path="/homepage/" element={<Homepage />} />
-            <Route path="/user-profile/" element={<UserProfile />} />
-            <Route path="/user-settings/" element={<UserSettings />} />
-            <Route path="/pic/" element={<Pic />} />
-            <Route path="/add-pic/" element={<AddPic />} />
-          </Routes>
-        </AppContext.Provider>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/sign-up/" element={<SignUp />} />
+        <Route path="/sign-in/" element={<SignIn />} />
+        <Route path="/forgot-password/" element={<ForgotPassword />} />
+        <Route
+          path="/homepage/"
+          element={
+            <ProtectedRoute>
+              <Homepage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-profile/"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-settings/"
+          element={
+            <ProtectedRoute>
+              <UserSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/pic/" element={<Pic />} />
+        <Route path="/add-pic/" element={<AddPic />} />
+      </Routes>
     </div>
   );
 }

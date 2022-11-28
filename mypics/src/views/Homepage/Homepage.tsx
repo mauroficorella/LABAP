@@ -8,15 +8,15 @@ import theme from "../Landing/theme";
 import MainAppBar from "../MainAppBar";
 import MasornyImageList from "./MasornyImageList";
 import { useLocation } from "react-router-dom";
-
-
-export const AppContext = createContext<{ [key: string]: any }>({});
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Homepage() {
   const [imageListType, setImageListType] = useState("popular");
 
   //questa cosa serve per portarsi appresso le cose da una pagina all'altra
   const location = useLocation();
+
+  const {user} = useAuth();
 
   const showPopularImageList = () => {
     console.log("Executing showSavedImageList");
@@ -28,17 +28,12 @@ export default function Homepage() {
     setImageListType("followed");
   };
 
+  console.log(user)
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <React.Fragment>
-        <AppContext.Provider
-          value={{
-            username: location.state.username,
-            user_id: location.state.user_id,
-            profile_pic: location.state.profile_pic,
-          }}
-        >
           <MainAppBar />
           <main>
             <Box
@@ -74,7 +69,6 @@ export default function Homepage() {
               ></MasornyImageList>
             </Box>
           </main>
-        </AppContext.Provider>
       </React.Fragment>
     </ThemeProvider>
   );
