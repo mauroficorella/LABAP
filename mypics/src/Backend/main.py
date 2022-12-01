@@ -389,7 +389,7 @@ async def get_all_saved(user_id: str):
             "MATCH (u1:User)-[s:SAVED]->(p:Post)<-[:PUBLISHED]-(u2:User) WHERE u1.user_id = $u_id "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u:User) "
             "WITH count(r) AS num_likes, u1, u2, p, s "
-            "RETURN u2, p, num_likes, TRUE as saved, EXISTS((u1)-[:LIKES]->(p)) as liked, EXISTS((u1)-[:PUBLISHED]->(p)) as published"
+            "RETURN u2, p, num_likes, TRUE as saved, EXISTS((u1)-[:LIKES]->(p)) as liked, EXISTS((u1)-[:PUBLISHED]->(p)) as published "
             "ORDER BY s.datetime "
             )
     try:
@@ -645,7 +645,7 @@ async def get_followed_posts(user_id: str):
     query = (
             "MATCH (u1:User)-[:FOLLOWS]->(u2:User)-[:PUBLISHED]->(p:Post) WHERE u1.user_id = $u_id "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u:User) "
-            "WITH count(r) AS num_likes, u1, p "
+            "WITH count(r) AS num_likes, u1, p, u2 "
             "RETURN u2, p, num_likes, FALSE as published, EXISTS((u1)-[:LIKES]->(p)) as liked, EXISTS((u1)-[:SAVED]->(p)) as saved"
             )
     try:
@@ -774,8 +774,10 @@ async def get_followage_info(user_id: str):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
-            "MATCH (u1:User)-[r1:FOLLOWS]->(u2:User)-[r2:FOLLOWS]->(u3:User) WHERE u2.user_id = $u_id "
-            "RETURN count(r1) as num_followers, count(r2) as num_following, collect(u1) as followers, collect(u2) as following"
+            "MATCH (u1:User)-[r1:FOLLOWS]->(u2:User) WHERE u2.user_id = $u_id "
+            "WITH count(r1) as num_followers, collect(u1) as followers "
+            "MATCH (u4:User)-[r2:FOLLOWS]->(u3:User) WHERE u4.user_id = $u_id "
+            "RETURN num_followers, count(r2) as num_following, followers, collect(u3) as following"
             )
     try:
         result = session.run(query, u_id = user_id)

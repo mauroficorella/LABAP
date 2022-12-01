@@ -12,6 +12,7 @@ import red from "@mui/material/colors/red";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import TextField from "@mui/material/TextField";
@@ -31,6 +32,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useAuth } from "../hooks/useAuth";
 
 const MyPaper = styled(Paper)({
   borderRadius: 20,
@@ -76,16 +78,43 @@ function parseDate(dateData: any) {
 }
 
 export default function Pic() {
+  const { user } = useAuth();
   const { state } = useLocation(); //state contiene i dati riguardanti l'immagine che è stata cliccata dalla pagina precedente
   console.log("🚀 ~ file: Pic.tsx ~ line 34 ~ Pic ~ state", state);
 
   const [itemData, setItemData] = useState<{ [key: string]: any }>({});
   const [isLoading, setLoading] = useState(true);
   const [liked, setLiked] = useState(state.liked);
+  const [saved, setSaved] = useState(state.saved);
 
   const addOrRemoveLike = () => {
     liked ? setLiked(false) : setLiked(true);
-    //TODO TRIGGERARE L'API PER AGGIORNARE IL DB
+    axios
+      .post("http://localhost:8000/likes", {
+        user_id: user.user_id,
+        post_id: state.post_id,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const addOrRemoveSaved = () => {
+    saved ? setSaved(false) : setSaved(true);
+    axios
+      .post("http://localhost:8000/saved", {
+        user_id: user.user_id,
+        post_id: state.post_id,
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   /*const StyledFavoriteIcon = styled(FavoriteIcon, {
@@ -183,8 +212,15 @@ export default function Pic() {
                           <FavoriteBorderIcon></FavoriteBorderIcon>
                         )}
                       </IconButton>
-                      <IconButton aria-label="save image">
-                        <BookmarkBorderIcon />
+                      <IconButton
+                        aria-label="save image"
+                        onClick={addOrRemoveSaved}
+                      >
+                        {saved ? (
+                          <BookmarkIcon color="secondary" />
+                        ) : (
+                          <BookmarkBorderIcon></BookmarkBorderIcon>
+                        )}
                       </IconButton>
                     </Box>
                   </Container>
@@ -194,13 +230,14 @@ export default function Pic() {
                   <Container
                     sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
                   >
-                    <AccountCircle
+                    <Avatar
                       sx={{
                         color: "action.active",
                         mr: 1,
                         fontSize: 40,
                       }}
-                    />
+                      src={user.profile_pic}
+                    ></Avatar>
                     <TextField
                       id="outlined-basic"
                       label="Leave a comment"

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import { useAuth } from "../../hooks/useAuth";
 
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
@@ -14,12 +15,13 @@ interface ImageListProps {
 
 export default function MasornyImageList(props: ImageListProps) {
   const [itemData, setItemData] = useState<any[]>([]);
+  const {user} = useAuth()
   var url: string;
 
   if (props.list_type == "popular") {
-    url = "http://localhost:8000/popularposts/abcdef95";
+    url = "http://localhost:8000/popularposts/" + user.user_id;
   } else if (props.list_type == "followed") {
-    url = "http://localhost:8000/followedposts/abcdef95";
+    url = "http://localhost:8000/followedposts/" + user.user_id;
   }
 
   useEffect(() => {

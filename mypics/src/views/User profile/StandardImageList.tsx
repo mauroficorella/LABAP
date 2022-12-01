@@ -6,21 +6,23 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import { useAuth } from "../../hooks/useAuth";
 
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
   list_type: string;
-  user_id: string;
 }
 
 export default function StandardImageList(props: ImageListProps) {
+  const { user } = useAuth();
+
   const [itemData, setItemData] = useState<any[]>([]);
   var url: string;
 
   if (props.list_type == "profile") {
-    url = "http://localhost:8000/published/" + props.user_id;
+    url = "http://localhost:8000/published/" + user.user_id;
   } else if (props.list_type == "saved") {
-    url = "http://localhost:8000/saved/" + props.user_id;
+    url = "http://localhost:8000/saved/" + user.user_id;
   }
 
   useEffect(() => {

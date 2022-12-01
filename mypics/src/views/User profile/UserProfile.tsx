@@ -12,24 +12,19 @@ import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
 import React, { useState, useEffect } from "react";
 import TitlebarBelowImageList from "./StandardImageList";
+import SimpleDialog from "./SimpleDialog";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Homepage() {
+  const { user } = useAuth();
+
   const [imageListType, setImageListType] = useState("profile");
   const [followageInfo, setFollowageInfo] = useState<{ [key: string]: any }>(
     {}
   );
   const [numFollowers, setNumFollowers] = useState("");
   const [numFollowing, setNumFollowing] = useState("");
-  const location = useLocation();
-  const [currentUserData, setCurrentUserData] = useState({
-    username: location.state.username,
-    profile_pic:
-      location.state.profile_pic,
-  }); //TODO
-
-  
 
   const showSavedImageList = () => {
     setImageListType("saved");
@@ -39,21 +34,44 @@ export default function Homepage() {
     setImageListType("profile");
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState([]);
+  const [selectedTitle, setSelectedTitle] = React.useState("");
+
+  const handleClickOpenFollowers = () => {
+    setOpen(true);
+    setSelectedValue(followageInfo.followers);
+    setSelectedTitle("People following you:");
+    console.log(followageInfo.followers);
+  };
+
+  const handleClickOpenFollowing = () => {
+    setOpen(true);
+    setSelectedValue(followageInfo.following);
+    setSelectedTitle("People you follow:");
+    console.log(followageInfo.following);
+  };
+
+  const handleClose = (value: any[]) => {
+    setOpen(false);
+    //setSelectedValue(value);
+  };
+
   useEffect(() => {
     axios
-      .get("http://localhost:8000/followageinfo/" + location.state.user_id)
+      .get("http://localhost:8000/followageinfo/" + user.user_id)
       .then((response) => {
+        console.log("_________RESPONSE____________");
+        console.log(response.data[0]);
         setFollowageInfo(response.data[0]);
         setNumFollowers(
-          (response.data[0]["num_followers"] = 1
+          response.data[0]["num_followers"] == 1
             ? response.data[0]["num_followers"] + "  Follower"
-            : response.data[0]["num_followers"] + "  Followers")
+            : response.data[0]["num_followers"] + "  Followers"
         );
         setNumFollowing(response.data[0]["num_following"] + "  Following");
       });
-    //TODO AGGIUNGERE LE GET PER L'USERNAME E L'IMMAGINE DEL PROFILO, PER IL MOMENTO SONO DEFINITI SOPRA E NON VENGONO PRESI DALLE API
   }, []);
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -65,7 +83,7 @@ export default function Homepage() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Avatar
               alt="Remy Sharp"
-              src={currentUserData.profile_pic} //TODO Mettere immagine qui
+              src={user.profile_pic}
               sx={{ width: 128, height: 128 }}
             />
           </Box>{" "}
@@ -75,7 +93,7 @@ export default function Homepage() {
             variant="h5"
             sx={{ mb: 2, mt: { sx: 1, sm: 2 } }}
           >
-            {currentUserData.username}
+            {user.username}
           </Typography>
           <Container
             sx={{
@@ -88,9 +106,13 @@ export default function Homepage() {
             <Box
               sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}
             >
-              <Typography color="inherit">{numFollowers}</Typography>
+              <Button color="inherit" onClick={handleClickOpenFollowers}>
+                {numFollowers}
+              </Button>
               <Divider orientation="vertical" flexItem />
-              <Typography color="inherit">{numFollowing}</Typography>
+              <Button color="inherit" onClick={handleClickOpenFollowing}>
+                {numFollowing}
+              </Button>
             </Box>
           </Container>
           <Box
@@ -115,8 +137,16 @@ export default function Homepage() {
           <Box sx={{ mr: 3, ml: 3 }}>
             <ImageList
               list_type={imageListType}
-              user_id={location.state.user_id}
             ></ImageList>
+          </Box>
+          <Box>
+            <br />
+            <SimpleDialog
+              title={selectedTitle}
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
+            />
           </Box>
         </main>
       </React.Fragment>

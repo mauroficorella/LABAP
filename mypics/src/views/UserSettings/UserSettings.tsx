@@ -13,8 +13,10 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import SettingsForm from "./SettingsForm";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function UserSettings() {
+  const { user } = useAuth();
 
   return (
     <ThemeProvider theme={theme}>
@@ -49,8 +51,8 @@ export default function UserSettings() {
                 }}
               >
                 <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg" //TODO Mettere immagine qui
+                  alt={user.username}
+                  src={user.profile_pic}
                   sx={{ width: 128, height: 128 }}
                 />
               </Badge>
@@ -119,7 +121,6 @@ export default function UserSettings() {
                     {
                       //SERVE LA MAIL QUI? PERCHE NON SAPREI COME PORTARMI APPRESSO LA MAIL DAL LOGIN VISTO CHE NEL LOGIN INSERIAMO SOLO USERNAME E PASSWORD, QUINDI ANDREBBE PRESA CON UNA QUERY AL DB IN QUESTO CASO
                     }
-                    
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>
