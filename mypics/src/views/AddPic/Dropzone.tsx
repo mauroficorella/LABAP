@@ -28,9 +28,9 @@ const thumbInner = {
 };
 
 const img = {
-  //display: "block",
-  width: "200",
-  //height: "100%",
+  display: "block",
+  width: "auto",
+  height: "30vh",
 };
 
 export function StyledDropzone(props: any) {
