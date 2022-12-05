@@ -90,6 +90,30 @@ async def create_post(published_post: PublishedPost): #quando creo un post devo 
                 query=query, exception=exception))
             raise
 
+@app.post("/fake_post")
+async def create_fake_post(published_post: PublishedPost): #quando creo un post devo creare sia il nodo Post, ma anche la relazione "Published" con l'utente che ha creato il post
+                                   #quindi invece di Post posso chiamarlo PublishedPost ed aggiungere il parametro "user_id", che mi servirà per aggiungere la relazione
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.username = $u_id " #il MATCH va sempre prima di CREATE altrimenti rompe le balls
+            "CREATE (p:Post { post_id: $p_id, fb_img_url: $img_url, title: $p_title, description: $descr, datetime: localdatetime({timezone: 'Europe/Rome'}) }) "
+            "CREATE (u)-[:PUBLISHED]->(p) "
+            "RETURN p"
+            )
+
+    result = session.run(query, p_id = str(uuid.uuid4()), img_url = published_post.fb_img_url, p_title = published_post.title, descr = published_post.description, u_id = published_post.user_id)
+    try:
+        return [{"post_id": record["p"]["post_id"], "fb_img_url": record["p"]["fb_img_url"],"description":record["p"]["description"], "datetime":record["p"]["datetime"]} 
+                    for record in result]
+        #avrei potuto scrivere anche solo record["post_id"], quindi senza ["p"],
+        #ma l'ho lasciato perché utile vedere come si fa quando la query ritorna più cose,
+        #quindi nel caso in cui nella query c'è RETURN p1,p2 invece che semplicement RETURN p
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
 @app.delete("/post/{post_id}")
 async def delete_post(post_id: str):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
@@ -792,7 +816,23 @@ async def get_followage_info(user_id: str):
                 query=query, exception=exception))
             raise
 
+@app.get("/get_all_users")
+async def get_all_users(): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User "
+            "RETURN u"
+            )
+    result = session.run(query)
+    try:
+        return [{"user_id": record["u"]["user_id"]} 
+                    for record in result]
 
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
 
 
 '''if __name__ == "__main__":

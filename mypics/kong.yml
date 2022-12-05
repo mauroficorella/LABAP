@@ -8,6 +8,10 @@
      paths:
      - /post
      strip_path: false
+   - name: create-remove-fake-post
+     paths:
+     - /fake_post
+     strip_path: false
    - name: create-remove-user
      paths:
      - /user
@@ -91,4 +95,8 @@
    - name: get-followage-info
      paths:
      - /followageinfo
+     strip_path: false
+   - name: get-all-users
+     paths:
+     - /get_all_users
      strip_path: false
