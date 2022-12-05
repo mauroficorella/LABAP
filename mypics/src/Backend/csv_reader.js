@@ -99,14 +99,19 @@ async function parsePost() {
       console.log(error.message);
     })
     .on("end", function () {
-      for (var i = 1; i < 40; i++) {
+      for (var i = 40; i < 80; i++) {
         unsplash.photos.get({ photoId: data[i].photo_id }).then(function (res) {
-          createPost({
-            user_id: res.response.user.username,
-            title: res.response.description,
-            description: res.response.alt_description,
-            fb_img_url: res.response.urls.regular,
-          });
+          try {
+            createPost({
+              user_id: res.response.user.username,
+              title: res.response.description,
+              description: res.response.alt_description,
+              fb_img_url: res.response.urls.regular,
+            });
+          } catch (error) {
+            console.log("valentano");
+            console.error(error);
+          }
         });
       }
     });
@@ -193,4 +198,4 @@ async function randomize() {
     }); 
 }
 
-randomize();
+parsePost()
