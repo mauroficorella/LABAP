@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
-import React from "react";
+import React, { useState, useCallback } from "react";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TextField from "@mui/material/TextField";
@@ -13,6 +13,8 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { StyledDropzone } from "./Dropzone";
+import axios from "axios";
+import { useAuth } from "../../hooks/useAuth";
 //import { DropzoneArea } from "material-ui-dropzone";
 
 const MyPaper = styled(Paper)({
@@ -22,6 +24,76 @@ const MyPaper = styled(Paper)({
 });
 
 export default function Homepage() {
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [acceptedFiles, setAcceptedFiles] = useState([]);
+  var [titleValue, setTitleValue] = useState("");
+  var [descriptionValue, setDescriptionValue] = useState("");
+  var [fbImgUrl, setFbImgUrl] = useState("");
+
+  const { user } = useAuth();
+
+  const onDrop = useCallback((acceptedFiles: any) => {
+    // ! link che fa vedere come si fa a passare parametri dal figlio al padre, magari torna utile: https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent
+    setAcceptedFiles(acceptedFiles);
+    console.log(acceptedFiles[0].name);
+    setSelectedImages(
+      acceptedFiles.map((file: any) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
+  }, []);
+
+  function handleClick() {
+    console.log("called handleClick");
+
+    var formData = new FormData();
+    formData.append("image", acceptedFiles[0]);
+
+    axios
+      .post("http://localhost:8080/uploadpic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        //console.log(response.data.fb_img_url);
+        console.log("TYPE" + response.data.type);
+        setFbImgUrl(response.data);
+        console.log("FBIMGURL: " + fbImgUrl);
+        //SALVIAMO IL POST NEL DATABASE DI NEO4J
+        savePostInDB(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function savePostInDB(fb_img_url: string) {
+    console.log("executing savePostInDB");
+    if (titleValue != "" && descriptionValue != "") {
+      console.log("savePostInDB if");
+      axios
+        .post("http://localhost:8000/post", {
+          fb_img_url: fb_img_url,
+          title: titleValue,
+          description: descriptionValue,
+          user_id: user.user_id,
+        })
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      console.log("Missing image, title or description");
+      console.log("titleValue: " + titleValue);
+      console.log("dezcriptionValue: " + descriptionValue);
+      console.log("fbImgUrl: " + fbImgUrl);
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -44,7 +116,10 @@ export default function Homepage() {
             <MyPaper sx={{ m: 2 }} elevation={15}>
               <Grid container spacing={0}>
                 <Grid item xs={6}>
-                  <StyledDropzone />
+                  <StyledDropzone
+                    onDrop={onDrop}
+                    selectedImages={selectedImages}
+                  ></StyledDropzone>
                 </Grid>
                 <Grid item xs={6}>
                   <Container
@@ -65,6 +140,9 @@ export default function Homepage() {
                         fullWidth
                         label="Add a title"
                         id="title"
+                        onChange={(newValue) =>
+                          setTitleValue(newValue.target.value)
+                        }
                         variant="standard"
                         inputProps={{ style: { fontSize: 40 } }}
                         InputLabelProps={{ style: { fontSize: 40 } }}
@@ -82,6 +160,9 @@ export default function Homepage() {
                         fullWidth
                         label="Add a description"
                         id="description"
+                        onChange={(newValue) =>
+                          setDescriptionValue(newValue.target.value)
+                        }
                         multiline
                         rows={8}
                       />
@@ -93,6 +174,7 @@ export default function Homepage() {
                         size="large"
                         component="a"
                         //href="//"
+                        onClick={handleClick}
                         sx={{ minWidth: 200 }}
                       >
                         Save

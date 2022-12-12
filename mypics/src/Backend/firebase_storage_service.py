@@ -54,7 +54,7 @@ async def upload_pic(image: UploadFile = File(...)): # ! image DEVE ESSERE LO ST
     blob.make_public()
 
     print("your file url", blob.public_url)
-    return {"fb_img_url":blob.public_url}
+    return blob.public_url
     
 
 if __name__ == "__main__":
