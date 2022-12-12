@@ -817,7 +817,7 @@ async def get_followage_info(user_id: str):
             raise
 
 @app.get("/get_all_users")
-async def get_all_users(): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+async def get_all_users():
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
@@ -827,6 +827,24 @@ async def get_all_users(): #ho messo user_model perché user era già la variabi
     result = session.run(query)
     try:
         return [{"user_id": record["u"]["user_id"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
+@app.get("/get_all_posts")
+async def get_all_posts():
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (p) WHERE p:Post "
+            "RETURN p"
+            )
+    result = session.run(query)
+    try:
+        return [{"post_id": record["p"]["post_id"]} 
                     for record in result]
 
     except Neo4jError as exception:

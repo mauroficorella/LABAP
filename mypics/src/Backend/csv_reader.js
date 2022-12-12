@@ -43,6 +43,17 @@ async function createFollow(values) {
     });
 }
 
+async function createLike(values) {
+  await axios
+    .post("http://localhost:8000/likes", values)
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 async function parseUsersCSV() {
   const data = [];
   fs.createReadStream("./csv/user.csv")
@@ -99,7 +110,7 @@ async function parsePost() {
       console.log(error.message);
     })
     .on("end", function () {
-      for (var i = 40; i < 80; i++) {
+      for (var i = 90; i < 140; i++) {
         unsplash.photos.get({ photoId: data[i].photo_id }).then(function (res) {
           try {
             createPost({
@@ -173,29 +184,64 @@ function getMultipleRandom(arr, num) {
   return shuffled.slice(0, num);
 }
 
-async function randomize() {
+async function randomizeFollow() {
   var arr = [];
   await axios
     .get("http://localhost:8000/get_all_users")
     .then(function (response) {
-      response.data.forEach(function (user){
-        arr.push(user.user_id)
-      })
+      response.data.forEach(function (user) {
+        arr.push(user.user_id);
+      });
       console.log(arr);
-      for (var i = 0; i < arr.length; i++) {
+      /*for (var i = 0; i < arr.length; i++) {
         let x = Math.floor(Math.random() * 18 + 3);
         var temp = arr.slice();
         delete temp[i];
         var to_follow = getMultipleRandom(temp, x);
-        to_follow.forEach(function (follow){
-          createFollow({user_id1: arr[i], user_id2: follow})
-        })
+        to_follow.forEach(function (follow) {
+          createFollow({ user_id1: arr[i], user_id2: follow });
+        });
         //console.log(getMultipleRandom(temp, x));
+      }*/
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+async function randomizeLike() {
+  var arrUsers = [];
+  var arrPosts = [];
+  await axios
+    .get("http://localhost:8000/get_all_users")
+    .then(function (response) {
+      response.data.forEach(function (user) {
+        arrUsers.push(user.user_id);
+      });
+      console.log(arrUsers)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  /*await axios
+    .get("http://localhost:8000/get_all_posts")
+    .then(function (response) {
+      response.data.forEach(function (post) {
+        arrPosts.push(post.post_id);
+      });
+      for (var i = 0; i < arrPosts.length; i++) {
+        let x = Math.floor(Math.random() * 18 + 3);
+         var to_like = getMultipleRandom(arrUsers, x);
+         to_like.forEach(function (user) {
+           createLike({ user_id: user, post_id: arrPosts[i] });
+         });
       }
     })
     .catch(function (error) {
       console.log(error);
-    }); 
+    });*/
 }
 
-parsePost()
+//parsePost();
+
+randomizeFollow()

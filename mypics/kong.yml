@@ -100,3 +100,7 @@
      paths:
      - /get_all_users
      strip_path: false
+   - name: get-all-posts
+     paths:
+     - /get_all_posts
+     strip_path: false
