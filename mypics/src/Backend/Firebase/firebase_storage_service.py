@@ -5,7 +5,7 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
 
-cred_obj = credentials.Certificate('mypics/api/labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
+cred_obj = credentials.Certificate('labap-785cc-firebase-adminsdk-gdm5s-736b213798.json')
 default_app = firebase_admin.initialize_app(cred_obj, {'storageBucket': 'labap-785cc.appspot.com'})
 
 

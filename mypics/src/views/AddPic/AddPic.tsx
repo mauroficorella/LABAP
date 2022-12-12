@@ -52,7 +52,7 @@ export default function Homepage() {
     formData.append("image", acceptedFiles[0]);
 
     axios
-      .post("http://localhost:8080/uploadpic", formData, {
+      .post("http://localhost:8000/uploadpic", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(function (response) {

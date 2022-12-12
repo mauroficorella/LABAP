@@ -1,0 +1,12 @@
+comando per buildare: docker build -t nomeservizio .
+comando per runnare: docker run -d --name nomecontainer -p 80:80 nomeservizio
+-> 80:80 è la porta in questo caso ma si possono usare anche altre porte
+-> entrambi vanno runnati dalla cartella root dove si trova il dockerfile
+
+Firebase:
+docker build -t firebaseservice .
+docker run -d --name firebasecontainer -p 80:80 firebaseservice
+
+Neo4j:
+docker build -t socialservice .
+docker run -d --name socialcontainer -p 81:81 socialservice

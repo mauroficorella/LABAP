@@ -2,7 +2,7 @@
 
  services:
  - name: social-api
-   url: http://host.docker.internal:80
+   url: http://host.docker.internal:81
    routes:
    - name: create-remove-post
      paths:
@@ -103,4 +103,11 @@
    - name: get-all-posts
      paths:
      - /get_all_posts
+     strip_path: false
+ - name: firebase-api
+   url: http://host.docker.internal:80
+   routes:
+   - name: upload-pic
+     paths:
+     - /uploadpic
      strip_path: false
