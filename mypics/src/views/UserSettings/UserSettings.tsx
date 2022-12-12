@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
-import React, { useContext } from "react";
+import React from "react";
 import Badge from "@mui/material/Badge";
 import CreateIcon from "@mui/icons-material/Create";
 import Button from "@mui/material/Button";
@@ -14,9 +14,25 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import SettingsForm from "./SettingsForm";
 import { useAuth } from "../../hooks/useAuth";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 
 export default function UserSettings() {
   const { user } = useAuth();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true); //TODO fare 3 cose diverse
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,10 +92,10 @@ export default function UserSettings() {
                     sx={{ mb: 0.5 }}
                     color="#9e9e9e"
                   >
-                    Name
+                    Username
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    TABINDA
+                    {user.username}
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>
@@ -89,11 +105,41 @@ export default function UserSettings() {
                   color="secondary"
                   variant="contained"
                   component="a"
-                  //href="//"
                   sx={{ minWidth: 70, ml: 1 }}
+                  onClick={handleClickOpen}
                 >
                   Edit
                 </Button>
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle color="secondary">Change Username</DialogTitle>
+                  <DialogContent sx={{ minWidth: 500 }}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="username"
+                      label="New username"
+                      type="email"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={handleClose}
+                    >
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
             </Grid>
             <Grid
@@ -118,9 +164,7 @@ export default function UserSettings() {
                     Email
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    {
-                      //SERVE LA MAIL QUI? PERCHE NON SAPREI COME PORTARMI APPRESSO LA MAIL DAL LOGIN VISTO CHE NEL LOGIN INSERIAMO SOLO USERNAME E PASSWORD, QUINDI ANDREBBE PRESA CON UNA QUERY AL DB IN QUESTO CASO
-                    }
+                    {user.email}
                   </Typography>
                   <Divider light sx={{ mb: 1.5 }} />
                 </Container>
@@ -129,12 +173,41 @@ export default function UserSettings() {
                 <Button
                   color="secondary"
                   variant="contained"
-                  component="a"
-                  //href="//"
                   sx={{ minWidth: 70, ml: 1 }}
+                  onClick={handleClickOpen}
                 >
                   Edit
                 </Button>
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle color="secondary">Change Email</DialogTitle>
+                  <DialogContent sx={{ minWidth: 500 }}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="email"
+                      label="New email"
+                      type="email"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={handleClose}
+                    >
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
             </Grid>
             <Grid
@@ -159,7 +232,7 @@ export default function UserSettings() {
                     Password
                   </Typography>
                   <Typography variant="h5" fontSize="15pt" sx={{ mb: 0.5 }}>
-                    **********
+                    {user.password}
                   </Typography>
                   <Divider light />
                 </Container>
@@ -171,9 +244,40 @@ export default function UserSettings() {
                   component="a"
                   //href="//"
                   sx={{ minWidth: 70, ml: 1 }}
+                  onClick={handleClickOpen}
                 >
                   Edit
                 </Button>
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle color="secondary">Change Password</DialogTitle>
+                  <DialogContent sx={{ minWidth: 500 }}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="username"
+                      label="New username"
+                      type="email"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={handleClose}
+                    >
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
             </Grid>
             <Box sx={{ pt: 4, pb: 4 }}></Box>

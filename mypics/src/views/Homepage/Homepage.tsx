@@ -16,59 +16,65 @@ export default function Homepage() {
   //questa cosa serve per portarsi appresso le cose da una pagina all'altra
   const location = useLocation();
 
-  const {user} = useAuth();
+  const { user } = useAuth();
+
+  const [selectedBtn, setSelectedBtn] = React.useState(1);
 
   const showPopularImageList = () => {
-    console.log("Executing showSavedImageList");
     setImageListType("popular");
+    setSelectedBtn(1)
   };
 
   const showFollowedImageList = () => {
-    console.log("Executing showProfileImageList");
     setImageListType("followed");
+    setSelectedBtn(2);
   };
-
-  console.log(user)
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <React.Fragment>
-          <MainAppBar />
-          <main>
-            <Box
-              sx={{
-                bgcolor: "background.paper",
-                pt: 7,
-                pb: 3,
-              }}
-            ></Box>
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                mt: 3,
-                mb: 4,
-              }}
+        <MainAppBar />
+        <main>
+          <Box
+            sx={{
+              bgcolor: "background.paper",
+              pt: 7,
+              pb: 3,
+            }}
+          ></Box>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              mt: 3,
+              mb: 4,
+            }}
+          >
+            <ButtonGroup
+              color="secondary"
+              aria-label="medium secondary button group"
+              size="large"
             >
-              <ButtonGroup
-                variant="contained"
-                color="secondary"
-                aria-label="medium secondary button group"
-                size="large"
+              <Button
+                variant={selectedBtn === 1 ? "contained" : "outlined"}
+                onClick={showPopularImageList}
               >
-                <Button onClick={showPopularImageList}>Popular</Button>
-                <Button onClick={showFollowedImageList}>Following</Button>
-              </ButtonGroup>
-            </Box>
-            <Box sx={{ mr: 3, ml: 3 }}>
-              <MasornyImageList
-                list_type={imageListType}
-                
-              ></MasornyImageList>
-            </Box>
-          </main>
+                Popular
+              </Button>
+              <Button
+                variant={selectedBtn === 2 ? "contained" : "outlined"}
+                onClick={showFollowedImageList}
+              >
+                Following
+              </Button>
+            </ButtonGroup>
+          </Box>
+          <Box sx={{ mr: 3, ml: 3 }}>
+            <MasornyImageList list_type={imageListType}></MasornyImageList>
+          </Box>
+        </main>
       </React.Fragment>
     </ThemeProvider>
   );

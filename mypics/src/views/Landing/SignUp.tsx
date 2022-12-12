@@ -7,10 +7,12 @@ import AppAppBar from "./AppAppBar";
 import AppForm from "./AppForm";
 import withRoot from "./withRoot";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function SignUp() {
   /*const [sent, setSent] = React.useState(false);
@@ -55,6 +57,10 @@ function SignUp() {
     createUser(data)
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
   return (
     <React.Fragment>
       <AppAppBar />
@@ -95,10 +101,24 @@ function SignUp() {
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="new-password"
                 color="secondary"
+                InputProps={{
+                  // <-- This is where the toggle button is added.
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
           </Grid>

@@ -8,6 +8,8 @@ interface UserData {
   username: string;
   user_id: string;
   profile_pic: string;
+  email: string;
+  password: string;
 }
 
 export const AuthProvider = (props: React.HTMLAttributes<HTMLDivElement>) => {

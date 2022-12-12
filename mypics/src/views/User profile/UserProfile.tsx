@@ -26,12 +26,16 @@ export default function Homepage() {
   const [numFollowers, setNumFollowers] = useState("");
   const [numFollowing, setNumFollowing] = useState("");
 
+  const [selectedBtn, setSelectedBtn] = React.useState(1);
+
   const showSavedImageList = () => {
     setImageListType("saved");
+    setSelectedBtn(2);
   };
 
   const showProfileImageList = () => {
     setImageListType("profile");
+    setSelectedBtn(1);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -125,19 +129,26 @@ export default function Homepage() {
             }}
           >
             <ButtonGroup
-              variant="contained"
               color="secondary"
               aria-label="medium secondary button group"
               size="large"
             >
-              <Button onClick={showProfileImageList}>Your Pics</Button>
-              <Button onClick={showSavedImageList}>Saved</Button>
+              <Button
+                variant={selectedBtn === 1 ? "contained" : "outlined"}
+                onClick={showProfileImageList}
+              >
+                Your Pics
+              </Button>
+              <Button
+                variant={selectedBtn === 2 ? "contained" : "outlined"}
+                onClick={showSavedImageList}
+              >
+                Saved
+              </Button>
             </ButtonGroup>
           </Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList
-              list_type={imageListType}
-            ></ImageList>
+            <ImageList list_type={imageListType}></ImageList>
           </Box>
           <Box>
             <br />

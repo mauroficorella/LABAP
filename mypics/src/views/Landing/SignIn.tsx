@@ -11,8 +11,11 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useState } from "react";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function SignIn() {
   //serve per spostarsi da una pagina all'altra
@@ -40,6 +43,8 @@ function SignIn() {
             username: response.data[0].username,
             user_id: response.data[0].user_id,
             profile_pic: response.data[0].profile_pic,
+            email: response.data[0].email,
+            password: response.data[0].password,
           });
         }
       })
@@ -57,6 +62,10 @@ function SignIn() {
     });
     checkUserAndPass(data);
   };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
     <React.Fragment>
@@ -89,10 +98,24 @@ function SignIn() {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
               color="secondary"
+              InputProps={{
+                // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="secondary" />}
