@@ -13,8 +13,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router";
 
 function SignUp() {
+  const navigate = useNavigate();
   /*const [sent, setSent] = React.useState(false);
 
   const validate = (values: { [index: string]: string }) => {
@@ -40,8 +42,12 @@ function SignUp() {
       })
       .then(function (response) {
         console.log(response);
+        //faccio uscire l'alert e poi torno alla pagina di sign in
+        alert("You are successfully registered!")
+        navigate("/sign-in/")
       })
       .catch(function (error) {
+        alert("Registration error, please try again.")
         console.log(error);
       });
   }

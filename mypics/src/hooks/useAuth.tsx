@@ -22,7 +22,7 @@ export const AuthProvider = (props: React.HTMLAttributes<HTMLDivElement>) => {
     setUser(data);
     return navigate("/homepage/");
   };
-
+  
   // call this function to sign out logged in user
   const logout = () => {
     setUser(null);

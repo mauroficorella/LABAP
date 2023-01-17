@@ -20,9 +20,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 export default function UserSettings() {
   const { user } = useAuth();
+
+  //questo serve per usare gli hooks e tornare alla pagina iniziale dopo l'eliminazione dell'account
+  const { logout } = useAuth();
 
   const [open, setOpen] = React.useState(false);
 
@@ -33,6 +37,26 @@ export default function UserSettings() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  //funzione per cancellare l'account tramite una delete con axios e poi ridirezionare l'utente alla pagina iniziale
+  async function deleteUser() {
+    await axios
+      .delete("http://localhost:8000/user/" + user.user_id)
+      .then(function (response) {
+        console.log(response);
+        logout();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  //funzione per fare semplicemente il logout e tornare alla pagina iniziale
+  function logoutUser() {
+    logout();
+  }
+
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -293,7 +317,7 @@ export default function UserSettings() {
                 color="secondary"
                 variant="contained"
                 component="a"
-                //href="//"
+                onClick={logoutUser}
                 sx={{ minWidth: 100 }}
               >
                 Logout
@@ -303,6 +327,7 @@ export default function UserSettings() {
                 variant="contained"
                 component="a"
                 //href="//"
+                onClick={deleteUser}
                 sx={{ minWidth: 180 }}
               >
                 Delete account
