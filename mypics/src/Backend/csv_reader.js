@@ -110,7 +110,7 @@ async function parsePost() {
       console.log(error.message);
     })
     .on("end", function () {
-      for (var i = 140; i < 190; i++) {
+      for (var i = 190; i < 240; i++) {
         unsplash.photos.get({ photoId: data[i].photo_id }).then(function (res) {
           try {
             createPost({
@@ -242,6 +242,6 @@ async function randomizeLike() {
     });*/
 }
 
-//parsePost();
+parsePost();
 
-randomizeFollow()
+//randomizeFollow()
