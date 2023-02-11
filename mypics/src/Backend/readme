@@ -10,3 +10,34 @@ docker run -d --name firebasecontainer -p 80:80 firebaseservice
 Neo4j:
 docker build -t socialservice .
 docker run -d --name socialcontainer -p 81:81 socialservice
+
+Deepdetect:
+comando per runnare: docker run -d -p 8080:8080 -v /path/to/models:/opt/models/ jolibrain/deepdetect_gpu
+comando per aggiungere il servizio: curl -X PUT "http://localhost:8080/services/catsdogs" -d '{
+       "mllib":"caffe",
+       "description":"image classification service",
+       "type":"supervised",
+       "parameters":{
+         "input":{
+           "connector":"image",
+           "width":224,
+           "height":224,
+           "db": true
+         },
+         "mllib":{
+           "template":"se_resnet_50",
+           "nclasses":2,
+       "finetuning":true
+         }
+       },
+       "model":{
+         "templates":"../templates/caffe/",
+         "repository":"/opt/models/cats_dogs",
+     "weight": "SE-ResNet-50.caffemodel"
+       }
+     }'
+
+comando per fare il predict: curl -XPOST "http://localhost:8080/predict" -d
+'{"service":"imageserv","parameters":{"mllib":{"gpu":true},"input":{"width":224,"height":224},"output":{"best":3,"template":"{ {{#body}}{{#predictions}} \"uri\":\"{{uri}}\",\"categories\": [ {{#classes}} { \"category\":\"{{cat}}\",\"score\":{{prob}} } {{^last}},{{/last}}{{/classes}} ] {{/predictions}}{{/body}} }","network":{"url":"http://host.docker.internal:9200/images/img","http_method":"POST"}}},"data":["http://i.ytimg.com/vi/0vxOhd4qlnA/maxresdefault.jpg"]}'
+
+comando per fare la ricerca in base al contenuto (helmet): curl -XGET "http://localhost:9200/images/_search?q=helmet"
