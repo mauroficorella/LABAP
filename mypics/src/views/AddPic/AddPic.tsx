@@ -66,7 +66,7 @@ export default function Homepage() {
 
         axios
           .post("http://localhost:8000/addindex", {
-            img_url: response.data.fb_img_url,
+            img_url: response.data,
           })
           .then(function (response) {
             console.log(response.data);

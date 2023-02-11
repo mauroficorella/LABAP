@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 from fastapi.middleware.cors import CORSMiddleware
+import json
 
 app = FastAPI()
 
@@ -32,7 +33,7 @@ async def add_index(image: Image):
     myobj = {
     "service": "imageserv",
     "parameters": {
-        "mllib": {"gpu": true},
+        "mllib": {"gpu": True},
         "input": {
             "width": 224,
             "height": 224
@@ -50,7 +51,8 @@ async def add_index(image: Image):
         image.img_url
     ]
     }
-    r = requests.post(url = "http://host.docker.internal:8080/predict", json = myobj)
+    jsondata = json.dumps(myobj)
+    r = requests.post("http://host.docker.internal:8080/predict", jsondata)
 
     data = r.json()
     print(data)
