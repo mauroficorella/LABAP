@@ -63,15 +63,28 @@ export default function Homepage() {
         console.log("FBIMGURL: " + fbImgUrl);
         //SALVIAMO IL POST NEL DATABASE DI NEO4J
         savePostInDB(response.data);
+
+        axios
+          .post("http://localhost:8000/addindex", {
+            img_url: response.data.fb_img_url,
+          })
+          .then(function (response) {
+            console.log(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       })
       .catch(function (error) {
         console.log(error);
       });
+    
+    
   }
 
   function savePostInDB(fb_img_url: string) {
     console.log("executing savePostInDB");
-    if (titleValue != "" && descriptionValue != "") {
+    if (titleValue != "") {
       console.log("savePostInDB if");
       axios
         .post("http://localhost:8000/post", {

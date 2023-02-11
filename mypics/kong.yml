@@ -112,3 +112,15 @@
      paths:
      - /uploadpic
      strip_path: false
+ - name: elasticsearch
+   url: http://host.docker.internal:82
+   routes:
+   - name: search
+     paths:
+     - /search
+     strip_path: false
+   routes:
+   - name: add-index
+     paths:
+     - /addindex
+     strip_path: false

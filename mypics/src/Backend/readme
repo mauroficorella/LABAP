@@ -11,6 +11,10 @@ Neo4j:
 docker build -t socialservice .
 docker run -d --name socialcontainer -p 81:81 socialservice
 
+Elasticsearch:
+docker build -t searchservice .
+docker run -d --name searchcontainer -p 82:82 searchservice
+
 Deepdetect:
 comando per runnare: docker run -d -p 8080:8080 -v /path/to/models:/opt/models/ jolibrain/deepdetect_gpu
 comando per aggiungere il servizio: curl -X PUT "http://localhost:8080/services/catsdogs" -d '{

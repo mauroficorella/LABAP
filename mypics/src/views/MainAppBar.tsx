@@ -15,8 +15,8 @@ import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
-
-
+import Button from "@mui/material/Button";
+import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -67,7 +67,19 @@ function HomeIcon(props: SvgIconProps) {
 }
 
 function MainAppBar() {
-  
+  const [searchInput, setSearchInput] = React.useState("");
+
+  const handleSearchInput = async () => {
+    console.log(searchInput);
+    await axios
+      .get("http://localhost:8000/search/" + searchInput)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const navigateTo = useNavigate();
   return (
@@ -114,8 +126,16 @@ function MainAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </Search>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSearchInput}
+          >
+            Search
+          </Button>
         </Box>
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           <IconButton
@@ -136,7 +156,6 @@ function MainAppBar() {
                 navigateTo("/user-settings/", {
                   //COPIARE QUESTA COSA ANCHE SOTTO NELL'ICONA PER ANDARE ALLA PAGINA DELL'UTENTE
                   //IN MODO DA PORTARSI APPRESSO IL NOME DELL'UTENTE DA USARE IN QUELLA PAGINA
-                  
                 });
               }}
             >
