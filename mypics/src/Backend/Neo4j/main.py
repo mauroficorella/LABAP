@@ -797,23 +797,34 @@ async def get_post_info(post_id: str, user_id: str):
 async def get_followage_info(user_id: str):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
-    query = (
+    query1 = (
             "MATCH (u1:User)-[r1:FOLLOWS]->(u2:User) WHERE u2.user_id = $u_id "
-            "WITH count(r1) as num_followers, collect(u1) as followers "
-            "MATCH (u4:User)-[r2:FOLLOWS]->(u3:User) WHERE u4.user_id = $u_id "
-            "RETURN num_followers, count(r2) as num_following, followers, collect(u3) as following"
+            "RETURN count(r1) as num_followers, collect(u1) as followers "
             )
+    query2 = (
+            "MATCH (u1:User)-[r1:FOLLOWS]->(u2:User) WHERE u1.user_id = $u_id "
+            "RETURN count(r1) as num_following, collect(u2) as following "
+            )
+        
     try:
-        result = session.run(query, u_id = user_id)
-        return [{
-                "num_followers": record["num_followers"], 
-                "num_following": record["num_following"], 
-                "followers": record["followers"],
-                "following": record["following"] 
-        } for record in result]
+        result1 = session.run(query1, u_id = user_id)
+        result2 = session.run(query2, u_id = user_id)
+        
+        
+        return [{ "followers_info": [{
+                             "num_followers": record1["num_followers"], 
+                             "followers": record1["followers"]
+                  } for record1 in result1],
+                  "following_info": [{
+                             "num_following": record2["num_following"], 
+                             "following": record2["following"] 
+                  } for record2 in result2]
+        }]
+        
+    
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
-                query=query, exception=exception))
+                query=query1, exception=exception))
             raise
 
 @app.get("/get_all_users")

@@ -69,11 +69,15 @@ export default function Homepage() {
         console.log(response.data[0]);
         setFollowageInfo(response.data[0]);
         setNumFollowers(
-          response.data[0]["num_followers"] == 1
-            ? response.data[0]["num_followers"] + "  Follower"
-            : response.data[0]["num_followers"] + "  Followers"
+          response.data[0]["followers_info"][0]["num_followers"] == 1
+            ? response.data[0]["followers_info"][0]["num_followers"] +
+                "  Follower"
+            : response.data[0]["followers_info"][0]["num_followers"] +
+                "  Followers"
         );
-        setNumFollowing(response.data[0]["num_following"] + "  Following");
+        setNumFollowing(
+          response.data[0]["following_info"][0]["num_following"] + "  Following"
+        );
       });
   }, []);
 
