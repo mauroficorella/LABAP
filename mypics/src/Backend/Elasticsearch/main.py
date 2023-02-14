@@ -28,6 +28,33 @@ async def search(search_input: str):
 
     return data
 
+@app.get("/addservice")
+async def add_service():
+    myobj = {
+    "mllib":"caffe",
+    "description":"image classification service",
+    "type":"supervised",
+    "parameters":{
+    "input":{
+      "connector":"image"
+    },
+    "mllib":{
+      "nclasses":1000
+    }
+    },
+    "model":{
+        "repository":"/opt/models/ggnet/"
+    }
+    }
+    jsondata = json.dumps(myobj)
+    # sending get request and saving the response as response object
+    r = requests.post("http://host.docker.internal:8080/services/imageserv", jsondata)
+    
+    # extracting data in json format
+    data = r.json()
+
+    return data
+
 @app.post("/addindex")
 async def add_index(image: Image):
     myobj = {

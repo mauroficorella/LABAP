@@ -119,8 +119,11 @@
      paths:
      - /search
      strip_path: false
-   routes:
    - name: add-index
      paths:
      - /addindex
+     strip_path: false
+   - name: add-service
+     paths:
+     - /addservice
      strip_path: false

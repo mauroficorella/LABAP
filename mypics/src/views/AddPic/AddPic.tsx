@@ -23,6 +23,8 @@ const MyPaper = styled(Paper)({
   padding: 20,
 });
 
+var firstTime = true; 
+
 export default function Homepage() {
   const [selectedImages, setSelectedImages] = useState([]);
   const [acceptedFiles, setAcceptedFiles] = useState([]);
@@ -44,6 +46,18 @@ export default function Homepage() {
       )
     );
   }, []);
+
+  if (firstTime) {
+    firstTime = false;
+    axios
+      .get("http://localhost:8000/addservice")
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   function handleClick() {
     console.log("called handleClick");
