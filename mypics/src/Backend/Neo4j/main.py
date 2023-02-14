@@ -49,6 +49,10 @@ class PostInfo(BaseModel):
     post_id: str
     user_id: str
 
+class SearchedPost(BaseModel):
+    url_list: list
+    user_id: str
+
 
 app = FastAPI()
 
@@ -865,7 +869,37 @@ async def get_all_posts():
 
 
 
-
+@app.post("/searched_posts")
+async def get_searched_posts(searchedPosts: SearchedPost):
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u1:User)-[:PUBLISHED]->(p:Post) WHERE p.fb_img_url in $urlList "
+            "MATCH (u2:User) WHERE u2.user_id = $u_id "
+            "OPTIONAL MATCH (p)<-[r:LIKES]-(u:User) "
+            "WITH count(r) AS num_likes, u1, p, u2 "
+            "ORDER BY num_likes DESC "
+            "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKES]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
+            )
+    result = session.run(query, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
+    try:
+        return [{"post_id": record["p"]["post_id"],
+                 "fb_img_url": record["p"]["fb_img_url"],
+                 "title": record["p"]["title"],
+                 "description": record["p"]["description"],
+                 "datetime": record["p"]["datetime"],
+                 "user_id":record["u1"]["user_id"],
+                 "username":record["u1"]["username"],
+                 "profile_pic":record["u1"]["profile_pic"],
+                 "num_likes":record["num_likes"],
+                 "published":record["published"],
+                 "liked":record["liked"],
+                 "saved":record["saved"]} for record in result]
+                 
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
 
 
 

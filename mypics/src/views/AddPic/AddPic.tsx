@@ -23,7 +23,7 @@ const MyPaper = styled(Paper)({
   padding: 20,
 });
 
-var firstTime = true; 
+var firstTime = true;
 
 export default function Homepage() {
   const [selectedImages, setSelectedImages] = useState([]);
@@ -37,7 +37,7 @@ export default function Homepage() {
   const onDrop = useCallback((acceptedFiles: any) => {
     // ! link che fa vedere come si fa a passare parametri dal figlio al padre, magari torna utile: https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent
     setAcceptedFiles(acceptedFiles);
-    console.log(acceptedFiles[0].name);
+    console.log(acceptedFiles);
     setSelectedImages(
       acceptedFiles.map((file: any) =>
         Object.assign(file, {
@@ -92,8 +92,6 @@ export default function Homepage() {
       .catch(function (error) {
         console.log(error);
       });
-    
-    
   }
 
   function savePostInDB(fb_img_url: string) {

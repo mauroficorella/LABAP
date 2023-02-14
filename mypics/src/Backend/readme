@@ -16,7 +16,8 @@ docker build -t searchservice .
 docker run -d --name searchcontainer -p 82:82 searchservice
 
 Deepdetect:
-comando per runnare: docker run -d -p 8080:8080 -v /path/to/models:/opt/models/ jolibrain/deepdetect_gpu
+comando per istallare: docker pull jolibrain/deepdetect_cpu
+comando per runnare: docker run -d -p 8080:8080 jolibrain/deepdetect_cpu
 comando per aggiungere il servizio: curl -X PUT 'http://localhost:8080/services/imageserv' -d
 '{
     "description": "image classification service",
