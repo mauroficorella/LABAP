@@ -17,6 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -67,12 +68,17 @@ function HomeIcon(props: SvgIconProps) {
 }
 
 function MainAppBar() {
+  const { user } = useAuth();
   const [searchInput, setSearchInput] = React.useState("");
 
   const handleSearchInput = async () => {
     console.log(searchInput);
     await axios
-      .get("http://localhost:8000/search/" + searchInput)
+      .post("http://localhost:8000/search/", {
+        searchInput: searchInput,
+        user_id: user.user_id,
+      })
+
       .then(function (response) {
         console.log(response.data);
       })
