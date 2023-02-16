@@ -18,19 +18,19 @@ export default function MasornyImageList(props: ImageListProps) {
   const { user } = useAuth();
   var url: string;
 
-  axios
-    .post("http://localhost:8000/search/", {
-      searchInput: props.searchInput,
-      user_id: user.user_id,
-    })
-
-    .then(function (response) {
-      
-      setItemData(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  useEffect(() => {
+    axios
+      .post("http://localhost:8000/search/", {
+        searchInput: props.searchInput,
+        user_id: user.user_id,
+      })
+      .then(function (response) {
+        setItemData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [props.searchInput]);
 
   return (
     <ImageList
