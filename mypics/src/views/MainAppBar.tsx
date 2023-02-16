@@ -1,6 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import { Link as LinkButton } from "react-router-dom";
 import AppBar from "../components/Landing/AppBar";
 import Toolbar from "../components/Landing/Toolbar";
 import { alpha, styled } from "@mui/material/styles";
@@ -70,8 +71,11 @@ function HomeIcon(props: SvgIconProps) {
 function MainAppBar() {
   const { user } = useAuth();
   const [searchInput, setSearchInput] = React.useState("");
+  const [searchResultImageList, setSearchResultImageList] = React.useState<
+    any[]
+  >([]);
 
-  const handleSearchInput = async () => {
+  /*const handleSearchInput = async () => {
     console.log(searchInput);
     await axios
       .post("http://localhost:8000/search/", {
@@ -81,11 +85,12 @@ function MainAppBar() {
 
       .then(function (response) {
         console.log(response.data);
+        setSearchResultImageList(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  };
+  };*/
 
   const navigateTo = useNavigate();
   return (
@@ -136,9 +141,11 @@ function MainAppBar() {
             />
           </Search>
           <Button
+            component={LinkButton}
+            to="/searchpage"
+            state={searchInput}
             variant="contained"
             color="secondary"
-            onClick={handleSearchInput}
           >
             Search
           </Button>

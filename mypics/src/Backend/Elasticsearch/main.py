@@ -29,11 +29,15 @@ async def search(search_params: SearchParams):
     
     # extracting data in json format
     data = r.json()
-    #print(data["hits"])
+    
+    print(data["hits"])
+    
     arr = []
     for elem in data["hits"]["hits"]:
         arr.append(elem["_source"]["uri"])
-    #print(arr)
+    
+    print("ARRAY---------")
+    print(arr)
 
     myobj = {
         "url_list": arr,
@@ -105,5 +109,4 @@ async def add_index(image: Image):
     print(data)
 
     return data
-
 

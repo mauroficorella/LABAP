@@ -9,6 +9,7 @@ import Home from "./views/Landing/Home";
 import SignIn from "./views/Landing/SignIn";
 import SignUp from "./views/Landing/SignUp";
 import Pic from "./views/Pic";
+import SearchPage from "./views/Search/SearchPage";
 import UserProfile from "./views/User profile/UserProfile";
 import UserSettings from "./views/UserSettings/UserSettings";
 
@@ -46,6 +47,14 @@ function App() {
         />
         <Route path="/pic/" element={<Pic />} />
         <Route path="/add-pic/" element={<AddPic />} />
+        <Route
+          path="/searchpage/"
+          element={
+            <ProtectedRoute>
+              <SearchPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

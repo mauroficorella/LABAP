@@ -882,8 +882,10 @@ async def get_searched_posts(searchedPosts: SearchedPost):
             "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKES]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
             )
     result = session.run(query, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
+    print(result)
+    print(searchedPosts.url_list)
     try:
-        return [{"post_id": record["p"]["post_id"],
+        result_value = [{"post_id": record["p"]["post_id"],
                  "fb_img_url": record["p"]["fb_img_url"],
                  "title": record["p"]["title"],
                  "description": record["p"]["description"],
@@ -895,6 +897,8 @@ async def get_searched_posts(searchedPosts: SearchedPost):
                  "published":record["published"],
                  "liked":record["liked"],
                  "saved":record["saved"]} for record in result]
+        print(result_value)
+        return result_value
                  
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
@@ -902,6 +906,28 @@ async def get_searched_posts(searchedPosts: SearchedPost):
             raise
 
 
+
+@app.get("/get_all_posts_urls")
+async def get_all_posts_urls(): #quando creo un post devo creare sia il nodo Post, ma anche la relazione "Published" con l'utente che ha creato il post
+                                   #quindi invece di Post posso chiamarlo PublishedPost ed aggiungere il parametro "user_id", che mi servirà per aggiungere la relazione
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (p) WHERE p:Post "
+            "RETURN p"
+            )
+
+    result = session.run(query)
+    try:
+        return [{"fb_img_url": record["p"]["fb_img_url"]} 
+                    for record in result]
+        #avrei potuto scrivere anche solo record["post_id"], quindi senza ["p"],
+        #ma l'ho lasciato perché utile vedere come si fa quando la query ritorna più cose,
+        #quindi nel caso in cui nella query c'è RETURN p1,p2 invece che semplicement RETURN p
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise   
 
 
 

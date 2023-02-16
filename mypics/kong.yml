@@ -101,14 +101,18 @@
      paths:
      - /get_all_users
      strip_path: false
-   - name: get-all-posts
+   - name: get-all-posts-urls
      paths:
-     - /get_all_posts
+     - /get_all_posts_urls
      strip_path: false
    - name: searched-posts
      paths:
      - /searched_posts
      strip_path: false
+   - name: get-all-posts
+     paths:
+     - /get_all_posts
+     strip_path: false     
  - name: firebase-api
    url: http://host.docker.internal:80
    routes:
