@@ -34,7 +34,8 @@ async def search(search_params: SearchParams):
     
     arr = []
     for elem in data["hits"]["hits"]:
-        arr.append(elem["_source"]["uri"])
+        arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
+
     
     print("ARRAY---------")
     print(arr)
@@ -81,6 +82,8 @@ async def add_service():
 
 @app.post("/addindex")
 async def add_index(image: Image):
+    print("---------------IMG URL---------------")
+    print(image.img_url)
     myobj = {
     "service": "imageserv",
     "parameters": {
