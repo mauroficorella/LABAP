@@ -44,3 +44,27 @@ comando per fare il predict: curl -XPOST "http://localhost:8080/predict" -d
 '{"service":"imageserv","parameters":{"mllib":{"gpu":true},"input":{"width":224,"height":224},"output":{"best":3,"template":"{ {{#body}}{{#predictions}} \"uri\":\"{{uri}}\",\"categories\": [ {{#classes}} { \"category\":\"{{cat}}\",\"score\":{{prob}} } {{^last}},{{/last}}{{/classes}} ] {{/predictions}}{{/body}} }","network":{"url":"http://host.docker.internal:9200/images/img","http_method":"POST"}}},"data":["http://i.ytimg.com/vi/0vxOhd4qlnA/maxresdefault.jpg"]}'
 
 comando per fare la ricerca in base al contenuto (helmet): curl -XGET "http://localhost:9200/images/_search?q=helmet"
+
+query elasticsearch per filtrare in base allo score:
+GET /images/_search?
+{
+  "query": {
+    "bool" : {
+      "must" : [
+          {
+            "match" : {
+              "categories.category": "cat"
+            }
+          },
+          {
+            "range": {
+              "categories.score": {
+                "gte": 0.5,
+                "lte": 1
+              }
+            }
+          }
+        ]
+    }
+  }
+}

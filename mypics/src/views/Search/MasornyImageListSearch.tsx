@@ -20,7 +20,7 @@ export default function MasornyImageList(props: ImageListProps) {
 
   useEffect(() => {
     axios
-      .post("http://localhost:8000/search/", {
+      .post("http://localhost:8000/search", {
         searchInput: props.searchInput,
         user_id: user.user_id,
       })
