@@ -44,16 +44,16 @@ export default function Homepage() {
 
   const handleClickOpenFollowers = () => {
     setOpen(true);
-    setSelectedValue(followageInfo.followers);
+    setSelectedValue(followageInfo["followers_info"][0]["followers"]);
     setSelectedTitle("People following you:");
-    console.log(followageInfo.followers);
+    console.log(followageInfo["followers_info"][0]["followers"]);
   };
 
   const handleClickOpenFollowing = () => {
     setOpen(true);
-    setSelectedValue(followageInfo.following);
+    setSelectedValue(followageInfo["following_info"][0]["following"]);
     setSelectedTitle("People you follow:");
-    console.log(followageInfo.following);
+    console.log(followageInfo["following_info"][0]["following"]);
   };
 
   const handleClose = (value: any[]) => {
