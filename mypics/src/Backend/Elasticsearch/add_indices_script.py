@@ -3,6 +3,9 @@ import requests
 
 
 def run_script():
+
+    requests.get("http://host.docker.internal:82/addservice")
+
     print("ciao")
     r1 = requests.get(url = "http://host.docker.internal:9200/images/_search")
     data1 = r1.json()
