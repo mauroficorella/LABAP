@@ -14,7 +14,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -23,13 +22,8 @@ import MainAppBar from "./MainAppBar";
 import { useLocation } from "react-router";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import {
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import Link from "@mui/material/Link";
+import { List, ListItem, ListItemText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useAuth } from "../hooks/useAuth";
@@ -299,42 +293,87 @@ export default function Pic() {
                                 }}
                                 alignItems="flex-start"
                               >
-                                <ListItemAvatar>
-                                  <Avatar src={comment.profile_pic}></Avatar>
-                                </ListItemAvatar>
                                 <ListItemText
-                                  primary={comment.username}
+                                  primary={
+                                    <React.Fragment>
+                                      <Container
+                                        sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          ml: -3,
+                                          mb: 2,
+                                          justifyContent: "space-between",
+                                        }}
+                                      >
+                                        <Link href="/user-profile/">
+                                          <Container
+                                            sx={{
+                                              display: "flex",
+                                              alignItems: "center",
+                                              ml: -3,
+                                            }}
+                                          >
+                                            <Avatar
+                                              sx={{
+                                                color: "action.active",
+                                                mr: 2,
+                                                fontSize: 40,
+                                              }}
+                                              src={comment.profile_pic}
+                                            ></Avatar>
+                                            <Typography
+                                              sx={{ display: "inline" }}
+                                              component={"span"}
+                                              variant="body1"
+                                            >
+                                              {comment.username}
+                                            </Typography>
+                                          </Container>
+                                        </Link>
+                                        <Box
+                                          sx={{
+                                            mr: -5,
+                                          }}
+                                        >
+                                          {comment.published_comment ? (
+                                            <IconButton aria-label="comment">
+                                              <DeleteIcon />
+                                            </IconButton>
+                                          ) : (
+                                            <div></div>
+                                          )}
+                                        </Box>
+                                      </Container>
+                                    </React.Fragment>
+                                  }
                                   secondary={
                                     <React.Fragment>
-                                      <Typography
-                                        sx={{ display: "inline" }}
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
-                                      >
-                                        {comment.comment_text}
-                                      </Typography>
-                                      <Typography
-                                        sx={{ display: "inline" }}
-                                        component={"span"}
-                                      >
-                                        {parseDate(comment.datetime)}
-                                      </Typography>
+                                      <Box sx={{ mb: 1 }}>
+                                        <Typography
+                                          sx={{ display: "inline" }}
+                                          component="span"
+                                          variant="body1"
+                                          color="text.primary"
+                                          align="justify"
+                                        >
+                                          {comment.comment_text}
+                                        </Typography>
+                                      </Box>
+                                      <Box>
+                                        <Typography
+                                          sx={{ display: "inline" }}
+                                          component={"span"}
+                                          variant="body2"
+                                        >
+                                          {parseDate(comment.datetime)}
+                                        </Typography>
+                                      </Box>
                                     </React.Fragment>
                                   }
                                   sx={{
                                     width: "100",
                                   }}
                                 />
-                                <ListItemIcon>
-                                  {comment.published_comment ? (
-                                    <IconButton aria-label="comment">
-                                      <DeleteIcon />
-                                    </IconButton>
-                                  ) : (
-                                    <div></div>
-                                  )}
-                                </ListItemIcon>
                               </ListItem>
                             )
                           )
