@@ -15,6 +15,10 @@ Elasticsearch:
 docker build -t searchservice .
 docker run -d --name searchcontainer -p 82:82 searchservice
 
+Index:
+docker build -t indexservice .
+docker run -d --name indexcontainer -p 83:83 indexservice
+
 Deepdetect:
 comando per istallare: docker pull jolibrain/deepdetect_cpu
 comando per runnare: docker run -d -p 8080:8080 jolibrain/deepdetect_cpu
