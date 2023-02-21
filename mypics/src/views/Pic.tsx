@@ -27,6 +27,7 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useAuth } from "../hooks/useAuth";
+import Button from "@mui/material/Button";
 
 const MyPaper = styled(Paper)({
   borderRadius: 20,
@@ -77,9 +78,11 @@ export default function Pic() {
   console.log("🚀 ~ file: Pic.tsx ~ line 34 ~ Pic ~ state", state);
 
   const [itemData, setItemData] = useState<{ [key: string]: any }>({});
+  const [comments, setComments] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
   const [liked, setLiked] = useState(state.liked);
   const [saved, setSaved] = useState(state.saved);
+  const [commentText, setCommentText] = useState("");
 
   const addOrRemoveLike = () => {
     liked ? setLiked(false) : setLiked(true);
@@ -111,6 +114,39 @@ export default function Pic() {
       });
   };
 
+  const handlePublish = () => {
+    axios
+      .post("http://localhost:8000/comment", {
+        user_id: user.user_id,
+        post_id: state.post_id,
+        comment_text: commentText,
+      })
+      .then(function (response) {
+        console.log(response.data);
+        console.log(response.data[0]);
+
+        setComments([...comments, response.data[0]]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const handleDeleteComment = (comment_id: String) => {
+    axios
+      .delete("http://localhost:8000/comment/" + comment_id)
+      .then(function (response) {
+        console.log(response.data);
+        console.log(response.data[0]);
+        //TODO: FAR USCIRE L'ALERT PRIMA DI CANGELLARE IL COMMENTO
+        setComments(
+          comments.filter((item: any) => item.comment_id !== comment_id)
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   /*const StyledFavoriteIcon = styled(FavoriteIcon, {
     name: "StyledFavoriteIcon",
   })({
@@ -120,13 +156,16 @@ export default function Pic() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/postinfo/" + state.post_id + "/abcdef95")
+      .get(
+        "http://localhost:8000/postinfo/" + state.post_id + "/" + user.user_id
+      )
       .then((response) => {
         setItemData(response.data[0]);
         console.log(response.data[0]);
         console.log(response.data[0].datetime);
         console.log("COMMENTS");
         console.log(response.data[0].comments);
+        setComments(response.data[0].comments);
         console.log("-------------------STATE-----------------");
         console.log(state);
         setLoading(false); //stop loading when data is fetched
@@ -238,7 +277,21 @@ export default function Pic() {
                       variant="outlined"
                       size="small"
                       fullWidth
+                      multiline
+                      onChange={(newValue) =>
+                        setCommentText(newValue.target.value)
+                      }
                     />
+                    <Box sx={{ ml: 1 }}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        //size="small"
+                        onClick={handlePublish}
+                      >
+                        Publish
+                      </Button>
+                    </Box>
                   </Container>
                   <Container
                     sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
@@ -267,11 +320,13 @@ export default function Pic() {
                         sx={{
                           width: "100%",
                           maxWidth: "100%",
+                          height: "500px",
                           bgcolor: "background.paper",
+                          overflowY: "scroll",
                         }}
                       >
-                        {itemData.comments ? ( //TODO: non funziona questo check perché quando i commenti non ci sono "comments" non c'è proprio nei dati ritrnati dal backend, capire come fare questo check
-                          itemData.comments.map(
+                        {comments ? ( //TODO: non funziona questo check perché quando i commenti non ci sono "comments" non c'è proprio nei dati ritrnati dal backend, capire come fare questo check
+                          comments.map(
                             (comment: {
                               comment_id: string;
                               comment_text: string;
@@ -336,7 +391,14 @@ export default function Pic() {
                                           }}
                                         >
                                           {comment.published_comment ? (
-                                            <IconButton aria-label="comment">
+                                            <IconButton
+                                              aria-label="comment"
+                                              onClick={() =>
+                                                handleDeleteComment(
+                                                  comment.comment_id
+                                                )
+                                              }
+                                            >
                                               <DeleteIcon />
                                             </IconButton>
                                           ) : (

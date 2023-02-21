@@ -68,3 +68,69 @@ GET /images/_search?
     }
   }
 }
+
+
+GET /images/_search?
+{
+  "query": {
+    "nested": {
+      "path": "categories",
+      "query": {
+        "bool": {
+          "must": [
+            { "match": {
+              "categories.category": "cat"
+            }},
+            { "range": {
+              "categories.score": {
+                "gte": 0.5,
+                "lte": 1.0
+              }
+            }}
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+https://stackoverflow.com/questions/60620921/elasticsearch-filter-by-multiple-fields-in-an-object-which-is-in-an-array-field
+
+
+
+PUT /images/_mapping
+{
+  "images": {
+    "mappings": {
+      "properties": {
+        "categories": {
+          "type": "nested",
+          "properties": {
+            "category": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "score": {
+              "type": "float"
+            }
+          }
+        },
+        "uri": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -222,11 +222,11 @@ async def create_comment(comment: Comment):
             "CREATE (c:Comment { comment_id: $c_id, comment_text: $c_text, datetime: localdatetime({timezone: 'Europe/Rome'}) }) "
             "CREATE (u)-[:COMMENTED]->(c) "
             "CREATE (c)-[:COMMENT_ON]->(p) "
-            "RETURN c"
+            "RETURN c, u"
             )
     result = session.run(query, c_id = str(uuid.uuid4()), c_text = comment.comment_text, u_id = comment.user_id, p_id = comment.post_id)
     try:
-        return [{"comment_id": record["c"]["comment_id"], "comment_text": record["c"]["comment_text"],"datetime":record["c"]["datetime"]} 
+        return [{"comment_id": record["c"]["comment_id"], "comment_text": record["c"]["comment_text"],"datetime":record["c"]["datetime"], "user_id":record["u"]["user_id"], "username":record["u"]["username"], "profile_pic":record["u"]["profile_pic"], "published_comment":True} 
                     for record in result]
 
     except Neo4jError as exception:

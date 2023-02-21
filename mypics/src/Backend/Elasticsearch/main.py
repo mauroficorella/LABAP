@@ -34,7 +34,14 @@ async def search(search_params: SearchParams):
     
     arr = []
     for elem in data["hits"]["hits"]:
-        arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
+        categories = elem["_source"]["categories"]
+        hasHighScore = False
+        for cat in categories:
+            if search_params.searchInput in cat["category"] and cat["score"] >= 0.2:
+                hasHighScore = True
+        
+        if(hasHighScore):
+            arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
 
     
     print("ARRAY---------")
