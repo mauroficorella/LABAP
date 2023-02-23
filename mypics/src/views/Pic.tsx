@@ -22,7 +22,7 @@ import MainAppBar from "./MainAppBar";
 import { useLocation } from "react-router";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import { List, ListItem, ListItemText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -202,23 +202,27 @@ export default function Pic() {
                       flexDirection: "column",
                     }}
                   >
-                    <CardHeader
-                      avatar={
-                        <Avatar
-                          sx={{ bgcolor: red[500], width: 72, height: 72 }}
-                          aria-label="recipe"
-                          src={state.profile_pic}
-                        ></Avatar>
-                      }
-                      title={state.username}
-                      subheader={parseDate(state.datetime)}
-                    />
+                    <Link
+                      to="/user-profile/"
+                      state={state.user_id}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ bgcolor: red[500], width: 72, height: 72 }}
+                            aria-label="recipe"
+                            src={state.profile_pic}
+                          ></Avatar>
+                        }
+                        title={state.username}
+                        subheader={parseDate(state.datetime)}
+                      />
+                    </Link>
                     <CardMedia
                       component="img"
                       image={state.fb_img_url}
                       alt="random"
-                      //height="250"
-                      //sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
                     />
                   </Card>
                 </Grid>
@@ -360,7 +364,14 @@ export default function Pic() {
                                           justifyContent: "space-between",
                                         }}
                                       >
-                                        <Link href="/user-profile/">
+                                        <Link
+                                          to="/user-profile/"
+                                          state={comment.user_id}
+                                          style={{
+                                            color: "black",
+                                            textDecoration: "none",
+                                          }}
+                                        >
                                           <Container
                                             sx={{
                                               display: "flex",

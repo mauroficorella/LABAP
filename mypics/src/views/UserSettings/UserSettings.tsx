@@ -310,7 +310,7 @@ export default function UserSettings() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                width: "80%",
+                width: "92%",
               }}
             >
               <Button

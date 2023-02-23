@@ -11,6 +11,7 @@ import { useAuth } from "../../hooks/useAuth";
 //source: https://bobbyhadz.com/blog/react-parameter-props-implicitly-has-an-any-type#:~:text=The%20React.,props%20object%20in%20your%20components.
 interface ImageListProps {
   list_type: string;
+  user_id: string;
 }
 
 export default function StandardImageList(props: ImageListProps) {
@@ -19,18 +20,20 @@ export default function StandardImageList(props: ImageListProps) {
   const [itemData, setItemData] = useState<any[]>([]);
   var url: string;
 
-  if (props.list_type == "profile") {
-    url = "http://localhost:8000/published/" + user.user_id;
-  } else if (props.list_type == "saved") {
-    url = "http://localhost:8000/saved/" + user.user_id;
-  }
-
   useEffect(() => {
+    console.log(props.user_id)
+
+    if (props.list_type == "profile") {
+      url = "http://localhost:8000/published/" + props.user_id;
+    } else if (props.list_type == "saved") {
+      url = "http://localhost:8000/saved/" + props.user_id;
+    }
+
     axios.get(url).then((response) => {
       setItemData(response.data);
       console.log(response.data);
     });
-  }, [props.list_type]);
+  }, [props]);
 
   return (
     <ImageList
@@ -65,9 +68,3 @@ export default function StandardImageList(props: ImageListProps) {
     </ImageList>
   );
 }
-
-/*<ImageListItemBar
-              title={item.description}
-              subtitle={<span>by: {item.username}</span>}
-              //position="below"
-            />*/

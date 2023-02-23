@@ -211,6 +211,25 @@ async def delete_user(user_id: str):
             raise
 
 
+@app.get("/user/{user_id}")
+async def get_user_info(user_id: str): 
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "RETURN u"
+            )
+    try:
+       result = session.run(query, u_id = user_id)
+       return [{"user_id": record["u"]["user_id"], "profile_pic": record["u"]["profile_pic"],"username":record["u"]["username"]} 
+                    for record in result]
+
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+
 
 @app.post("/comment")
 async def create_comment(comment: Comment): 

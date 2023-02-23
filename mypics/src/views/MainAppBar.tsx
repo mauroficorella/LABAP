@@ -70,6 +70,7 @@ function HomeIcon(props: SvgIconProps) {
 
 function MainAppBar() {
   const { user } = useAuth();
+
   const [searchInput, setSearchInput] = React.useState("");
   const [searchResultImageList, setSearchResultImageList] = React.useState<
     any[]
@@ -175,24 +176,23 @@ function MainAppBar() {
               <SettingsIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Profile">
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-haspopup="true"
-              color="inherit"
-              onClick={() => {
-                return navigateTo("/user-profile/", {
-                  //COPIARE QUESTA COSA ANCHE SOTTO NELL'ICONA PER ANDARE ALLA PAGINA DELL'UTENTE
-                  //IN MODO DA PORTARSI APPRESSO IL NOME DELL'UTENTE DA USARE IN QUELLA PAGINA
-                  //state: { username: props.username, user_id: props.user_id, profile_pic: props.profile_pic},
-                });
-              }}
-            >
-              <AccountCircle />
-            </IconButton>
-          </Tooltip>
+          <LinkButton
+            to="/user-profile/"
+            state={user.user_id}
+            style={{ color: "white" }}
+          >
+            <Tooltip title="Profile">
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </Tooltip>
+          </LinkButton>
         </Box>
       </Toolbar>
     </AppBar>

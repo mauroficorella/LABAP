@@ -65,7 +65,7 @@ export function StyledDropzone(props: StyledDropzoneProps) {
         <FileUploadIcon sx={{ fontSize: 50 }} color="secondary" />
         <h3>Drag and drop your pic here</h3>
         <p>(Only *.jpg or *.png image)</p>
-        <Box sx={{ pt: 7, pb: 3 }}>{selected_pic}</Box>;
+        <Box sx={{ pt: 7, pb: 3 }}>{selected_pic}</Box>
       </Container>      
     </div>
   );

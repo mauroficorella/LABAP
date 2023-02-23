@@ -7,7 +7,7 @@ import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import { blue } from "@mui/material/colors";
-
+import { Link } from "react-router-dom";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -32,21 +32,27 @@ export default function SimpleDialog(props: SimpleDialogProps) {
       <DialogTitle>{title}</DialogTitle>
       <List sx={{ pt: 0, m: 3, width: 300 }}>
         {selectedValue?.map((user) => (
-          <ListItem
-            button
-            onClick={() => handleListItemClick(selectedValue)}
-            key={user.user_id}
-            sx={{ p: 1.5 }}
-            alignItems="center"
+          <Link
+            to="/user-profile/"
+            state={user.user_id}
+            style={{ color: "black", textDecoration: "none" }}
           >
-            <ListItemAvatar>
-              <Avatar
-                sx={{ bgcolor: blue[100], color: blue[600] }}
-                src={user.profile_pic}
-              ></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={user.username} />
-          </ListItem>
+            <ListItem
+              button
+              onClick={() => handleListItemClick(selectedValue)}
+              key={user.user_id}
+              sx={{ p: 1.5 }}
+              alignItems="center"
+            >
+              <ListItemAvatar>
+                <Avatar
+                  sx={{ bgcolor: blue[100], color: blue[600] }}
+                  src={user.profile_pic}
+                ></Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={user.username} />
+            </ListItem>
+          </Link>
         ))}
       </List>
     </Dialog>

@@ -15,9 +15,12 @@ import TitlebarBelowImageList from "./StandardImageList";
 import SimpleDialog from "./SimpleDialog";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
+import { useLocation } from "react-router-dom";
 
-export default function Homepage() {
+export default function UserProfile() {
   const { user } = useAuth();
+
+  const location = useLocation();
 
   const [imageListType, setImageListType] = useState("profile");
   const [followageInfo, setFollowageInfo] = useState<{ [key: string]: any }>(
@@ -27,6 +30,8 @@ export default function Homepage() {
   const [numFollowing, setNumFollowing] = useState("");
 
   const [selectedBtn, setSelectedBtn] = React.useState(1);
+
+  const [followBtn, setFollowBtn] = React.useState(false); //False --> Follow, True --> Unfollow
 
   const showSavedImageList = () => {
     setImageListType("saved");
@@ -38,9 +43,18 @@ export default function Homepage() {
     setSelectedBtn(1);
   };
 
+  const handleFollowBtn = () => {
+    setFollowBtn(!followBtn);
+    axios.post("http://localhost:8000/follows", {
+      user_id1: user.user_id,
+      user_id2: userData.user_id,
+    });
+  };
+
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState([]);
   const [selectedTitle, setSelectedTitle] = React.useState("");
+  const [userData, setUserData] = React.useState<{ [key: string]: any }>({});
 
   const handleClickOpenFollowers = () => {
     setOpen(true);
@@ -62,24 +76,54 @@ export default function Homepage() {
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/followageinfo/" + user.user_id)
-      .then((response) => {
-        console.log("_________RESPONSE____________");
-        console.log(response.data[0]);
-        setFollowageInfo(response.data[0]);
-        setNumFollowers(
-          response.data[0]["followers_info"][0]["num_followers"] == 1
-            ? response.data[0]["followers_info"][0]["num_followers"] +
-                "  Follower"
-            : response.data[0]["followers_info"][0]["num_followers"] +
-                "  Followers"
-        );
-        setNumFollowing(
-          response.data[0]["following_info"][0]["num_following"] + "  Following"
-        );
+    if (location.state != user.user_id) {
+      axios
+        .get("http://localhost:8000/user/" + location.state)
+        .then((response) => {
+          //console.log("_________RESPONSE____________");
+          setUserData(response.data[0]);
+          //getFollowerInfo();
+        });
+    } else {
+      setUserData({
+        user_id: user.user_id,
+        username: user.username,
+        profile_pic: user.profile_pic,
       });
-  }, []);
+      //getFollowerInfo();
+    }
+    console.log(userData);
+  }, [location.state]);
+
+  useEffect(() => {
+    if (Object.keys(userData).length > 0) {
+      axios
+        .get("http://localhost:8000/followageinfo/" + userData.user_id)
+        .then((response) => {
+          console.log("_________RESPONSE____________");
+          console.log(response.data[0]);
+          setFollowageInfo(response.data[0]);
+          setNumFollowers(
+            response.data[0]["followers_info"][0]["num_followers"] == 1
+              ? response.data[0]["followers_info"][0]["num_followers"] +
+                  "  Follower"
+              : response.data[0]["followers_info"][0]["num_followers"] +
+                  "  Followers"
+          );
+          setNumFollowing(
+            response.data[0]["following_info"][0]["num_following"] +
+              "  Following"
+          );
+          response.data[0]["followers_info"][0]["followers"].forEach(
+            (follower: { user_id: any }) => {
+              if (follower.user_id == user.user_id) {
+                setFollowBtn(true);
+              }
+            }
+          );
+        });
+    }
+  }, [userData, followBtn]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,7 +135,7 @@ export default function Homepage() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Avatar
               alt="Remy Sharp"
-              src={user.profile_pic}
+              src={userData.profile_pic}
               sx={{ width: 128, height: 128 }}
             />
           </Box>{" "}
@@ -101,7 +145,7 @@ export default function Homepage() {
             variant="h5"
             sx={{ mb: 2, mt: { sx: 1, sm: 2 } }}
           >
-            {user.username}
+            {userData.username}
           </Typography>
           <Container
             sx={{
@@ -132,27 +176,42 @@ export default function Homepage() {
               mb: 5,
             }}
           >
-            <ButtonGroup
-              color="secondary"
-              aria-label="medium secondary button group"
-              size="large"
-            >
-              <Button
-                variant={selectedBtn === 1 ? "contained" : "outlined"}
-                onClick={showProfileImageList}
+            {" "}
+            {userData.user_id == user.user_id ? (
+              <ButtonGroup
+                color="secondary"
+                aria-label="medium secondary button group"
+                size="large"
               >
-                Your Pics
-              </Button>
+                <Button
+                  variant={selectedBtn === 1 ? "contained" : "outlined"}
+                  onClick={showProfileImageList}
+                >
+                  Your Pics
+                </Button>
+                <Button
+                  variant={selectedBtn === 2 ? "contained" : "outlined"}
+                  onClick={showSavedImageList}
+                >
+                  Saved
+                </Button>
+              </ButtonGroup>
+            ) : (
               <Button
-                variant={selectedBtn === 2 ? "contained" : "outlined"}
-                onClick={showSavedImageList}
+                variant="contained"
+                color="secondary"
+                onClick={handleFollowBtn}
               >
-                Saved
+                {" "}
+                {followBtn ? "Unfollow" : "Follow"}
               </Button>
-            </ButtonGroup>
+            )}
           </Box>
           <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList list_type={imageListType}></ImageList>
+            <ImageList
+              list_type={imageListType}
+              user_id={userData.user_id}
+            ></ImageList>
           </Box>
           <Box>
             <br />
