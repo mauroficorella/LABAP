@@ -92,6 +92,7 @@ export default function Pic() {
   const [isLoading, setLoading] = useState(true);
   const [liked, setLiked] = useState(state.liked);
   const [saved, setSaved] = useState(state.saved);
+  const [published, setPublished] = useState(state.published);
   const [commentText, setCommentText] = useState("");
 
   const addOrRemoveLike = () => {
@@ -278,9 +279,20 @@ export default function Pic() {
                           <BookmarkBorderIcon></BookmarkBorderIcon>
                         )}
                       </IconButton>
-                      {
-                        
-                      }
+                      {published ? (
+                        <IconButton
+                          aria-label="more"
+                          id="long-button"
+                          aria-controls={open ? "long-menu" : undefined}
+                          aria-expanded={open ? "true" : undefined}
+                          aria-haspopup="true"
+                          onClick={handleClick}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      ) : (
+                        <Box/>
+                      )}
                       <IconButton
                         aria-label="more"
                         id="long-button"
