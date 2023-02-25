@@ -110,7 +110,7 @@ async function parsePost() {
       console.log(error.message);
     })
     .on("end", function () {
-      for (var i = 390; i < 440; i++) {
+      for (var i = 440; i < 490; i++) {
         unsplash.photos.get({ photoId: data[i].photo_id }).then(function (res) {
           try {
             createPost({

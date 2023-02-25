@@ -12,9 +12,9 @@ def run_script():
     
     arr = []
     print(data1)
-    if not(data1["error"]):
-        for elem in data1["hits"]["hits"]:
-            arr.append(elem["_source"]["uri"])
+    #if not(data1["error"]):
+    for elem in data1["hits"]["hits"]:
+        arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
     
     print("ARRAY---------")
     print(arr)
