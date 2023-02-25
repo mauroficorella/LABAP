@@ -19,17 +19,23 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import React, { useEffect, useState } from "react";
 import MainAppBar from "./MainAppBar";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useAuth } from "../hooks/useAuth";
@@ -38,6 +44,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
+import Snackbar from "../components/Landing/Snackbar";
 
 const MyPaper = styled(Paper)({
   borderRadius: 20,
@@ -83,6 +90,7 @@ function parseDate(dateData: any) {
 }
 
 export default function Pic() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { state } = useLocation(); //state contiene i dati riguardanti l'immagine che è stata cliccata dalla pagina precedente
   console.log("🚀 ~ file: Pic.tsx ~ line 34 ~ Pic ~ state", state);
@@ -127,11 +135,38 @@ export default function Pic() {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [showAlert, setShowAlert] = React.useState(false);
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleDelete = () => {
+    handleCloseDialog();
+    setShowAlert(true);
+
+    axios
+      .delete("http://localhost:8000/post/" + state.post_id)
+      .then(function (response) {
+        navigate(-1);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handlePublish = () => {
@@ -291,18 +326,9 @@ export default function Pic() {
                           <MoreVertIcon />
                         </IconButton>
                       ) : (
-                        <Box/>
+                        <Box></Box>
                       )}
-                      <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={open ? "long-menu" : undefined}
-                        aria-expanded={open ? "true" : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClick}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
+
                       <Menu
                         anchorEl={anchorEl}
                         id="account-menu"
@@ -351,13 +377,35 @@ export default function Pic() {
                           </ListItemIcon>
                           Modify image
                         </MenuItem>
-                        <MenuItem onClick={handleClose}>
+                        <MenuItem onClick={handleClickOpenDialog}>
                           <ListItemIcon>
                             <DeleteIcon fontSize="small" />
                           </ListItemIcon>
                           Delete image
                         </MenuItem>
                       </Menu>
+                      <Dialog
+                        open={openDialog}
+                        onClose={handleCloseDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Do you really want to delete your post?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleCloseDialog}>CANCEL</Button>
+                          <Button
+                            color="secondary"
+                            onClick={handleDelete}
+                            autoFocus
+                          >
+                            DELETE
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                     </Box>
                   </Container>
                   <Container sx={{ mt: 3, ml: 2 }}>
@@ -559,6 +607,12 @@ export default function Pic() {
               </Grid>
             </MyPaper>
           </Container>
+
+          <Snackbar open={showAlert} autoHideDuration={6000}>
+            <Alert severity="success" color="success">
+              Post deleted successfully!
+            </Alert>
+          </Snackbar>
         </main>
       </React.Fragment>
     </ThemeProvider>
