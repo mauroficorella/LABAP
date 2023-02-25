@@ -25,7 +25,7 @@ class SearchParams(BaseModel):
 @app.post("/search")
 async def search(search_params: SearchParams):
     # sending get request and saving the response as response object
-    r = requests.get(url = "http://host.docker.internal:9200/images/_search", params={'q': search_params.searchInput})
+    r = requests.get(url = "http://host.docker.internal:9200/images/_search", params={'q': search_params.searchInput, 'size':10000})
     
     # extracting data in json format
     data = r.json()
