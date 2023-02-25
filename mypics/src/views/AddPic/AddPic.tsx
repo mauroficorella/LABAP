@@ -165,12 +165,13 @@ export default function Homepage() {
                         fullWidth
                         label="Add a title"
                         id="title"
+                        color="secondary"
                         onChange={(newValue) =>
                           setTitleValue(newValue.target.value)
                         }
                         variant="standard"
                         inputProps={{ style: { fontSize: 40 } }}
-                        InputLabelProps={{ style: { fontSize: 40 } }}
+                        InputLabelProps={{ style: { fontSize: 30 } }}
                       />
                     </Box>
                     <Box
@@ -185,6 +186,7 @@ export default function Homepage() {
                         fullWidth
                         label="Add a description"
                         id="description"
+                        color="secondary"
                         onChange={(newValue) =>
                           setDescriptionValue(newValue.target.value)
                         }

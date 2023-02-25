@@ -147,6 +147,7 @@ function MainAppBar() {
             state={searchInput}
             variant="contained"
             color="secondary"
+            //type="submit"
           >
             Search
           </Button>

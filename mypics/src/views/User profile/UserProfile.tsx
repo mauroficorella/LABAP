@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -11,7 +11,6 @@ import ImageList from "./StandardImageList";
 import MainAppBar from "../MainAppBar";
 import theme from "../Landing/theme";
 import React, { useState, useEffect } from "react";
-import TitlebarBelowImageList from "./StandardImageList";
 import SimpleDialog from "./SimpleDialog";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
