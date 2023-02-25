@@ -12,9 +12,9 @@ def run_script():
     
     arr = []
     print(data1)
-    #if not(data1["error"]):
-    for elem in data1["hits"]["hits"]:
-        arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
+    if not(data1["error"]):
+        for elem in data1["hits"]["hits"]:
+            arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
     
     print("ARRAY---------")
     print(arr)
@@ -24,7 +24,7 @@ def run_script():
     print("Num posts: "+ str(len(data2)))
 
     for item in data2:
-        if (item["fb_img_url"] not in arr):
+        if (item["fb_img_url"].replace("&amp;", "&") not in arr):
             myobj = {
                 "service": "imageserv",
                 "parameters": {
