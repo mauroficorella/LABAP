@@ -781,7 +781,7 @@ async def get_post_info(post_id: str, user_id: str):
         result3 = session.run(query3, p_id = post_id)
           
         return [{
-                    "post_id": record["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHé SONO INFORMAZIONI CHE HO GIA
+                    "post_id": record["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHE' SONO INFORMAZIONI CHE HO GIA
                     "fb_img_url": record["p"]["fb_img_url"],
                     "title": record["p"]["title"],
                     "description": record["p"]["description"],
@@ -892,7 +892,7 @@ async def get_all_posts():
 async def get_searched_posts(searchedPosts: SearchedPost):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
-    query = (
+    query1 = (
             "MATCH (u1:User)-[:PUBLISHED]->(p:Post) WHERE p.fb_img_url in $urlList "
             "MATCH (u2:User) WHERE u2.user_id = $u_id "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u:User) "
@@ -900,8 +900,13 @@ async def get_searched_posts(searchedPosts: SearchedPost):
             "ORDER BY num_likes DESC "
             "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKES]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
             )
-    result = session.run(query, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
-    print(result)
+    query2 = (
+            "MATCH (u:User) WHERE u.username CONTAINS searchedPosts.search_input "
+            "RETURN u"
+             )
+    result1 = session.run(query1, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
+    result2 =
+    print(result1)
     print(searchedPosts.url_list)
     try:
         result_value = [{"post_id": record["p"]["post_id"],
@@ -915,13 +920,13 @@ async def get_searched_posts(searchedPosts: SearchedPost):
                  "num_likes":record["num_likes"],
                  "published":record["published"],
                  "liked":record["liked"],
-                 "saved":record["saved"]} for record in result]
+                 "saved":record["saved"]} for record in result1]
         print(result_value)
         return result_value
                  
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
-                query=query, exception=exception))
+                query=query1, exception=exception))
             raise
 
 

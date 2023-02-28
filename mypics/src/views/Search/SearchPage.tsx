@@ -7,8 +7,9 @@ import MainAppBar from "../MainAppBar";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import MasornyImageListSearch from "./MasornyImageListSearch";
-
-
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
 
 export default function SearchPage() {
   const [imageListType, setImageListType] = useState("popular");
@@ -24,6 +25,45 @@ export default function SearchPage() {
     setImageListType("followed");
   };
 
+  interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+  }
+
+  function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  function a11yProps(index: number) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -37,10 +77,27 @@ export default function SearchPage() {
               pb: 3,
             }}
           ></Box>
-          <Box sx={{ mr: 3, ml: 3 }}>
-            <MasornyImageListSearch
-              searchInput={location.state}
-            ></MasornyImageListSearch>
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Posts" {...a11yProps(0)} />
+                <Tab label="Users" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+              <Box sx={{ mr: 3, ml: 3 }}>
+                <MasornyImageListSearch
+                  searchInput={location.state}
+                ></MasornyImageListSearch>
+              </Box>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              
+            </TabPanel>
           </Box>
         </main>
       </React.Fragment>
