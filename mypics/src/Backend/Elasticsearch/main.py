@@ -49,7 +49,7 @@ async def search(search_params: SearchParams):
 
     myobj = {
         "url_list": arr,
-        "user_id": search_params.user_id
+        "user_id": search_params.user_id,
     }
     jsondata = json.dumps(myobj)
     req = requests.post("http://host.docker.internal:81/searched_posts", jsondata)

@@ -53,6 +53,9 @@ class SearchedPost(BaseModel):
     url_list: list
     user_id: str
 
+class SearchedUser(BaseModel):
+    search_input: str
+
 
 app = FastAPI()
 
@@ -892,7 +895,7 @@ async def get_all_posts():
 async def get_searched_posts(searchedPosts: SearchedPost):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
-    query1 = (
+    query = (
             "MATCH (u1:User)-[:PUBLISHED]->(p:Post) WHERE p.fb_img_url in $urlList "
             "MATCH (u2:User) WHERE u2.user_id = $u_id "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u:User) "
@@ -900,13 +903,8 @@ async def get_searched_posts(searchedPosts: SearchedPost):
             "ORDER BY num_likes DESC "
             "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKES]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
             )
-    query2 = (
-            "MATCH (u:User) WHERE u.username CONTAINS searchedPosts.search_input "
-            "RETURN u"
-             )
-    result1 = session.run(query1, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
-    result2 =
-    print(result1)
+    result = session.run(query, urlList = searchedPosts.url_list, u_id = searchedPosts.user_id)
+    print(result)
     print(searchedPosts.url_list)
     try:
         result_value = [{"post_id": record["p"]["post_id"],
@@ -920,13 +918,37 @@ async def get_searched_posts(searchedPosts: SearchedPost):
                  "num_likes":record["num_likes"],
                  "published":record["published"],
                  "liked":record["liked"],
-                 "saved":record["saved"]} for record in result1]
+                 "saved":record["saved"]} for record in result]
         print(result_value)
         return result_value
                  
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
-                query=query1, exception=exception))
+                query=query, exception=exception))
+            raise
+    
+@app.post("/searched_users")
+async def get_searched_users(searchedUser: SearchedUser):
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    print(searchedUser.search_input)
+    query = (
+            "MATCH (u:User) WHERE toLower(u.username) CONTAINS toLower($searchInput) "
+            "RETURN u"
+            )
+    result = session.run(query, searchInput = searchedUser.search_input)
+    print(result)
+    try:
+        result_value = [{ "user_id": record["u"]["user_id"], "username": record["u"]["username"], 
+                        "profile_pic": record["u"]["profile_pic"] } for record in result]
+        
+       
+        print(result_value)
+        return result_value
+                 
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
             raise
 
 

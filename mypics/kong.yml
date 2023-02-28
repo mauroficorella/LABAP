@@ -109,6 +109,10 @@
      paths:
      - /searched_posts
      strip_path: false
+   - name: searched-users
+     paths:
+     - /searched_users
+     strip_path: false
    - name: get-all-posts
      paths:
      - /get_all_posts

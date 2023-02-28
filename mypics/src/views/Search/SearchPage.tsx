@@ -45,7 +45,7 @@ export default function SearchPage() {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            <Typography component={"span"}>{children}</Typography>
           </Box>
         )}
       </div>
@@ -100,7 +100,7 @@ export default function SearchPage() {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <ListUsers></ListUsers>
+              <ListUsers searchInput={location.state}></ListUsers>
             </TabPanel>
           </Box>
         </main>
