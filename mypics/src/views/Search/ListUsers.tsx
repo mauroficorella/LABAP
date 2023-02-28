@@ -48,7 +48,7 @@ export default function ListUsers(props: UserListProps) {
             style={{ color: "black", textDecoration: "none" }}
             key={item.user_id}
           >
-            <ListItem alignItems="center">
+            <ListItem alignItems="center" divider>
               <ListItemButton>
                 <ListItemAvatar>
                   <Avatar alt={item.username} src={item.profile_pic} />

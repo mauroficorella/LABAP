@@ -19,6 +19,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
+import Popover from "@mui/material/Popover";
+import NotificationList from "./NotificationList";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -93,6 +96,21 @@ function MainAppBar() {
       });
   };*/
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   const navigateTo = useNavigate();
   return (
     <AppBar position="fixed">
@@ -157,11 +175,54 @@ function MainAppBar() {
             size="large"
             aria-label="show 17 new notifications"
             color="inherit"
+            onClick={handleClick}
           >
             <Badge badgeContent={17} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            PaperProps={{
+              elevation: 8,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.8,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  left: 305,
+                  width: 15,
+                  height: 15,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <NotificationList></NotificationList>
+          </Popover>
           <Tooltip title="Settings">
             <IconButton
               size="large"
