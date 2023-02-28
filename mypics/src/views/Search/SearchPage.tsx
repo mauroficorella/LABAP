@@ -83,7 +83,10 @@ export default function SearchPage() {
               <Tabs
                 value={value}
                 onChange={handleChange}
-                aria-label="basic tabs example"
+                //aria-label="basic tabs example"
+                centered
+                textColor="secondary"
+                indicatorColor="secondary"
               >
                 <Tab label="Posts" {...a11yProps(0)} />
                 <Tab label="Users" {...a11yProps(1)} />
@@ -97,7 +100,7 @@ export default function SearchPage() {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <ListUsers></ListUsers>              
+              <ListUsers></ListUsers>
             </TabPanel>
           </Box>
         </main>
