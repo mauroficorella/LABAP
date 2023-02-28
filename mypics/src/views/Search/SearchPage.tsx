@@ -10,6 +10,7 @@ import MasornyImageListSearch from "./MasornyImageListSearch";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
+import ListUsers from "./ListUsers";
 
 export default function SearchPage() {
   const [imageListType, setImageListType] = useState("popular");
@@ -96,7 +97,7 @@ export default function SearchPage() {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              
+              <ListUsers></ListUsers>              
             </TabPanel>
           </Box>
         </main>
