@@ -45,9 +45,22 @@ export default function UserProfile() {
   };
 
   //console.log(API);
-  API.subscribe(({ result }) => {
-    console.log(result);
-  });
+  useEffect(() => {
+    API.subscribe(({ result }) => {
+      console.log(result);
+
+      //const params = new URLSearchParams();
+      //params.append("user_id", user.user_id);
+
+      fetch(`${API.API_URL}/api/receive`, {
+        method: "POST",
+        body: JSON.stringify({ user_id: user.user_id }),
+      }).then((res) => {
+        res.json();
+        console.log(res.json());
+      });
+    });
+  }, [API.socket]);
 
   /*const API_URL = "http://localhost:5555";
   const name = "notifications_" + user.user_id;
