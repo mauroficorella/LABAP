@@ -19,6 +19,9 @@ Index:
 docker build -t indexservice .
 docker run -d --name indexcontainer -p 83:83 indexservice
 
+RabbitMQ:
+docker run -it --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
+
 Deepdetect:
 comando per istallare: docker pull jolibrain/deepdetect_cpu
 comando per runnare: docker run -d -p 8080:8080 jolibrain/deepdetect_cpu

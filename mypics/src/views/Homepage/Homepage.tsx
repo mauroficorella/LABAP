@@ -9,7 +9,6 @@ import MainAppBar from "../MainAppBar";
 import MasornyImageList from "./MasornyImageList";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import * as API from '../../api';
 
 export default function Homepage() {
   const [imageListType, setImageListType] = useState("popular");
@@ -31,13 +30,7 @@ export default function Homepage() {
     setSelectedBtn(2);
   };
 
-  const params = new URLSearchParams();
-  params.append("a", "5");
-  params.append("b", "6");
 
-  fetch(`${API.API_URL}/api/calc/sum`, { method: "POST", body: params }).then(
-    (res) => res.json()
-  );
 
   return (
     <ThemeProvider theme={theme}>
