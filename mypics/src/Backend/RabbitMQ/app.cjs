@@ -17,56 +17,6 @@ var user_queue;
 
 var following_user_id;
 
-/*rabbitMQHandler((connection) => {
-  connection.createChannel((err, channel) => {
-    if (err) {
-      throw new Error(err);
-    }
-    var mainQueue = "calc_sum";
-    var ex = "calc_sum";
-
-    /*channel.assertQueue(mainQueue, {
-      durable: false
-    });
-    channel.sendToQueue(mainQueue, Buffer.from("Hello World"));
-    console.log(" [x] Sent %s", "hello world");
-    channel.assertExchange(ex, "direct", {
-      durable: false,
-    });
-
-    channel.assertQueue(
-      user_queue,
-      { exclusive: true },
-      (err, queue) => {
-        if (err) {
-          throw new Error(err);
-        }
-        channel.bindQueue(queue.queue, mainQueue, "");
-        channel.consume(queue.queue, (msg) => {
-          /*console.log(JSON.parse(msg.content.toString()).task);
-
-          var user_id = JSON.parse(msg.content.toString()).task.user_id;
-          mainQueue = "follow_queue_" + user_id;
-
-          var result = JSON.stringify({ following_user_id: following_user_id });
-          /*var result = JSON.stringify({
-            result: Object.values(
-              JSON.parse(msg.content.toString()).task
-            ).reduce(
-              (accumulator, currentValue) =>
-                parseInt(accumulator) + parseInt(currentValue)
-            ),
-          });
-          console.log(result);
-          calcSocket.emit("calc", result);
-          calcSocket.emit("calc", result);
-        });
-      },
-      { noAck: true }
-    );
-  });
-});*/
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", router);
 router.route("/calc/sum").post((req, res) => {
@@ -87,12 +37,6 @@ router.route("/calc/sum").post((req, res) => {
       console.log(req.body);
       user_queue = "queue_" + req.body.followed_user_id;
       following_user_id = req.body.following_user_id;
-
-      /*channel.assertExchange(ex, "direct", {
-        durable: false,
-      });
-
-      channel.publish(ex, "", new Buffer(msg), { persistent: false });*/
 
       channel.assertQueue(user_queue, {
         durable: true,
@@ -115,76 +59,50 @@ router.route("/calc/sum").post((req, res) => {
 });
 
 router.route("/receive").post((req, res) => {
+  var response = JSON.stringify({ response: "error" });
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  var response = "";
+  res.header("Access-Control-Allow-Credentials", true);
   rabbitMQHandler((connection) => {
-    connection.createChannel((err, channel) => {
-      if (err) {
-        throw new Error(err);
+    connection.createChannel(function (error, channel) {
+      if (error) {
+        throw error;
       }
 
-      connection.createChannel(function (error1, channel) {
-        if (error1) {
-          throw error1;
-        }
+      console.log("req.body");
+      console.log(req.body);
+      queue = "queue_" + req.body.user_id;
 
-        console.log("req.body");
-        console.log(req.body);
-        queue = "queue_" + req.body.user_id;
-
-        channel.assertQueue(queue, {
-          durable: true,
-        });
-
-        console.log(
-          " [*] Waiting for messages in %s. To exit press CTRL+C",
-          queue
-        );
-
-        channel.consume(
-          queue,
-          function (msg) {
-            console.log(" [x] Received %s", msg.content.toString());
-            response = msg.content.toString();
-
-            //calcSocket.emit("abcdef95", msg);
-          },
-          {
-            noAck: true,
-          }
-        );
+      channel.assertQueue(queue, {
+        durable: true,
       });
-      /*var mainQueue = "calc_sum";
 
-      channel.assertQueue(
-        "",
-        { exclusive: true },
-        (err, queue) => {
-          if (err) {
-            throw new Error(err);
-          }
-          //channel.bindQueue(queue.queue, mainQueue, '')
-          channel.consume(mainQueue, (msg) => {
-            var result = JSON.stringify({
-              result: Object.values(
-                JSON.parse(msg.content.toString()).task
-              ).reduce(
-                (accumulator, currentValue) =>
-                  parseInt(accumulator) + parseInt(currentValue)
-              ),
-            });
-            calcSocket.emit("calc", result);
-          });
+      console.log(
+        " [*] Waiting for messages in %s. To exit press CTRL+C",
+        queue
+      );
+
+      //TODO controllare perchè dopo la seconda volta che si clicca su follow la response non viene più ricevuta
+      channel.consume(
+        queue,
+        async function (msg) {
+          console.log(" [x] Received %s", msg.content.toString());
+          response = JSON.stringify({ response: msg.content.toString() });
+          console.log(response);
+          res.send(response);
+          channel.close(function () {
+            connection.close();
+          }); 
         },
-        { noAck: true }
-      );}*/
+        {
+          noAck: true,
+        }
+      );
     });
   });
-  return response;
 });
 
 server.listen(5555, "localhost", () => {

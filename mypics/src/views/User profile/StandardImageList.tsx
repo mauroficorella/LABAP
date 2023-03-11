@@ -31,7 +31,7 @@ export default function StandardImageList(props: ImageListProps) {
 
     axios.get(url).then((response) => {
       setItemData(response.data);
-      console.log(response.data);
+      //console.log(response.data);
     });
   }, [props]);
 

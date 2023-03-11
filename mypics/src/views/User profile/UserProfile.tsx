@@ -46,19 +46,24 @@ export default function UserProfile() {
 
   //console.log(API);
   useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("user_id", user.user_id);
     API.subscribe(({ result }) => {
       console.log(result);
 
-      //const params = new URLSearchParams();
-      //params.append("user_id", user.user_id);
-
       fetch(`${API.API_URL}/api/receive`, {
         method: "POST",
-        body: JSON.stringify({ user_id: user.user_id }),
-      }).then((res) => {
-        res.json();
-        console.log(res.json());
-      });
+        body: params,
+      })
+        .then((res) => {
+          res.json().then((data) => {
+            console.log(data)
+          });
+          //console.log(res.json());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
   }, [API.socket]);
 
@@ -144,8 +149,8 @@ export default function UserProfile() {
       axios
         .get("http://localhost:8000/followageinfo/" + userData.user_id)
         .then((response) => {
-          console.log("_________RESPONSE____________");
-          console.log(response.data[0]);
+          //console.log("_________RESPONSE____________");
+          //console.log(response.data[0]);
           setFollowageInfo(response.data[0]);
           setNumFollowers(
             response.data[0]["followers_info"][0]["num_followers"] == 1
