@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { Link as LinkButton } from "react-router-dom";
@@ -21,7 +20,9 @@ import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import Popover from "@mui/material/Popover";
 import NotificationList from "./NotificationList";
-
+import { socket } from "../api";
+import React, { useState, useEffect, Component } from "react";
+import * as API from "../api";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -112,6 +113,52 @@ function MainAppBar() {
   const id = open ? "simple-popover" : undefined;
 
   const navigateTo = useNavigate();
+
+  //socket.io stuff
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [fooEvents, setFooEvents] = useState([]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("user_id", user.user_id);
+
+    fetch(`${API.API_URL}/api/receive`, {
+      method: "POST",
+      body: params,
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+        });
+        //console.log(res.json());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    function onFooEvent(result: any) {
+      result = JSON.parse(result);
+      console.log(result);
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("abcdef95", onFooEvent);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("abcdef95", onFooEvent);
+    };
+  }, []);
+
   return (
     <AppBar position="fixed">
       <Toolbar sx={{ justifyContent: "space-between" }}>

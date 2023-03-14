@@ -16,8 +16,7 @@ import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
 import * as API from "../../api";
-import { socket } from "../../api";
-import clientSocket from "socket.io-client";
+
 
 export default function UserProfile() {
   const { user } = useAuth();
@@ -35,9 +34,7 @@ export default function UserProfile() {
 
   const [followBtn, setFollowBtn] = React.useState(false); //False --> Follow, True --> Unfollow
 
-  //socket.io stuff
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [fooEvents, setFooEvents] = useState([]);
+  
 
   const showSavedImageList = () => {
     setImageListType("saved");
@@ -71,47 +68,7 @@ export default function UserProfile() {
         });
     });
   }, [API.socket]);*/
-  useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function onFooEvent(result: any) {
-      result = JSON.parse(result);
-      console.log(result);
-      const params = new URLSearchParams();
-      params.append("user_id", user.user_id);
-      if (Object.keys(userData).length !== 0) {
-        fetch(`${API.API_URL}/api/receive`, {
-          method: "POST",
-          body: params,
-        })
-          .then((res) => {
-            res.json().then((data) => {
-              console.log(data);
-            });
-            //console.log(res.json());
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    }
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("abcdef95", onFooEvent);
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("abcdef95", onFooEvent);
-    };
-  }, []);
+  
 
   /*const API_URL = "http://localhost:5555";
   const name = "notifications_" + user.user_id;

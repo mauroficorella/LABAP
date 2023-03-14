@@ -17,6 +17,7 @@ var user_queue;
 
 var following_user_id;
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", router);
 router.route("/calc/sum").post((req, res) => {
@@ -53,13 +54,14 @@ router.route("/calc/sum").post((req, res) => {
       //res.send(response);
       channel.close(() => {
         response = JSON.stringify({ response: "FATTI DANCULO" });
-        res.send(response)
+        res.send(response);
         connection.close();
       });
     });
   });
 });
 
+//TODO controllare come possiamo recuperare l'user id per dare il nome alla coda se tiriamo fuori rabbitmqhandler dal router come fa daniel poppa
 router.route("/receive").post((req, res) => {
   var response = JSON.stringify({ response: "error" });
   res.header("Access-Control-Allow-Origin", "*");
@@ -87,14 +89,15 @@ router.route("/receive").post((req, res) => {
         queue
       );
 
-      //TODO controllare perchè dopo la seconda volta che si clicca su follow la response non viene più ricevuta
+      
       channel.consume(
         queue,
         async function (msg) {
           console.log(" [x] Received %s", msg.content.toString());
           response = JSON.stringify({ response: msg.content.toString() });
           console.log(response);
-          res.send(response);
+          //res.send(response);
+          calcSocket.emit("abcdef95", response)
           channel.close(function () {
             connection.close();
           });
