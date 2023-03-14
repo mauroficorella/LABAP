@@ -85,19 +85,21 @@ export default function UserProfile() {
       console.log(result);
       const params = new URLSearchParams();
       params.append("user_id", user.user_id);
-      fetch(`${API.API_URL}/api/receive`, {
-        method: "POST",
-        body: params,
-      })
-        .then((res) => {
-          res.json().then((data) => {
-            console.log(data);
-          });
-          //console.log(res.json());
+      if (Object.keys(userData).length !== 0) {
+        fetch(`${API.API_URL}/api/receive`, {
+          method: "POST",
+          body: params,
         })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((res) => {
+            res.json().then((data) => {
+              console.log(data);
+            });
+            //console.log(res.json());
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
 
     socket.on("connect", onConnect);
@@ -126,16 +128,19 @@ export default function UserProfile() {
     const params = new URLSearchParams();
     params.append("followed_user_id", userData.user_id);
     params.append("following_user_id", user.user_id);
-    fetch(`${API.API_URL}/api/calc/sum`, {
-      method: "POST",
-      body: params,
-    }).then((res) => {
-      /*res.json();
+    console.log(Object.keys(userData).length !== 0);
+    if (Object.keys(userData).length !== 0) {
+      fetch(`${API.API_URL}/api/calc/sum`, {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        /*res.json();
       console.log(res.json());*/
-      res.json().then((valentano) => {
-        console.log(valentano);
+        res.json().then((valentano) => {
+          console.log(valentano);
+        });
       });
-    });
+    }
   }, [followBtn]);
 
   const handleFollowBtn = () => {

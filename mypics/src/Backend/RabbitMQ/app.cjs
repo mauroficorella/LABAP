@@ -76,8 +76,8 @@ router.route("/receive").post((req, res) => {
 
       console.log("req.body");
       console.log(req.body);
-      //queue = "queue_" + req.body.user_id;
-      queue = "queue_abcdef95"
+      queue = "queue_" + req.body.user_id;
+      //queue = "queue_abcdef95"
       channel.assertQueue(queue, {
         durable: true,
       });
