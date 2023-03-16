@@ -119,6 +119,7 @@ function MainAppBar() {
   const [fooEvents, setFooEvents] = useState([]);
 
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
+  // ! far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
 
   console.log(notificationsArray);
 
