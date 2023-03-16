@@ -118,6 +118,10 @@ function MainAppBar() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState([]);
 
+  const [notificationsArray, setNotificationsArray] = useState<any>([]);
+
+  console.log(notificationsArray);
+
   useEffect(() => {
     /*const params = new URLSearchParams();
     params.append("user_id", user.user_id);
@@ -145,7 +149,11 @@ function MainAppBar() {
 
     function onFooEvent(result: any) {
       result = JSON.parse(result);
-      console.log(result);
+      //console.log(result);
+      setNotificationsArray((notificationsArray: any[]) => [
+        ...notificationsArray,
+        result,
+      ]);
     }
 
     socket.on("connect", onConnect);
@@ -224,7 +232,7 @@ function MainAppBar() {
             color="inherit"
             onClick={handleClick}
           >
-            <Badge badgeContent={17} color="secondary">
+            <Badge badgeContent={notificationsArray.length} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -268,7 +276,9 @@ function MainAppBar() {
               horizontal: "left",
             }}
           >
-            <NotificationList></NotificationList>
+            <NotificationList
+              notificationsArray={notificationsArray}
+            ></NotificationList>
           </Popover>
           <Tooltip title="Settings">
             <IconButton

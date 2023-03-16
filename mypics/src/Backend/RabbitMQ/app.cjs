@@ -44,9 +44,9 @@ function startHandler() {
             response = JSON.stringify({ response: msg.content.toString() });
             console.log(response);
             calcSocket.emit("abcdef95", response);
-            channel.close(function () {
+            /*channel.close(function () {
               connection.close();
-            });
+            });*/
           },
           {
             noAck: true,
@@ -111,7 +111,7 @@ router.route("/receive").post((req, res) => {
   console.log("req.body");
   console.log(req.body);
   queue = "queue_" + req.body.user_id;
-  
+
   startHandler();
   var response = JSON.stringify({ response: "done" });
   res.send(response);

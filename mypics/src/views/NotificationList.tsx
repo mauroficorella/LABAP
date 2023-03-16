@@ -31,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component={"span"}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -45,7 +45,11 @@ function a11yProps(index: number) {
   };
 }
 
-export default function NotificationList() {
+interface NotificationProps {
+  notificationsArray: any[];
+}
+
+export default function NotificationList(props: NotificationProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -76,42 +80,48 @@ export default function NotificationList() {
           <List
             sx={{ width: "100%", maxWidth: 400, bgcolor: "background.paper" }}
           >
-            <ListItemButton>
-              <ListItem alignItems="center" divider>
-                <ListItemAvatar>
-                  <CircleIcon sx={{ fontSize: 10, ml: -1 }} color="secondary" />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <React.Fragment>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          ml: -3,
-                        }}
-                      >
-                        <Avatar
-                          alt="Remy Sharp"
-                          src="/static/images/avatar/1.jpg"
-                        />
-                        <Box sx={{ ml: 1 }}>
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body1"
-                            color="text.primary"
-                          >
-                            Utente
-                          </Typography>
-                          {" — ha messo mi piace alla tua foto"}
+            {props.notificationsArray.map((notification, index) => (
+              <ListItemButton key={index}>
+                <ListItem alignItems="center" divider key={index}>
+                  <ListItemAvatar>
+                    <CircleIcon
+                      sx={{ fontSize: 10, ml: -1 }}
+                      color="secondary"
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <React.Fragment>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            ml: -3,
+                          }}
+                        >
+                          <Avatar
+                            alt="Remy Sharp"
+                            src="/static/images/avatar/1.jpg"
+                          />
+                          <Box sx={{ ml: 1 }}>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component={"span"}
+                              variant="body1"
+                              color="text.primary"
+                            >
+                              Utente
+                            </Typography>
+
+                            {" — ha messo mi piace alla tua foto"}
+                          </Box>
                         </Box>
-                      </Box>
-                    </React.Fragment>
-                  }
-                  //secondary={}
-                />
-              </ListItem>
-            </ListItemButton>
+                      </React.Fragment>
+                    }
+                    //secondary={}
+                  />
+                </ListItem>
+              </ListItemButton>
+            ))}
           </List>
         </TabPanel>
         <TabPanel value={value} index={1}>
@@ -139,7 +149,7 @@ export default function NotificationList() {
                         <Box sx={{ ml: 1 }}>
                           <Typography
                             sx={{ display: "inline" }}
-                            component="span"
+                            component={"span"}
                             variant="body1"
                             color="text.primary"
                           >

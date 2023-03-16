@@ -290,7 +290,12 @@ export default function Pic() {
                       mt: 2,
                     }}
                   >
-                    <Typography variant="h5" fontSize="20pt" fontWeight="500">
+                    <Typography
+                      component={"span"}
+                      variant="h5"
+                      fontSize="20pt"
+                      fontWeight="500"
+                    >
                       {state.title}
                     </Typography>
                     <Box>
@@ -409,7 +414,9 @@ export default function Pic() {
                     </Box>
                   </Container>
                   <Container sx={{ mt: 3, ml: 2 }}>
-                    <Typography align="justify">{state.description}</Typography>
+                    <Typography component={"span"} align="justify">
+                      {state.description}
+                    </Typography>
                   </Container>
                   <Container
                     sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
@@ -447,7 +454,12 @@ export default function Pic() {
                   <Container
                     sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
                   >
-                    <Typography variant="h5" fontSize="16pt" fontWeight="500">
+                    <Typography
+                      component={"span"}
+                      variant="h5"
+                      fontSize="16pt"
+                      fontWeight="500"
+                    >
                       Comments:
                     </Typography>
                   </Container>
@@ -571,7 +583,7 @@ export default function Pic() {
                                       <Box sx={{ mb: 1 }}>
                                         <Typography
                                           sx={{ display: "inline" }}
-                                          component="span"
+                                          component={"span"}
                                           variant="body1"
                                           color="text.primary"
                                           align="justify"
@@ -598,7 +610,10 @@ export default function Pic() {
                             )
                           )
                         ) : (
-                          <Typography> No comments to show</Typography>
+                          <Typography component={"span"}>
+                            {" "}
+                            No comments to show
+                          </Typography>
                         )}
                       </List>
                     )}
