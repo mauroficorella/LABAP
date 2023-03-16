@@ -42,6 +42,7 @@ function startHandler() {
           async function (msg) {
             console.log(" [x] Received %s", msg.content.toString());
             response = JSON.stringify({ response: msg.content.toString() });
+
             console.log(response);
             calcSocket.emit("abcdef95", response);
             /*channel.close(function () {
@@ -71,25 +72,27 @@ router.route("/calc/sum").post((req, res) => {
         throw new Error(err);
       }
       var ex = "calc_sum";
-      var msg = JSON.stringify({ task: req.body });
 
       console.log("req.body");
       console.log(req.body);
       user_queue = "queue_" + req.body.followed_user_id;
       following_user_id = req.body.following_user_id;
 
+      var msg = "" + following_user_id + "," + req.body.notification_type;
+
       channel.assertQueue(user_queue, {
         durable: true,
       });
       channel.sendToQueue(
         user_queue,
-        Buffer.from("User " + following_user_id + " started following you :)"),
+        //Buffer.from("User " + following_user_id + " started following you :)"),
+        Buffer.from(msg),
         {
           persistent: true,
         }
       );
       console.log(" [x] Sent '%s'", msg);
-      calcSocket.emit("abcdef95", JSON.stringify({ result: "new valentano" }));
+      //calcSocket.emit("abcdef95", JSON.stringify({ result: "new valentano" }));
       //res.send(response);
       channel.close(() => {
         response = JSON.stringify({ response: "FATTI DANCULO" });

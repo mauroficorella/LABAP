@@ -17,7 +17,6 @@ import { useAuth } from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
 import * as API from "../../api";
 
-
 export default function UserProfile() {
   const { user } = useAuth();
 
@@ -33,8 +32,6 @@ export default function UserProfile() {
   const [selectedBtn, setSelectedBtn] = React.useState(1);
 
   const [followBtn, setFollowBtn] = React.useState(false); //False --> Follow, True --> Unfollow
-
-  
 
   const showSavedImageList = () => {
     setImageListType("saved");
@@ -68,7 +65,6 @@ export default function UserProfile() {
         });
     });
   }, [API.socket]);*/
-  
 
   /*const API_URL = "http://localhost:5555";
   const name = "notifications_" + user.user_id;
@@ -81,7 +77,7 @@ export default function UserProfile() {
     //newCallback(result);
   });
   //};*/
-  useEffect(() => {
+  /* useEffect(() => {
     const params = new URLSearchParams();
     params.append("followed_user_id", userData.user_id);
     params.append("following_user_id", user.user_id);
@@ -91,28 +87,37 @@ export default function UserProfile() {
         method: "POST",
         body: params,
       }).then((res) => {
-        /*res.json();
-      console.log(res.json());*/
+
         res.json().then((valentano) => {
           console.log(valentano);
         });
       });
     }
-  }, [followBtn]);
+  }, [followBtn]);*/
 
   const handleFollowBtn = () => {
-    setFollowBtn(!followBtn);
     axios.post("http://localhost:8000/follows", {
       user_id1: user.user_id,
       user_id2: userData.user_id,
     });
 
-    /*const params = new URLSearchParams();
+    const params = new URLSearchParams();
     params.append("followed_user_id", userData.user_id);
-    params.append("following_user_id", user.user_id);*/
-    //params.append("b", "6");
+    params.append("following_user_id", user.user_id);
+    params.append("notification_type", "follow");
 
-    //axios.post(`${API.API_URL}/api/calc/sum`, params).then((res) => res);
+    if (Object.keys(userData).length !== 0 && followBtn === false) {
+      fetch(`${API.API_URL}/api/calc/sum`, {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        res.json().then((valentano) => {
+          console.log(valentano);
+        });
+      });
+    }
+
+    setFollowBtn(!followBtn);
   };
 
   const [open, setOpen] = React.useState(false);

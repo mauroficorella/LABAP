@@ -56,6 +56,9 @@ export default function NotificationList(props: NotificationProps) {
     setValue(newValue);
   };
 
+  // ! (riga 114 circa)  ! PORTARCI APPRESSO IL NOME E COGNOME DELL'UTENTE
+  // ! INVECE DELL USERID e ANCHE LA FOTO SU CUI E' STATO MESSO IL MI PIACE O E' STATO MESSO IL COMMENTO
+
   return (
     <Box
       display="flex"
@@ -109,10 +112,13 @@ export default function NotificationList(props: NotificationProps) {
                               variant="body1"
                               color="text.primary"
                             >
-                              Utente
+                              {"User " + notification.response.split(",")[0]}
                             </Typography>
-
-                            {" — ha messo mi piace alla tua foto"}
+                            {notification.response.split(",")[1] === "follow"
+                              ? " started following you"
+                              : notification.response.split(",")[1] === "like"
+                              ? " liked your picture"
+                              : " commented on your picture"}{" "}
                           </Box>
                         </Box>
                       </React.Fragment>
