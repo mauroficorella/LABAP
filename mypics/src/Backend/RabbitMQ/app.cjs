@@ -15,8 +15,47 @@ var calcSocket = socketIO.of("/calc");
 
 var user_queue;
 
+var queue = "";
+
 var following_user_id;
 
+function startHandler() {
+  rabbitMQHandler((connection) => {
+    if (queue != "") {
+      console.log("CIAO AMICI");
+      connection.createChannel(function (error, channel) {
+        if (error) {
+          throw error;
+        }
+        //queue = "queue_abcdef95"
+        channel.assertQueue(queue, {
+          durable: true,
+        });
+
+        console.log(
+          " [*] Waiting for messages in %s. To exit press CTRL+C",
+          queue
+        );
+
+        channel.consume(
+          queue,
+          async function (msg) {
+            console.log(" [x] Received %s", msg.content.toString());
+            response = JSON.stringify({ response: msg.content.toString() });
+            console.log(response);
+            calcSocket.emit("abcdef95", response);
+            channel.close(function () {
+              connection.close();
+            });
+          },
+          {
+            noAck: true,
+          }
+        );
+      });
+    }
+  });
+}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", router);
@@ -63,51 +102,19 @@ router.route("/calc/sum").post((req, res) => {
 
 //TODO controllare come possiamo recuperare l'user id per dare il nome alla coda se tiriamo fuori rabbitmqhandler dal router come fa daniel poppa
 router.route("/receive").post((req, res) => {
-  var response = JSON.stringify({ response: "error" });
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.header("Access-Control-Allow-Credentials", true);
-  rabbitMQHandler((connection) => {
-    connection.createChannel(function (error, channel) {
-      if (error) {
-        throw error;
-      }
-
-      console.log("req.body");
-      console.log(req.body);
-      queue = "queue_" + req.body.user_id;
-      //queue = "queue_abcdef95"
-      channel.assertQueue(queue, {
-        durable: true,
-      });
-
-      console.log(
-        " [*] Waiting for messages in %s. To exit press CTRL+C",
-        queue
-      );
-
-      
-      channel.consume(
-        queue,
-        async function (msg) {
-          console.log(" [x] Received %s", msg.content.toString());
-          response = JSON.stringify({ response: msg.content.toString() });
-          console.log(response);
-          //res.send(response);
-          calcSocket.emit("abcdef95", response)
-          channel.close(function () {
-            connection.close();
-          });
-        },
-        {
-          noAck: true,
-        }
-      );
-    });
-  });
+  console.log("req.body");
+  console.log(req.body);
+  queue = "queue_" + req.body.user_id;
+  
+  startHandler();
+  var response = JSON.stringify({ response: "done" });
+  res.send(response);
 });
 
 server.listen(5555, "localhost", () => {

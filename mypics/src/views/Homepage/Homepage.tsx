@@ -9,6 +9,7 @@ import MainAppBar from "../MainAppBar";
 import MasornyImageList from "./MasornyImageList";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import * as API from "../../api";
 
 export default function Homepage() {
   const [imageListType, setImageListType] = useState("popular");
@@ -30,7 +31,23 @@ export default function Homepage() {
     setSelectedBtn(2);
   };
 
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("user_id", user.user_id);
 
+    fetch(`${API.API_URL}/api/receive`, {
+      method: "POST",
+      body: params,
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

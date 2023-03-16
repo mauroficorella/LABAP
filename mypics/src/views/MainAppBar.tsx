@@ -119,7 +119,7 @@ function MainAppBar() {
   const [fooEvents, setFooEvents] = useState([]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
+    /*const params = new URLSearchParams();
     params.append("user_id", user.user_id);
 
     fetch(`${API.API_URL}/api/receive`, {
@@ -134,7 +134,7 @@ function MainAppBar() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
     function onConnect() {
       setIsConnected(true);
     }
