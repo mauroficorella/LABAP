@@ -102,8 +102,8 @@ export default function UserProfile() {
     });
 
     const params = new URLSearchParams();
-    params.append("followed_user_id", userData.user_id);
-    params.append("following_user_id", user.user_id);
+    params.append("destination_user_id", userData.user_id);
+    params.append("origin_user_id", user.user_id);
     params.append("notification_type", "follow");
 
     if (Object.keys(userData).length !== 0 && followBtn === false) {

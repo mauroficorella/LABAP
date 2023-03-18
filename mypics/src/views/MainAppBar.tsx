@@ -123,6 +123,19 @@ function MainAppBar() {
 
   console.log(notificationsArray);
 
+  useEffect(() =>{
+    axios
+      .post("http://localhost:8000/get_notifications_info", {
+        notificationsArray: notificationsArray
+      })
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  })
+
   useEffect(() => {
     /*const params = new URLSearchParams();
     params.append("user_id", user.user_id);

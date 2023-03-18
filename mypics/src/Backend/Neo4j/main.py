@@ -56,6 +56,9 @@ class SearchedPost(BaseModel):
 class SearchedUser(BaseModel):
     search_input: str
 
+class NotificationsInfo(BaseModel):
+    notificationsArray: list
+
 
 app = FastAPI()
 
@@ -974,6 +977,32 @@ async def get_all_posts_urls(): #quando creo un post devo creare sia il nodo Pos
             logging.error("{query} raised an error: \n {exception}".format(
                 query=query, exception=exception))
             raise   
+
+
+
+@app.post("/get_notifications_info")
+async def get_searched_users(searchedUser: SearchedUser):
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    print(searchedUser.search_input)
+    query = (
+            "MATCH (u:User) WHERE toLower(u.username) CONTAINS toLower($searchInput) "
+            "RETURN u"
+            )
+    result = session.run(query, searchInput = searchedUser.search_input)
+    print(result)
+    try:
+        result_value = [{ "user_id": record["u"]["user_id"], "username": record["u"]["username"], 
+                        "profile_pic": record["u"]["profile_pic"] } for record in result]
+        
+       
+        print(result_value)
+        return result_value
+                 
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
 
 
 

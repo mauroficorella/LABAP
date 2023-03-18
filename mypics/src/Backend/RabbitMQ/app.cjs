@@ -75,10 +75,16 @@ router.route("/calc/sum").post((req, res) => {
 
       console.log("req.body");
       console.log(req.body);
-      user_queue = "queue_" + req.body.followed_user_id;
-      following_user_id = req.body.following_user_id;
+      user_queue = "queue_" + req.body.destination_user_id;
 
-      var msg = "" + following_user_id + "," + req.body.notification_type;
+      var msg = "";
+
+      if (req.body.notification_type == "follow") {
+        msg = "" + req.body.origin_user_id + "," + req.body.notification_type;
+      }
+      else {
+        msg = "" + req.body.origin_user_id + "," + req.body.notification_type + "," + req.body.post_id;
+      }
 
       channel.assertQueue(user_queue, {
         durable: true,

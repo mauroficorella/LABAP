@@ -45,6 +45,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import Snackbar from "../components/Landing/Snackbar";
+import * as API from "../api";
 
 const MyPaper = styled(Paper)({
   borderRadius: 20,
@@ -185,6 +186,21 @@ export default function Pic() {
       .catch(function (error) {
         console.log(error);
       });
+
+    const params = new URLSearchParams();
+    params.append("origin_user_id", user.user_id);
+    params.append("destination_user_id", state.user_id);
+    params.append("notification_type", "comment");
+    params.append("post_id", state.post_id);
+
+    fetch(`${API.API_URL}/api/calc/sum`, {
+      method: "POST",
+      body: params,
+    }).then((res) => {
+      res.json().then((valentano) => {
+        console.log(valentano);
+      });
+    });
   };
 
   const handleDeleteComment = (comment_id: String) => {
