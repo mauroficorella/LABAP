@@ -119,13 +119,16 @@ function MainAppBar() {
   const [fooEvents, setFooEvents] = useState([]);
 
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
-  // ! far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
+ 
 
-  console.log(notificationsArray);
+  //console.log(notificationsArray);
 
-  function emptyNotifications(){
+  //TODO: -triggerare creazione notifica su neo4j anche per i commenti e i likes
+  //TODO: -modificare struttura notifications list in base alla struttura che ci torna neo4j
+  //TODO: -far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
+  //TODO: -quando apri le notifiche dobbiamo fare l'update su neo4j del flag e far diventare le notifiche lette
 
-  }
+  function emptyNotifications() {}
 
   /*useEffect(() => {
     if (notificationsArray.length > 0) {
@@ -141,7 +144,6 @@ function MainAppBar() {
         });
     }
   }, [notificationsArray]);*/
-
 
   useEffect(() => {
     /*const params = new URLSearchParams();
@@ -180,7 +182,6 @@ function MainAppBar() {
         .catch(function (error) {
           console.log(error);
         });
-      
     }
 
     socket.on("connect", onConnect);
