@@ -59,8 +59,8 @@ export default function MasornyImageList(props: ImageListProps) {
               style={{ margin: 0 }}
             >
               <img
-                src={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format`}
-                srcSet={`${item.fb_img_url}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.fb_img_url}?w=1024&h=1024&fit=crop&auto=format`}
+                srcSet={`${item.fb_img_url}?w=1024&h=1024&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading="lazy"
               />
