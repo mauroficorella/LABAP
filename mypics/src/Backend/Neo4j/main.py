@@ -981,19 +981,40 @@ async def get_all_posts_urls(): #quando creo un post devo creare sia il nodo Pos
 
 
 @app.post("/get_notifications_info")
-async def get_searched_users(searchedUser: SearchedUser):
+async def get_searched_users(notificationsInfo: NotificationsInfo):
+    users_list = []
+    posts_list = []
+    for elem in notificationsInfo.notificationsArray:
+         x = elem.split(',')
+         users_list.append(x[0])
+         posts_list.append(x[2])
+    
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
-    print(searchedUser.search_input)
-    query = (
-            "MATCH (u:User) WHERE toLower(u.username) CONTAINS toLower($searchInput) "
+    q1 = (
+            "MATCH (u:User) WHERE u.user_id IN $u_list "
             "RETURN u"
             )
-    result = session.run(query, searchInput = searchedUser.search_input)
-    print(result)
+    
+    q2 = (
+            "MATCH (p:Post) WHERE p.post_id IN $p_list "
+            "RETURN p"
+            )
+    
+    result1 = session.run(q1, u_list = users_list)
+    result2 = session.run(q2, p_list = posts_list)
+    print(result1, result2)
     try:
-        result_value = [{ "user_id": record["u"]["user_id"], "username": record["u"]["username"], 
-                        "profile_pic": record["u"]["profile_pic"] } for record in result]
+        result_value = [{ "users_list": [{
+                             "user_id": record1["user_id"], 
+                             "username": record1["username"],
+                             "profile_pic": record1["profile_pic"]
+                  } for record1 in result1],
+                  "posts_list": [{
+                             "post_id": record2["post_id"], 
+                             "title": record2["title"] 
+                  } for record2 in result2]
+        }]
         
        
         print(result_value)
@@ -1001,7 +1022,7 @@ async def get_searched_users(searchedUser: SearchedUser):
                  
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
-                query=query, exception=exception))
+                query=q1, exception=exception))
             raise
 
 
