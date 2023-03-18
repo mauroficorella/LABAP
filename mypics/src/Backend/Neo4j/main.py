@@ -56,6 +56,13 @@ class SearchedPost(BaseModel):
 class SearchedUser(BaseModel):
     search_input: str
 
+class Notification(BaseModel):
+    destination_user_id: str
+    origin_user_id: str
+    notification_type: str
+    username: str
+    profile_pic: str
+
 
 app = FastAPI()
 
@@ -975,6 +982,57 @@ async def get_all_posts_urls(): #quando creo un post devo creare sia il nodo Pos
                 query=query, exception=exception))
             raise   
 
+
+@app.post("/notification")
+async def create_notification(notification: Notification): 
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "CREATE (n:Notification { notification_id: $n_id, origin_user_id: $o_id, notification_type: $n_type, origin_username: $o_username, origin_profile_pic: $o_profile_pic, read: False }) "
+            "CREATE (u)-[:HAS_NOTIFICATION]->(n) "
+            "RETURN n"
+            )
+
+    result = session.run(query, n_id = str(uuid.uuid4()), u_id = notification.destination_user_id, o_id = notification.origin_user_id, n_type = notification.notification_type, o_username = notification.username, o_profile_pic = notification.profile_pic)
+    try:
+        return [{"notification_id": record["n"]["notification_id"]} 
+                    for record in result]
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
+@app.get("/notification/{user_id}")
+async def get_notifications(user_id: str): 
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    q1 = (
+            "MATCH (u:User)-[r:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = False "
+            "RETURN collect(n) AS not_read_list, COUNT(r) AS count_not_read"
+            )
+    q2 = (
+            "MATCH (u:User)-[r:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = True "
+            "RETURN collect(n) AS read_list, COUNT(r) AS count_read"
+            )
+
+    
+    try:
+        result1 = session.run(q1, u_id = user_id)
+        result2 = session.run(q2, u_id = user_id)
+        return [{ "not_read_notifications": [{
+                             "num_not_read_notifications": record1["count_not_read"], 
+                             "not_read_list": record1["not_read_list"],
+                  } for record1 in result1],
+                  "read_notifications": [{
+                             "num_read_notifications": record2["count_read"], 
+                             "read_list": record2["read_list"],
+                  } for record2 in result2]
+        }]
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=q1, exception=exception))
+            raise
 
 
 """

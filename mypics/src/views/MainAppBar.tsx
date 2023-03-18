@@ -121,7 +121,11 @@ function MainAppBar() {
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
   // ! far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
 
-  //console.log(notificationsArray);
+  console.log(notificationsArray);
+
+  function emptyNotifications(){
+
+  }
 
   /*useEffect(() => {
     if (notificationsArray.length > 0) {
@@ -137,7 +141,7 @@ function MainAppBar() {
         });
     }
   }, [notificationsArray]);*/
-  
+
 
   useEffect(() => {
     /*const params = new URLSearchParams();
@@ -167,10 +171,16 @@ function MainAppBar() {
     function onFooEvent(result: any) {
       result = JSON.parse(result);
       //console.log(result);
-      setNotificationsArray((notificationsArray: any[]) => [
-        ...notificationsArray,
-        result,
-      ]);
+      axios
+        .get("http://localhost:8000/notification/" + user.user_id)
+        .then(function (response) {
+          console.log(response.data);
+          setNotificationsArray((notificationsArray: any[]) => response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      
     }
 
     socket.on("connect", onConnect);

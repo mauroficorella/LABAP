@@ -109,14 +109,28 @@ export default function UserProfile() {
     params.append("profile_pic", user.profile_pic);
 
     if (Object.keys(userData).length !== 0 && followBtn === false) {
-      fetch(`${API.API_URL}/api/calc/sum`, {
-        method: "POST",
-        body: params,
-      }).then((res) => {
-        res.json().then((valentano) => {
-          console.log(valentano);
+      axios
+        .post("http://localhost:8000/notification", {
+          destination_user_id: userData.user_id,
+          origin_user_id: user.user_id,
+          notification_type: "follow",
+          username: user.username,
+          profile_pic: user.profile_pic,
+        })
+        .then(function (response) {
+          console.log(response.data);
+          fetch(`${API.API_URL}/api/calc/sum`, {
+            method: "POST",
+            body: params,
+          }).then((res) => {
+            res.json().then((valentano) => {
+              console.log(valentano);
+            });
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      });
     }
 
     setFollowBtn(!followBtn);
