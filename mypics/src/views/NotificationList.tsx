@@ -102,8 +102,18 @@ export default function NotificationList(props: NotificationProps) {
                           }}
                         >
                           <Avatar
-                            alt="Remy Sharp"
-                            src="/static/images/avatar/1.jpg"
+                            alt={
+                              notification.response
+                                .split("username:")
+                                .pop()
+                                .split(",")[0]
+                            }
+                            src={
+                              notification.response
+                                .split("profile_pic:")
+                                .pop()
+                                .split(",")[0]
+                            }
                           />
                           <Box sx={{ ml: 1 }}>
                             <Typography
@@ -112,13 +122,31 @@ export default function NotificationList(props: NotificationProps) {
                               variant="body1"
                               color="text.primary"
                             >
-                              {"User " + notification.response.split(",")[0]}
+                              {"User " +
+                                notification.response
+                                  .split("username:")
+                                  .pop()
+                                  .split(",")[0]}
                             </Typography>
-                            {notification.response.split(",")[1] === "follow"
+                            {notification.response
+                              .split("notification_type:")
+                              .pop()
+                              .split(",")[0] === "follow"
                               ? " started following you"
-                              : notification.response.split(",")[1] === "like"
-                              ? " liked your picture"
-                              : " commented on your picture"}{" "}
+                              : notification.response
+                                  .split("notification_type:")
+                                  .pop()
+                                  .split(",")[0] === "like"
+                              ? " liked your picture " +
+                                notification.response
+                                  .split("post_title:")
+                                  .pop()
+                                  .split(",")[0]
+                              : " commented on your picture" +
+                                notification.response
+                                  .split("post_title:")
+                                  .pop()
+                                  .split(",")[0]}{" "}
                           </Box>
                         </Box>
                       </React.Fragment>

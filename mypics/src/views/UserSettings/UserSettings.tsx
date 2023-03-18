@@ -21,6 +21,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import * as API from "../../api";
 
 export default function UserSettings() {
   const { user } = useAuth();
@@ -53,10 +54,19 @@ export default function UserSettings() {
 
   //funzione per fare semplicemente il logout e tornare alla pagina iniziale
   function logoutUser() {
+    fetch(`${API.API_URL}/api/stop_handler`, {
+      method: "GET",
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     logout();
   }
-
-  
 
   return (
     <ThemeProvider theme={theme}>

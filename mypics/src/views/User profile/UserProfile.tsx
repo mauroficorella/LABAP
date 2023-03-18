@@ -105,6 +105,8 @@ export default function UserProfile() {
     params.append("destination_user_id", userData.user_id);
     params.append("origin_user_id", user.user_id);
     params.append("notification_type", "follow");
+    params.append("username", user.username);
+    params.append("profile_pic", user.profile_pic);
 
     if (Object.keys(userData).length !== 0 && followBtn === false) {
       fetch(`${API.API_URL}/api/calc/sum`, {

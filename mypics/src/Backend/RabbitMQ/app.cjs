@@ -19,11 +19,16 @@ var queue = "";
 
 var following_user_id;
 
+var conn;
+var chann;
+
 function startHandler() {
   rabbitMQHandler((connection) => {
+    conn = connection;
     if (queue != "") {
       console.log("CIAO AMICI");
       connection.createChannel(function (error, channel) {
+        chann = channel;
         if (error) {
           throw error;
         }
@@ -58,6 +63,12 @@ function startHandler() {
   });
 }
 
+function stopHandler() {
+  chann.close(function () {
+    conn.close();
+  });
+}
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", router);
 router.route("/calc/sum").post((req, res) => {
@@ -80,10 +91,29 @@ router.route("/calc/sum").post((req, res) => {
       var msg = "";
 
       if (req.body.notification_type == "follow") {
-        msg = "" + req.body.origin_user_id + "," + req.body.notification_type;
-      }
-      else {
-        msg = "" + req.body.origin_user_id + "," + req.body.notification_type + "," + req.body.post_id;
+        msg =
+          "user_id:" +
+          req.body.origin_user_id +
+          ",username:" +
+          req.body.username +
+          ",profile_pic:" +
+          req.body.profile_pic +
+          ",notification_type:" +
+          req.body.notification_type;
+      } else {
+        msg =
+          "user_id:" +
+          req.body.origin_user_id +
+          ",username:" +
+          req.body.username +
+          ",profile_pic:" +
+          req.body.profile_pic +
+          ",notification_type:" +
+          req.body.notification_type +
+          ",post_id:" +
+          req.body.post_id +
+          ",post_title:" +
+          req.body.post_title;
       }
 
       channel.assertQueue(user_queue, {
@@ -122,6 +152,18 @@ router.route("/receive").post((req, res) => {
   queue = "queue_" + req.body.user_id;
 
   startHandler();
+  var response = JSON.stringify({ response: "done" });
+  res.send(response);
+});
+
+router.route("/stop_handler").get((req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Credentials", true);
+  stopHandler();
   var response = JSON.stringify({ response: "done" });
   res.send(response);
 });

@@ -192,6 +192,9 @@ export default function Pic() {
     params.append("destination_user_id", state.user_id);
     params.append("notification_type", "comment");
     params.append("post_id", state.post_id);
+    params.append("username", user.username);
+    params.append("profile_pic", user.profile_pic);
+    params.append("post_title", state.title);
 
     fetch(`${API.API_URL}/api/calc/sum`, {
       method: "POST",

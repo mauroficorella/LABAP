@@ -121,20 +121,23 @@ function MainAppBar() {
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
   // ! far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
 
-  console.log(notificationsArray);
+  //console.log(notificationsArray);
 
-  useEffect(() =>{
-    axios
-      .post("http://localhost:8000/get_notifications_info", {
-        notificationsArray: notificationsArray
-      })
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  })
+  /*useEffect(() => {
+    if (notificationsArray.length > 0) {
+      axios
+        .post("http://localhost:8000/get_notifications_info", {
+          notificationsArray: notificationsArray,
+        })
+        .then(function (response) {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [notificationsArray]);*/
+  
 
   useEffect(() => {
     /*const params = new URLSearchParams();
