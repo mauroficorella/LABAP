@@ -107,6 +107,8 @@ export default function UserProfile() {
     params.append("notification_type", "follow");
     params.append("username", user.username);
     params.append("profile_pic", user.profile_pic);
+    params.append("post_id", "");
+    params.append("post_title", "");
 
     if (Object.keys(userData).length !== 0 && followBtn === false) {
       axios
@@ -116,6 +118,8 @@ export default function UserProfile() {
           notification_type: "follow",
           username: user.username,
           profile_pic: user.profile_pic,
+          post_id: "",
+          post_title: "",
         })
         .then(function (response) {
           console.log(response.data);
@@ -213,102 +217,99 @@ export default function UserProfile() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
-        <main>
-          <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}></Box>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <Avatar
-              alt="Remy Sharp"
-              src={userData.profile_pic}
-              sx={{ width: 128, height: 128 }}
-            />
-          </Box>{" "}
-          <Typography
-            color="inherit"
-            align="center"
-            variant="h5"
-            sx={{ mb: 2, mt: { sx: 1, sm: 2 } }}
-          >
-            {userData.username}
-          </Typography>
-          <Container
-            sx={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              width: 1 / 5,
-            }}
-          >
-            <Box
-              sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}
-            >
-              <Button color="inherit" onClick={handleClickOpenFollowers}>
-                {numFollowers}
-              </Button>
-              <Divider orientation="vertical" flexItem />
-              <Button color="inherit" onClick={handleClickOpenFollowing}>
-                {numFollowing}
-              </Button>
-            </Box>
-          </Container>
+      <main>
+        <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}></Box>
+        <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <Avatar
+            alt="Remy Sharp"
+            src={userData.profile_pic}
+            sx={{ width: 128, height: 128 }}
+          />
+        </Box>{" "}
+        <Typography
+          color="inherit"
+          align="center"
+          variant="h5"
+          sx={{ mb: 2, mt: { sx: 1, sm: 2 } }}
+        >
+          {userData.username}
+        </Typography>
+        <Container
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            width: 1 / 5,
+          }}
+        >
           <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              mt: 5,
-              mb: 5,
-            }}
+            sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}
           >
-            {" "}
-            {userData.user_id == user.user_id ? (
-              <ButtonGroup
-                color="secondary"
-                aria-label="medium secondary button group"
-                size="large"
-              >
-                <Button
-                  variant={selectedBtn === 1 ? "contained" : "outlined"}
-                  onClick={showProfileImageList}
-                >
-                  Your Pics
-                </Button>
-                <Button
-                  variant={selectedBtn === 2 ? "contained" : "outlined"}
-                  onClick={showSavedImageList}
-                >
-                  Saved
-                </Button>
-              </ButtonGroup>
-            ) : (
+            <Button color="inherit" onClick={handleClickOpenFollowers}>
+              {numFollowers}
+            </Button>
+            <Divider orientation="vertical" flexItem />
+            <Button color="inherit" onClick={handleClickOpenFollowing}>
+              {numFollowing}
+            </Button>
+          </Box>
+        </Container>
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            mt: 5,
+            mb: 5,
+          }}
+        >
+          {" "}
+          {userData.user_id == user.user_id ? (
+            <ButtonGroup
+              color="secondary"
+              aria-label="medium secondary button group"
+              size="large"
+            >
               <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleFollowBtn}
+                variant={selectedBtn === 1 ? "contained" : "outlined"}
+                onClick={showProfileImageList}
               >
-                {" "}
-                {followBtn ? "Unfollow" : "Follow"}
+                Your Pics
               </Button>
-            )}
-          </Box>
-          <Box sx={{ mr: 3, ml: 3 }}>
-            <ImageList
-              list_type={imageListType}
-              user_id={userData.user_id}
-            ></ImageList>
-          </Box>
-          <Box>
-            <br />
-            <SimpleDialog
-              title={selectedTitle}
-              selectedValue={selectedValue}
-              open={open}
-              onClose={handleClose}
-            />
-          </Box>
-        </main>
-      </React.Fragment>
+              <Button
+                variant={selectedBtn === 2 ? "contained" : "outlined"}
+                onClick={showSavedImageList}
+              >
+                Saved
+              </Button>
+            </ButtonGroup>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleFollowBtn}
+            >
+              {" "}
+              {followBtn ? "Unfollow" : "Follow"}
+            </Button>
+          )}
+        </Box>
+        <Box sx={{ mr: 3, ml: 3 }}>
+          <ImageList
+            list_type={imageListType}
+            user_id={userData.user_id}
+          ></ImageList>
+        </Box>
+        <Box>
+          <br />
+          <SimpleDialog
+            title={selectedTitle}
+            selectedValue={selectedValue}
+            open={open}
+            onClose={handleClose}
+          />
+        </Box>
+      </main>
     </ThemeProvider>
   );
 }

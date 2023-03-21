@@ -68,8 +68,6 @@ export default function SearchPage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
         <main>
           <Box
             sx={{
@@ -104,7 +102,6 @@ export default function SearchPage() {
             </TabPanel>
           </Box>
         </main>
-      </React.Fragment>
     </ThemeProvider>
   );
 }

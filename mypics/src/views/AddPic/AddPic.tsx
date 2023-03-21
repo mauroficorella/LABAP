@@ -122,8 +122,6 @@ export default function Homepage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
         <main>
           <Box sx={{ ml: 3, mt: 15 }}>
             <IconButton aria-label="back">
@@ -213,7 +211,6 @@ export default function Homepage() {
             </MyPaper>
           </Container>
         </main>
-      </React.Fragment>
     </ThemeProvider>
   );
 }

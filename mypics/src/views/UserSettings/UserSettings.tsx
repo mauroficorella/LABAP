@@ -71,8 +71,6 @@ export default function UserSettings() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
         <main>
           <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 8 }}></Box>
           <SettingsForm>
@@ -345,7 +343,6 @@ export default function UserSettings() {
             </Container>
           </SettingsForm>
         </main>
-      </React.Fragment>
     </ThemeProvider>
   );
 }

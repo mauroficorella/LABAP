@@ -119,31 +119,49 @@ function MainAppBar() {
   const [fooEvents, setFooEvents] = useState([]);
 
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
- 
+  const [notificationCount, setNotificationCount] = useState(0);
 
   //console.log(notificationsArray);
 
-  //TODO: -triggerare creazione notifica su neo4j anche per i commenti e i likes
+  //TODO: -triggerare creazione notifica su neo4j anche per i commenti e i likes (se un utente si mette mi piace o si commenta da solo non triggerare la notifica)
   //TODO: -modificare struttura notifications list in base alla struttura che ci torna neo4j
   //TODO: -far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
   //TODO: -quando apri le notifiche dobbiamo fare l'update su neo4j del flag e far diventare le notifiche lette
 
   function emptyNotifications() {}
 
-  /*useEffect(() => {
-    if (notificationsArray.length > 0) {
-      axios
-        .post("http://localhost:8000/get_notifications_info", {
-          notificationsArray: notificationsArray,
-        })
-        .then(function (response) {
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/notification/" + user.user_id)
+      .then(function (response) {
+        console.log(response.data);
+        setNotificationsArray((notificationsArray: any[]) => response.data);
+        setNotificationCount(
+          response.data[0].not_read_notifications[0].num_not_read_notifications
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("user_id", user.user_id);
+
+    fetch(`${API.API_URL}/api/receive`, {
+      method: "POST",
+      body: params,
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
         });
-    }
-  }, [notificationsArray]);*/
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     /*const params = new URLSearchParams();
@@ -178,6 +196,9 @@ function MainAppBar() {
         .then(function (response) {
           console.log(response.data);
           setNotificationsArray((notificationsArray: any[]) => response.data);
+          setNotificationCount(
+            response.data.not_read_notifications[0].not_read_list.lenght
+          );
         })
         .catch(function (error) {
           console.log(error);
@@ -260,7 +281,7 @@ function MainAppBar() {
             color="inherit"
             onClick={handleClick}
           >
-            <Badge badgeContent={notificationsArray.length} color="secondary">
+            <Badge badgeContent={notificationCount} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>

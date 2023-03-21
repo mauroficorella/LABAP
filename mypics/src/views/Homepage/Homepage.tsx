@@ -31,70 +31,49 @@ export default function Homepage() {
     setSelectedBtn(2);
   };
 
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.append("user_id", user.user_id);
-
-    fetch(`${API.API_URL}/api/receive`, {
-      method: "POST",
-      body: params,
-    })
-      .then((res) => {
-        res.json().then((data) => {
-          console.log(data);
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
-        <main>
-          <Box
-            sx={{
-              bgcolor: "background.paper",
-              pt: 7,
-              pb: 3,
-            }}
-          ></Box>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              mt: 3,
-              mb: 4,
-            }}
+      <main>
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            pt: 7,
+            pb: 3,
+          }}
+        ></Box>
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            mt: 3,
+            mb: 4,
+          }}
+        >
+          <ButtonGroup
+            color="secondary"
+            aria-label="medium secondary button group"
+            size="large"
           >
-            <ButtonGroup
-              color="secondary"
-              aria-label="medium secondary button group"
-              size="large"
+            <Button
+              variant={selectedBtn === 1 ? "contained" : "outlined"}
+              onClick={showPopularImageList}
             >
-              <Button
-                variant={selectedBtn === 1 ? "contained" : "outlined"}
-                onClick={showPopularImageList}
-              >
-                Popular
-              </Button>
-              <Button
-                variant={selectedBtn === 2 ? "contained" : "outlined"}
-                onClick={showFollowedImageList}
-              >
-                Following
-              </Button>
-            </ButtonGroup>
-          </Box>
-          <Box sx={{ mr: 3, ml: 3 }}>
-            <MasornyImageList list_type={imageListType}></MasornyImageList>
-          </Box>
-        </main>
-      </React.Fragment>
+              Popular
+            </Button>
+            <Button
+              variant={selectedBtn === 2 ? "contained" : "outlined"}
+              onClick={showFollowedImageList}
+            >
+              Following
+            </Button>
+          </ButtonGroup>
+        </Box>
+        <Box sx={{ mr: 3, ml: 3 }}>
+          <MasornyImageList list_type={imageListType}></MasornyImageList>
+        </Box>
+      </main>
     </ThemeProvider>
   );
 }

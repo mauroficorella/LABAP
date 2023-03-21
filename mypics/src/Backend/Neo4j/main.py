@@ -62,6 +62,8 @@ class Notification(BaseModel):
     notification_type: str
     username: str
     profile_pic: str
+    post_id: str
+    post_title: str
 
 
 app = FastAPI()
@@ -737,7 +739,7 @@ async def get_popular_posts(user_id: str):
             "WITH count(r) AS num_likes, u1, p, u2 " # ! se nella WITH clause non avessi messo anche u1 e p non me li avrebbe fatti ritornare nella RETURN perché avrebbe detto che non erano definiti come variabili, quindi quando uso la WITH metterci tutte le variabili che servono dopo
             "ORDER BY num_likes DESC "
             "RETURN u1, p, num_likes, EXISTS((u2)-[:PUBLISHED]->(p)) as published, EXISTS((u2)-[:LIKES]->(p)) as liked, EXISTS((u2)-[:SAVED]->(p)) as saved "
-            "LIMIT 50 "
+            "LIMIT 100 "
             )
     try:
         result = session.run(query, u_id = user_id)
@@ -989,12 +991,14 @@ async def create_notification(notification: Notification):
     session = neo4j_driver.session()
     query = (
             "MATCH (u) WHERE u:User and u.user_id = $u_id "
-            "CREATE (n:Notification { notification_id: $n_id, origin_user_id: $o_id, notification_type: $n_type, origin_username: $o_username, origin_profile_pic: $o_profile_pic, read: False }) "
+            "OPTIONAL MATCH (p) WHERE p:Post and p.post_id = $p_id "
+            "CREATE (n:Notification { notification_id: $n_id, origin_user_id: $o_id, notification_type: $n_type, origin_username: $o_username, origin_profile_pic: $o_profile_pic, read: False,  post_id: $p_id, post_title: $p_title}) "
             "CREATE (u)-[:HAS_NOTIFICATION]->(n) "
+            "MERGE (n)-[:NOTIFICATION_OF_POST]->(p) "
             "RETURN n"
             )
 
-    result = session.run(query, n_id = str(uuid.uuid4()), u_id = notification.destination_user_id, o_id = notification.origin_user_id, n_type = notification.notification_type, o_username = notification.username, o_profile_pic = notification.profile_pic)
+    result = session.run(query, n_id = str(uuid.uuid4()), u_id = notification.destination_user_id, o_id = notification.origin_user_id, n_type = notification.notification_type, o_username = notification.username, o_profile_pic = notification.profile_pic, p_id = notification.post_id, p_title = notification.post_title)
     try:
         return [{"notification_id": record["n"]["notification_id"]} 
                     for record in result]
@@ -1008,25 +1012,68 @@ async def get_notifications(user_id: str):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     q1 = (
-            "MATCH (u:User)-[r:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = False "
-            "RETURN collect(n) AS not_read_list, COUNT(r) AS count_not_read"
+            "MATCH (u:User)-[rn:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = False "
+            "OPTIONAL MATCH (n)-[:NOTIFCATION_OF_POST]->(p:Post) "
+            "MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
+            "WITH count(r) AS num_likes, u1, p "
+            "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
     q2 = (
             "MATCH (u:User)-[r:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = True "
-            "RETURN collect(n) AS read_list, COUNT(r) AS count_read"
+            "OPTIONAL MATCH (n)-[:NOTIFCATION_OF_POST]->(p:Post) "
+            "MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
+            "WITH count(r) AS num_likes, u1, p "
+            "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
 
+#TODO: AGGIUNGERE ANCHE I COMMENTI E LE PERSONE CHE HANNO PIACIUTO
     
     try:
         result1 = session.run(q1, u_id = user_id)
         result2 = session.run(q2, u_id = user_id)
         return [{ "not_read_notifications": [{
-                             "num_not_read_notifications": record1["count_not_read"], 
-                             "not_read_list": record1["not_read_list"],
+                                "num_not_read_notifications": record1["count_not_read"], 
+                                "post_id": record1["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHE' SONO INFORMAZIONI CHE HO GIA
+                                "fb_img_url": record1["p"]["fb_img_url"],
+                                "title": record1["p"]["title"],
+                                "description": record1["p"]["description"],
+                                "datetime": record1["p"]["datetime"],
+                                "user_id":record1["u1"]["user_id"],
+                                "username":record1["u1"]["username"],
+                                "profile_pic":record1["u1"]["profile_pic"],
+                                "num_likes": record1["num_likes"],
+                                "published":record1["published"],
+                                "liked":record1["liked"],
+                                "saved":record1["saved"],
+                                "notification_id":record1["n"]["notification_id"],
+                                "notification_type":record1["n"]["notification_type"],
+                                "origin_profile_pic":record1["n"]["origin_profile_pic"],
+                                "origin_user_id":record1["n"]["origin_user_id"],
+                                "origin_username":record1["n"]["origin_username"],
+                                "read":record1["n"]["read"],
                   } for record1 in result1],
                   "read_notifications": [{
-                             "num_read_notifications": record2["count_read"], 
-                             "read_list": record2["read_list"],
+                                "num_read_notifications": record2["count_read"], 
+                                "post_id": record2["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHE' SONO INFORMAZIONI CHE HO GIA
+                                "fb_img_url": record2["p"]["fb_img_url"],
+                                "title": record2["p"]["title"],
+                                "description": record2["p"]["description"],
+                                "datetime": record2["p"]["datetime"],
+                                "user_id":record2["u1"]["user_id"],
+                                "username":record2["u1"]["username"],
+                                "profile_pic":record2["u1"]["profile_pic"],
+                                "num_likes": record2["num_likes"],
+                                "published":record2["published"],
+                                "liked":record2["liked"],
+                                "saved":record2["saved"],
+                                "notification_id":record2["n"]["notification_id"],
+                                "notification_type":record2["n"]["notification_type"],
+                                "origin_profile_pic":record2["n"]["origin_profile_pic"],
+                                "origin_user_id":record2["n"]["origin_user_id"],
+                                "origin_username":record2["n"]["origin_username"],
+                                "read":record2["n"]["read"],
                   } for record2 in result2]
         }]
     except Neo4jError as exception:

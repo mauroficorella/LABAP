@@ -95,6 +95,7 @@ export default function Pic() {
   const { user } = useAuth();
   const { state } = useLocation(); //state contiene i dati riguardanti l'immagine che è stata cliccata dalla pagina precedente
   console.log("🚀 ~ file: Pic.tsx ~ line 34 ~ Pic ~ state", state);
+  console.log(state);
 
   const [itemData, setItemData] = useState<{ [key: string]: any }>({});
   const [comments, setComments] = useState<any>([]);
@@ -104,7 +105,11 @@ export default function Pic() {
   const [published, setPublished] = useState(state.published);
   const [commentText, setCommentText] = useState("");
 
-  const addOrRemoveLike = () => {
+  const addOrRemoveLike = (
+    user_id: string,
+    post_id: string,
+    post_title: string
+  ) => {
     liked ? setLiked(false) : setLiked(true);
     axios
       .post("http://localhost:8000/likes", {
@@ -113,6 +118,40 @@ export default function Pic() {
       })
       .then(function (response) {
         console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    const params = new URLSearchParams();
+    params.append("destination_user_id", user_id);
+    params.append("origin_user_id", user.user_id);
+    params.append("notification_type", "follow");
+    params.append("username", user.username);
+    params.append("profile_pic", user.profile_pic);
+    params.append("post_id", post_id);
+    params.append("post_title", post_title);
+
+    axios
+      .post("http://localhost:8000/notification", {
+        destination_user_id: user_id,
+        origin_user_id: user.user_id,
+        notification_type: "like",
+        username: user.username,
+        profile_pic: user.profile_pic,
+        post_id: post_id,
+        post_title: post_title,
+      })
+      .then(function (response) {
+        console.log(response.data);
+        fetch(`${API.API_URL}/api/calc/sum`, {
+          method: "POST",
+          body: params,
+        }).then((res) => {
+          res.json().then((valentano) => {
+            console.log(valentano);
+          });
+        });
       })
       .catch(function (error) {
         console.log(error);
@@ -249,406 +288,410 @@ export default function Pic() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <React.Fragment>
-        <MainAppBar />
-        <main>
-          <Box sx={{ ml: 3, mt: 15 }}>
-            <IconButton aria-label="back">
-              <ArrowBackIcon sx={{ color: "28282a" }} />
-            </IconButton>
-          </Box>
-          <Container
-            sx={{
-              display: "flex",
-              justifyContent: "Space-between",
-              width: 1600,
-              //height: 900,
-            }}
-          >
-            <MyPaper sx={{ m: 2 }} elevation={15}>
-              <Grid container spacing={0}>
-                <Grid item xs={6}>
-                  <Card
-                    elevation={0}
-                    sx={{
-                      //height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Link
-                      to="/user-profile/"
-                      state={state.user_id}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      <CardHeader
-                        avatar={
-                          <Avatar
-                            sx={{ bgcolor: red[500], width: 72, height: 72 }}
-                            aria-label="recipe"
-                            src={state.profile_pic}
-                          ></Avatar>
-                        }
-                        title={state.username}
-                        subheader={parseDate(state.datetime)}
-                      />
-                    </Link>
-                    <CardMedia
-                      component="img"
-                      image={state.fb_img_url}
-                      alt="random"
-                    />
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <Container
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      ml: 2,
-                      mt: 2,
-                    }}
-                  >
-                    <Typography
-                      component={"span"}
-                      variant="h5"
-                      fontSize="20pt"
-                      fontWeight="500"
-                    >
-                      {state.title}
-                    </Typography>
-                    <Box>
-                      <IconButton
-                        aria-label="add to favorites"
-                        onClick={addOrRemoveLike}
-                      >
-                        {liked ? (
-                          <FavoriteIcon color="secondary" />
-                        ) : (
-                          <FavoriteBorderIcon></FavoriteBorderIcon>
-                        )}
-                      </IconButton>
-                      <IconButton
-                        aria-label="save image"
-                        onClick={addOrRemoveSaved}
-                      >
-                        {saved ? (
-                          <BookmarkIcon color="secondary" />
-                        ) : (
-                          <BookmarkBorderIcon></BookmarkBorderIcon>
-                        )}
-                      </IconButton>
-                      {published ? (
-                        <IconButton
-                          aria-label="more"
-                          id="long-button"
-                          aria-controls={open ? "long-menu" : undefined}
-                          aria-expanded={open ? "true" : undefined}
-                          aria-haspopup="true"
-                          onClick={handleClick}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      ) : (
-                        <Box></Box>
-                      )}
 
-                      <Menu
-                        anchorEl={anchorEl}
-                        id="account-menu"
-                        open={open}
-                        onClose={handleClose}
-                        onClick={handleClose}
-                        PaperProps={{
-                          elevation: 0,
-                          sx: {
-                            overflow: "visible",
-                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                            mt: 1.5,
-                            "& .MuiAvatar-root": {
-                              width: 32,
-                              height: 32,
-                              ml: -0.5,
-                              mr: 1,
-                            },
-                            "&:before": {
-                              content: '""',
-                              display: "block",
-                              position: "absolute",
-                              top: 0,
-                              right: 14,
-                              width: 10,
-                              height: 10,
-                              bgcolor: "background.paper",
-                              transform: "translateY(-50%) rotate(45deg)",
-                              zIndex: 0,
-                            },
-                          },
-                        }}
-                        transformOrigin={{
-                          horizontal: "right",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                      >
-                        {" "}
-                        <MenuItem onClick={handleClose}>
-                          <ListItemIcon>
-                            <EditIcon fontSize="small" />
-                          </ListItemIcon>
-                          Modify image
-                        </MenuItem>
-                        <MenuItem onClick={handleClickOpenDialog}>
-                          <ListItemIcon>
-                            <DeleteIcon fontSize="small" />
-                          </ListItemIcon>
-                          Delete image
-                        </MenuItem>
-                      </Menu>
-                      <Dialog
-                        open={openDialog}
-                        onClose={handleCloseDialog}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            Do you really want to delete your post?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleCloseDialog}>CANCEL</Button>
-                          <Button
-                            color="secondary"
-                            onClick={handleDelete}
-                            autoFocus
-                          >
-                            DELETE
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </Box>
-                  </Container>
-                  <Container sx={{ mt: 3, ml: 2 }}>
-                    <Typography component={"span"} align="justify">
-                      {state.description}
-                    </Typography>
-                  </Container>
-                  <Container
-                    sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
+      <main>
+        <Box sx={{ ml: 3, mt: 15 }}>
+          <IconButton aria-label="back">
+            <ArrowBackIcon sx={{ color: "28282a" }} />
+          </IconButton>
+        </Box>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "Space-between",
+            width: 1600,
+            //height: 900,
+          }}
+        >
+          <MyPaper sx={{ m: 2 }} elevation={15}>
+            <Grid container spacing={0}>
+              <Grid item xs={6}>
+                <Card
+                  elevation={0}
+                  sx={{
+                    //height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Link
+                    to="/user-profile/"
+                    state={state.user_id}
+                    style={{ color: "black", textDecoration: "none" }}
                   >
-                    <Avatar
-                      sx={{
-                        color: "action.active",
-                        mr: 1,
-                        fontSize: 40,
-                      }}
-                      src={user.profile_pic}
-                    ></Avatar>
-                    <TextField
-                      id="outlined-basic"
-                      label="Leave a comment"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      multiline
-                      onChange={(newValue) =>
-                        setCommentText(newValue.target.value)
+                    <CardHeader
+                      avatar={
+                        <Avatar
+                          sx={{ bgcolor: red[500], width: 72, height: 72 }}
+                          aria-label="recipe"
+                          src={state.profile_pic}
+                        ></Avatar>
                       }
+                      title={state.username}
+                      subheader={parseDate(state.datetime)}
                     />
-                    <Box sx={{ ml: 1 }}>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        //size="small"
-                        onClick={handlePublish}
-                      >
-                        Publish
-                      </Button>
-                    </Box>
-                  </Container>
-                  <Container
-                    sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
+                  </Link>
+                  <CardMedia
+                    component="img"
+                    image={state.fb_img_url}
+                    alt="random"
+                  />
+                </Card>
+              </Grid>
+              <Grid item xs={6}>
+                <Container
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    ml: 2,
+                    mt: 2,
+                  }}
+                >
+                  <Typography
+                    component={"span"}
+                    variant="h5"
+                    fontSize="20pt"
+                    fontWeight="500"
                   >
-                    <Typography
-                      component={"span"}
-                      variant="h5"
-                      fontSize="16pt"
-                      fontWeight="500"
+                    {state.title}
+                  </Typography>
+                  <Box>
+                    <IconButton
+                      aria-label="add to favorites"
+                      onClick={() =>
+                        addOrRemoveLike(
+                          state.user_id,
+                          state.post_id,
+                          state.post_title
+                        )
+                      }
                     >
-                      Comments:
-                    </Typography>
-                  </Container>
-                  <Container
-                    sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
-                  >
-                    {isLoading ? (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
+                      {liked ? (
+                        <FavoriteIcon color="secondary" />
+                      ) : (
+                        <FavoriteBorderIcon></FavoriteBorderIcon>
+                      )}
+                    </IconButton>
+                    <IconButton
+                      aria-label="save image"
+                      onClick={addOrRemoveSaved}
+                    >
+                      {saved ? (
+                        <BookmarkIcon color="secondary" />
+                      ) : (
+                        <BookmarkBorderIcon></BookmarkBorderIcon>
+                      )}
+                    </IconButton>
+                    {published ? (
+                      <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
                       >
-                        <ThreeDots color="#ff3366" height="100" width="100" />
-                      </div>
+                        <MoreVertIcon />
+                      </IconButton>
                     ) : (
-                      <List
-                        sx={{
-                          width: "100%",
-                          maxWidth: "100%",
-                          height: "500px",
-                          bgcolor: "background.paper",
-                          overflowY: "scroll",
-                        }}
-                      >
-                        {comments ? ( //TODO: non funziona questo check perché quando i commenti non ci sono "comments" non c'è proprio nei dati ritrnati dal backend, capire come fare questo check
-                          comments.map(
-                            (comment: {
-                              comment_id: string;
-                              comment_text: string;
-                              datetime: any[];
-                              user_id: string;
-                              username: string;
-                              profile_pic: string;
-                              published_comment: boolean;
-                            }) => (
-                              <ListItem
-                                key={comment.comment_id}
-                                disableGutters
-                                sx={{
-                                  width: "100%",
-                                  backgroundColor: "#fcf2f5",
-                                  borderRadius: 4,
-                                  padding: 1.5,
-                                  mb: 1,
-                                }}
-                                alignItems="flex-start"
-                              >
-                                <ListItemText
-                                  primary={
-                                    <React.Fragment>
-                                      <Container
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          ml: -3,
-                                          mb: 2,
-                                          justifyContent: "space-between",
+                      <Box></Box>
+                    )}
+
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={open}
+                      onClose={handleClose}
+                      onClick={handleClose}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&:before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{
+                        horizontal: "right",
+                        vertical: "top",
+                      }}
+                      anchorOrigin={{
+                        horizontal: "right",
+                        vertical: "bottom",
+                      }}
+                    >
+                      {" "}
+                      <MenuItem onClick={handleClose}>
+                        <ListItemIcon>
+                          <EditIcon fontSize="small" />
+                        </ListItemIcon>
+                        Modify image
+                      </MenuItem>
+                      <MenuItem onClick={handleClickOpenDialog}>
+                        <ListItemIcon>
+                          <DeleteIcon fontSize="small" />
+                        </ListItemIcon>
+                        Delete image
+                      </MenuItem>
+                    </Menu>
+                    <Dialog
+                      open={openDialog}
+                      onClose={handleCloseDialog}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          Do you really want to delete your post?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseDialog}>CANCEL</Button>
+                        <Button
+                          color="secondary"
+                          onClick={handleDelete}
+                          autoFocus
+                        >
+                          DELETE
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Box>
+                </Container>
+                <Container sx={{ mt: 3, ml: 2 }}>
+                  <Typography component={"span"} align="justify">
+                    {state.description}
+                  </Typography>
+                </Container>
+                <Container
+                  sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
+                >
+                  <Avatar
+                    sx={{
+                      color: "action.active",
+                      mr: 1,
+                      fontSize: 40,
+                    }}
+                    src={user.profile_pic}
+                  ></Avatar>
+                  <TextField
+                    id="outlined-basic"
+                    label="Leave a comment"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    multiline
+                    onChange={(newValue) =>
+                      setCommentText(newValue.target.value)
+                    }
+                  />
+                  <Box sx={{ ml: 1 }}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      //size="small"
+                      onClick={handlePublish}
+                    >
+                      Publish
+                    </Button>
+                  </Box>
+                </Container>
+                <Container
+                  sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
+                >
+                  <Typography
+                    component={"span"}
+                    variant="h5"
+                    fontSize="16pt"
+                    fontWeight="500"
+                  >
+                    Comments:
+                  </Typography>
+                </Container>
+                <Container
+                  sx={{ display: "flex", alignItems: "center", mt: 3, ml: 2 }}
+                >
+                  {isLoading ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ThreeDots color="#ff3366" height="100" width="100" />
+                    </div>
+                  ) : (
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: "100%",
+                        height: "500px",
+                        bgcolor: "background.paper",
+                        overflowY: "scroll",
+                      }}
+                    >
+                      {comments ? ( //TODO: non funziona questo check perché quando i commenti non ci sono "comments" non c'è proprio nei dati ritrnati dal backend, capire come fare questo check
+                        comments.map(
+                          (comment: {
+                            comment_id: string;
+                            comment_text: string;
+                            datetime: any[];
+                            user_id: string;
+                            username: string;
+                            profile_pic: string;
+                            published_comment: boolean;
+                          }) => (
+                            <ListItem
+                              key={comment.comment_id}
+                              disableGutters
+                              sx={{
+                                width: "100%",
+                                backgroundColor: "#fcf2f5",
+                                borderRadius: 4,
+                                padding: 1.5,
+                                mb: 1,
+                              }}
+                              alignItems="flex-start"
+                            >
+                              <ListItemText
+                                primary={
+                                  <React.Fragment>
+                                    <Container
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        ml: -3,
+                                        mb: 2,
+                                        justifyContent: "space-between",
+                                      }}
+                                    >
+                                      <Link
+                                        to="/user-profile/"
+                                        state={comment.user_id}
+                                        style={{
+                                          color: "black",
+                                          textDecoration: "none",
                                         }}
                                       >
-                                        <Link
-                                          to="/user-profile/"
-                                          state={comment.user_id}
-                                          style={{
-                                            color: "black",
-                                            textDecoration: "none",
-                                          }}
-                                        >
-                                          <Container
-                                            sx={{
-                                              display: "flex",
-                                              alignItems: "center",
-                                              ml: -3,
-                                            }}
-                                          >
-                                            <Avatar
-                                              sx={{
-                                                color: "action.active",
-                                                mr: 2,
-                                                fontSize: 40,
-                                              }}
-                                              src={comment.profile_pic}
-                                            ></Avatar>
-                                            <Typography
-                                              sx={{ display: "inline" }}
-                                              component={"span"}
-                                              variant="body1"
-                                            >
-                                              {comment.username}
-                                            </Typography>
-                                          </Container>
-                                        </Link>
-                                        <Box
+                                        <Container
                                           sx={{
-                                            mr: -5,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            ml: -3,
                                           }}
                                         >
-                                          {comment.published_comment ? (
-                                            <IconButton
-                                              aria-label="comment"
-                                              onClick={() =>
-                                                handleDeleteComment(
-                                                  comment.comment_id
-                                                )
-                                              }
-                                            >
-                                              <DeleteIcon />
-                                            </IconButton>
-                                          ) : (
-                                            <div></div>
-                                          )}
-                                        </Box>
-                                      </Container>
-                                    </React.Fragment>
-                                  }
-                                  secondary={
-                                    <React.Fragment>
-                                      <Box sx={{ mb: 1 }}>
-                                        <Typography
-                                          sx={{ display: "inline" }}
-                                          component={"span"}
-                                          variant="body1"
-                                          color="text.primary"
-                                          align="justify"
-                                        >
-                                          {comment.comment_text}
-                                        </Typography>
+                                          <Avatar
+                                            sx={{
+                                              color: "action.active",
+                                              mr: 2,
+                                              fontSize: 40,
+                                            }}
+                                            src={comment.profile_pic}
+                                          ></Avatar>
+                                          <Typography
+                                            sx={{ display: "inline" }}
+                                            component={"span"}
+                                            variant="body1"
+                                          >
+                                            {comment.username}
+                                          </Typography>
+                                        </Container>
+                                      </Link>
+                                      <Box
+                                        sx={{
+                                          mr: -5,
+                                        }}
+                                      >
+                                        {comment.published_comment ? (
+                                          <IconButton
+                                            aria-label="comment"
+                                            onClick={() =>
+                                              handleDeleteComment(
+                                                comment.comment_id
+                                              )
+                                            }
+                                          >
+                                            <DeleteIcon />
+                                          </IconButton>
+                                        ) : (
+                                          <div></div>
+                                        )}
                                       </Box>
-                                      <Box>
-                                        <Typography
-                                          sx={{ display: "inline" }}
-                                          component={"span"}
-                                          variant="body2"
-                                        >
-                                          {parseDate(comment.datetime)}
-                                        </Typography>
-                                      </Box>
-                                    </React.Fragment>
-                                  }
-                                  sx={{
-                                    width: "100",
-                                  }}
-                                />
-                              </ListItem>
-                            )
+                                    </Container>
+                                  </React.Fragment>
+                                }
+                                secondary={
+                                  <React.Fragment>
+                                    <Box sx={{ mb: 1 }}>
+                                      <Typography
+                                        sx={{ display: "inline" }}
+                                        component={"span"}
+                                        variant="body1"
+                                        color="text.primary"
+                                        align="justify"
+                                      >
+                                        {comment.comment_text}
+                                      </Typography>
+                                    </Box>
+                                    <Box>
+                                      <Typography
+                                        sx={{ display: "inline" }}
+                                        component={"span"}
+                                        variant="body2"
+                                      >
+                                        {parseDate(comment.datetime)}
+                                      </Typography>
+                                    </Box>
+                                  </React.Fragment>
+                                }
+                                sx={{
+                                  width: "100",
+                                }}
+                              />
+                            </ListItem>
                           )
-                        ) : (
-                          <Typography component={"span"}>
-                            {" "}
-                            No comments to show
-                          </Typography>
-                        )}
-                      </List>
-                    )}
-                  </Container>
-                </Grid>
+                        )
+                      ) : (
+                        <Typography component={"span"}>
+                          {" "}
+                          No comments to show
+                        </Typography>
+                      )}
+                    </List>
+                  )}
+                </Container>
               </Grid>
-            </MyPaper>
-          </Container>
+            </Grid>
+          </MyPaper>
+        </Container>
 
-          <Snackbar open={showAlert} autoHideDuration={6000}>
-            <Alert severity="success" color="success">
-              Post deleted successfully!
-            </Alert>
-          </Snackbar>
-        </main>
-      </React.Fragment>
+        <Snackbar open={showAlert} autoHideDuration={6000}>
+          <Alert severity="success" color="success">
+            Post deleted successfully!
+          </Alert>
+        </Snackbar>
+      </main>
     </ThemeProvider>
   );
 }

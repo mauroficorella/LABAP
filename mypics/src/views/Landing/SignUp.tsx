@@ -68,8 +68,7 @@ function SignUp() {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <React.Fragment>
-      <AppAppBar />
+
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
@@ -147,7 +146,6 @@ function SignUp() {
           </Grid>
         </Box>
       </AppForm>
-    </React.Fragment>
   );
 }
 
