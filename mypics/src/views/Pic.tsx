@@ -132,6 +132,16 @@ export default function Pic() {
     params.append("post_id", post_id);
     params.append("post_title", post_title);
 
+    console.log({
+      destination_user_id: user_id,
+      origin_user_id: user.user_id,
+      notification_type: "like",
+      username: user.username,
+      profile_pic: user.profile_pic,
+      post_id: post_id,
+      post_title: post_title,
+    });
+
     axios
       .post("http://localhost:8000/notification", {
         destination_user_id: user_id,
@@ -362,7 +372,7 @@ export default function Pic() {
                         addOrRemoveLike(
                           state.user_id,
                           state.post_id,
-                          state.post_title
+                          state.title
                         )
                       }
                     >

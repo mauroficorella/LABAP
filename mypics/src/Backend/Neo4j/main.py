@@ -1013,18 +1013,24 @@ async def get_notifications(user_id: str):
     session = neo4j_driver.session()
     q1 = (
             "MATCH (u:User)-[rn:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = False "
-            "OPTIONAL MATCH (n)-[:NOTIFCATION_OF_POST]->(p:Post) "
-            "MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "WITH n, rn, u "
+            "OPTIONAL MATCH (n)-[:NOTIFICATION_OF_POST]->(p:Post) "
+            "WITH n, rn, u, p "
+            "OPTIONAL MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "WITH n, rn, u, p, u1 "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
-            "WITH count(r) AS num_likes, u1, p "
+            "WITH count(r) AS num_likes, u1, p, n, rn, u "
             "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
     q2 = (
-            "MATCH (u:User)-[r:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = True "
-            "OPTIONAL MATCH (n)-[:NOTIFCATION_OF_POST]->(p:Post) "
-            "MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "MATCH (u:User)-[rn:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = True "
+            "WITH n, rn, u "
+            "OPTIONAL MATCH (n)-[:NOTIFICATION_OF_POST]->(p:Post) "
+            "WITH n, rn, u, p "
+            "OPTIONAL MATCH (u1:User)-[:PUBLISHED]->(p) " 
+            "WITH n, rn, u, p, u1 "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
-            "WITH count(r) AS num_likes, u1, p "
+            "WITH count(r) AS num_likes, u1, p, n, rn, u "
             "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
 
@@ -1033,9 +1039,13 @@ async def get_notifications(user_id: str):
     try:
         result1 = session.run(q1, u_id = user_id)
         result2 = session.run(q2, u_id = user_id)
-        return [{ "not_read_notifications": [{
+        not_read_notifications = []
+        read_notifications = []
+        for record1 in result1:
+             if record1["p"] is not None:
+                  not_read_notifications.append([{
                                 "num_not_read_notifications": record1["count_not_read"], 
-                                "post_id": record1["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHE' SONO INFORMAZIONI CHE HO GIA
+                                "post_id": record1["p"]["post_id"],
                                 "fb_img_url": record1["p"]["fb_img_url"],
                                 "title": record1["p"]["title"],
                                 "description": record1["p"]["description"],
@@ -1053,10 +1063,23 @@ async def get_notifications(user_id: str):
                                 "origin_user_id":record1["n"]["origin_user_id"],
                                 "origin_username":record1["n"]["origin_username"],
                                 "read":record1["n"]["read"],
-                  } for record1 in result1],
-                  "read_notifications": [{
+                  }])
+             else:
+                  not_read_notifications.append([{
+                                "num_not_read_notifications": record1["count_not_read"], 
+                                "notification_id":record1["n"]["notification_id"],
+                                "notification_type":record1["n"]["notification_type"],
+                                "origin_profile_pic":record1["n"]["origin_profile_pic"],
+                                "origin_user_id":record1["n"]["origin_user_id"],
+                                "origin_username":record1["n"]["origin_username"],
+                                "read":record1["n"]["read"],
+                  }])
+
+        for record2 in result2:
+             if record2["p"] is not None:
+                  read_notifications.append([{
                                 "num_read_notifications": record2["count_read"], 
-                                "post_id": record2["p"]["post_id"], # ! DA POST_ID A SAVED POTREBBERO NON SERVIRE PERCHE' SONO INFORMAZIONI CHE HO GIA
+                                "post_id": record2["p"]["post_id"], 
                                 "fb_img_url": record2["p"]["fb_img_url"],
                                 "title": record2["p"]["title"],
                                 "description": record2["p"]["description"],
@@ -1074,8 +1097,18 @@ async def get_notifications(user_id: str):
                                 "origin_user_id":record2["n"]["origin_user_id"],
                                 "origin_username":record2["n"]["origin_username"],
                                 "read":record2["n"]["read"],
-                  } for record2 in result2]
-        }]
+                  }])
+             else:
+                  read_notifications.append([{
+                                "num_read_notifications": record2["count_read"], 
+                                "notification_id":record2["n"]["notification_id"],
+                                "notification_type":record2["n"]["notification_type"],
+                                "origin_profile_pic":record2["n"]["origin_profile_pic"],
+                                "origin_user_id":record2["n"]["origin_user_id"],
+                                "origin_username":record2["n"]["origin_username"],
+                                "read":record2["n"]["read"],
+                  }])
+        return [{"not_read_notifications": not_read_notifications, "read_notifications": read_notifications}]
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
                 query=q1, exception=exception))

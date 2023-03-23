@@ -135,9 +135,9 @@ function MainAppBar() {
       .get("http://localhost:8000/notification/" + user.user_id)
       .then(function (response) {
         console.log(response.data);
-        setNotificationsArray((notificationsArray: any[]) => response.data);
+        setNotificationsArray(response.data);
         setNotificationCount(
-          response.data[0].not_read_notifications[0].num_not_read_notifications
+          response.data[0].not_read_notifications.length
         );
       })
       .catch(function (error) {
@@ -195,9 +195,9 @@ function MainAppBar() {
         .get("http://localhost:8000/notification/" + user.user_id)
         .then(function (response) {
           console.log(response.data);
-          setNotificationsArray((notificationsArray: any[]) => response.data);
+          setNotificationsArray(response.data);
           setNotificationCount(
-            response.data.not_read_notifications[0].not_read_list.lenght
+            response.data[0].not_read_notifications.length
           );
         })
         .catch(function (error) {
