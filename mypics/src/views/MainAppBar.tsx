@@ -107,6 +107,31 @@ function MainAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    let notification_ids: any[] = [];
+    notificationsArray[0].not_read_notifications.forEach((elem: any) => {
+      notification_ids.push(elem[0].notification_id);
+    });
+    axios
+      .put("http://localhost:8000/notification", {
+        notification_ids: notification_ids,
+      })
+      .then(function () {
+        axios
+          .get("http://localhost:8000/notification/" + user.user_id)
+          .then(function (response) {
+            console.log(response.data);
+            setNotificationsArray(response.data);
+            setNotificationCount(
+              response.data[0].not_read_notifications.length
+            );
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const open = Boolean(anchorEl);
@@ -128,17 +153,13 @@ function MainAppBar() {
   //TODO: -far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
   //TODO: -quando apri le notifiche dobbiamo fare l'update su neo4j del flag e far diventare le notifiche lette
 
-  function emptyNotifications() {}
-
   useEffect(() => {
     axios
       .get("http://localhost:8000/notification/" + user.user_id)
       .then(function (response) {
         console.log(response.data);
         setNotificationsArray(response.data);
-        setNotificationCount(
-          response.data[0].not_read_notifications.length
-        );
+        setNotificationCount(response.data[0].not_read_notifications.length);
       })
       .catch(function (error) {
         console.log(error);
@@ -196,9 +217,7 @@ function MainAppBar() {
         .then(function (response) {
           console.log(response.data);
           setNotificationsArray(response.data);
-          setNotificationCount(
-            response.data[0].not_read_notifications.length
-          );
+          setNotificationCount(response.data[0].not_read_notifications.length);
         })
         .catch(function (error) {
           console.log(error);
@@ -327,7 +346,7 @@ function MainAppBar() {
           >
             <NotificationList
               notificationsArray={notificationsArray}
-              handleClose = {handleClose}
+              handleClose={handleClose}
             ></NotificationList>
           </Popover>
           <Tooltip title="Settings">

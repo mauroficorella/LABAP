@@ -125,7 +125,12 @@ export default function NotificationList(props: NotificationProps) {
             >
               {props.notificationsArray[0]["not_read_notifications"].map(
                 (notification: any, index: any) => (
-                  <ListItemButton key={index}>
+                  <ListItemButton
+                    key={index}
+                    onClick={() => {
+                      props.handleClose();
+                    }}
+                  >
                     <ListItem alignItems="center" divider key={index}>
                       <ListItemText
                         primary={
@@ -241,7 +246,7 @@ export default function NotificationList(props: NotificationProps) {
             <List
               sx={{ width: 400, maxWidth: 400, bgcolor: "background.paper" }}
             >
-              {props.notificationsArray[0]["read_notifications"][0].map(
+              {props.notificationsArray[0]["read_notifications"].map(
                 (notification: any, index: any) => (
                   <ListItemButton
                     key={index}
@@ -258,7 +263,24 @@ export default function NotificationList(props: NotificationProps) {
                           <React.Fragment>
                             <Link
                               to="/user-profile/"
-                              state={notification.origin_user_id}
+                              state={
+                                notification[0].notification_type === "follow"
+                                  ? notification.origin_user_id
+                                  : {
+                                      datetime: notification[0].datetime,
+                                      description: notification[0].description,
+                                      fb_img_url: notification[0].fb_img_url,
+                                      liked: notification[0].liked,
+                                      num_likes: notification[0].num_likes,
+                                      post_id: notification[0].post_id,
+                                      profile_pic: notification[0].profile_pic,
+                                      published: notification[0].published,
+                                      saved: notification[0].saved,
+                                      title: notification[0].title,
+                                      user_id: notification[0].user_id,
+                                      username: notification[0].username,
+                                    }
+                              }
                               style={{
                                 color: "black",
                                 textDecoration: "none",
@@ -272,7 +294,7 @@ export default function NotificationList(props: NotificationProps) {
                               >
                                 <Avatar
                                   alt={"Profile Pic"}
-                                  src={notification.origin_profile_pic}
+                                  src={notification[0].origin_profile_pic}
                                 />
                                 <Box sx={{ ml: 1 }}>
                                   <Typography
@@ -281,9 +303,10 @@ export default function NotificationList(props: NotificationProps) {
                                     variant="body1"
                                     color="text.primary"
                                   >
-                                    {"User " + notification.origin_username}
+                                    {"User " + notification[0].origin_username}
                                   </Typography>
-                                  {notification.notification_type === "follow"
+                                  {notification[0].notification_type ===
+                                  "follow"
                                     ? " started following you"
                                     : notification[0].notification_type ===
                                       "like"

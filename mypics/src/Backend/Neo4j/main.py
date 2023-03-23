@@ -65,6 +65,9 @@ class Notification(BaseModel):
     post_id: str
     post_title: str
 
+class NotificationUpdate(BaseModel):
+     notification_ids: list
+
 
 app = FastAPI()
 
@@ -1031,7 +1034,7 @@ async def get_notifications(user_id: str):
             "WITH n, rn, u, p, u1 "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
             "WITH count(r) AS num_likes, u1, p, n, rn, u "
-            "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
+            "RETURN n, COUNT(rn) AS count_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
 
 #TODO: AGGIUNGERE ANCHE I COMMENTI E LE PERSONE CHE HANNO PIACIUTO
@@ -1112,6 +1115,26 @@ async def get_notifications(user_id: str):
     except Neo4jError as exception:
             logging.error("{query} raised an error: \n {exception}".format(
                 query=q1, exception=exception))
+            raise
+
+
+@app.put("/notification")
+async def check_user(notification_update: NotificationUpdate): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (n) WHERE n:Notification AND n.notification_id IN $n_list "
+            "SET n += { read: True } "
+            "RETURN n"
+            )
+    result = session.run(query, n_list = notification_update.notification_ids)
+    try:
+        return [{"notification_id": record["n"]["notification_id"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
             raise
 
 
