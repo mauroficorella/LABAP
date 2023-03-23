@@ -47,6 +47,7 @@ function a11yProps(index: number) {
 
 interface NotificationProps {
   notificationsArray: any;
+  handleClose: any;
 }
 
 export default function NotificationList(props: NotificationProps) {

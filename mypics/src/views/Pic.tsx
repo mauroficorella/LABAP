@@ -110,7 +110,6 @@ export default function Pic() {
     post_id: string,
     post_title: string
   ) => {
-    liked ? setLiked(false) : setLiked(true);
     axios
       .post("http://localhost:8000/likes", {
         user_id: user.user_id,
@@ -142,30 +141,36 @@ export default function Pic() {
       post_title: post_title,
     });
 
-    axios
-      .post("http://localhost:8000/notification", {
-        destination_user_id: user_id,
-        origin_user_id: user.user_id,
-        notification_type: "like",
-        username: user.username,
-        profile_pic: user.profile_pic,
-        post_id: post_id,
-        post_title: post_title,
-      })
-      .then(function (response) {
-        console.log(response.data);
-        fetch(`${API.API_URL}/api/calc/sum`, {
-          method: "POST",
-          body: params,
-        }).then((res) => {
-          res.json().then((valentano) => {
-            console.log(valentano);
+    if (!liked && (user_id != user.user_id)) {
+      axios
+        .post("http://localhost:8000/notification", {
+          destination_user_id: user_id,
+          origin_user_id: user.user_id,
+          notification_type: "like",
+          username: user.username,
+          profile_pic: user.profile_pic,
+          post_id: post_id,
+          post_title: post_title,
+        })
+        .then(function (response) {
+          console.log(response.data);
+          fetch(`${API.API_URL}/api/calc/sum`, {
+            method: "POST",
+            body: params,
+          }).then((res) => {
+            res.json().then((valentano) => {
+              console.log(valentano);
+            });
           });
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    }
+    else{
+      console.log("sono una persona che non capisce un cazzo ha ragione martina")
+    }
+    liked ? setLiked(false) : setLiked(true);
   };
 
   const addOrRemoveSaved = () => {

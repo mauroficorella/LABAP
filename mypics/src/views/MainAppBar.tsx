@@ -327,6 +327,7 @@ function MainAppBar() {
           >
             <NotificationList
               notificationsArray={notificationsArray}
+              handleClose = {handleClose}
             ></NotificationList>
           </Popover>
           <Tooltip title="Settings">
