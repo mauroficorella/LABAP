@@ -104,7 +104,14 @@ export default function NotificationList(props: NotificationProps) {
                   <ListItemText
                     primary={
                       <React.Fragment>
-                        <Box>{"No notifications available"}</Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            ml: -6,
+                          }}
+                        >
+                          {"No notifications available"}
+                        </Box>
                       </React.Fragment>
                     }
                     //secondary={}
@@ -215,7 +222,14 @@ export default function NotificationList(props: NotificationProps) {
                   <ListItemText
                     primary={
                       <React.Fragment>
-                        <Box>{"No notifications available"}</Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            ml: -6,
+                          }}
+                        >
+                          {"No notifications available"}
+                        </Box>
                       </React.Fragment>
                     }
                     //secondary={}
