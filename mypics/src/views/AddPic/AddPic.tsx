@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import { StyledDropzone } from "./Dropzone";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 //import { DropzoneArea } from "material-ui-dropzone";
 
 const MyPaper = styled(Paper)({
@@ -119,99 +120,100 @@ export default function Homepage() {
     }
   }
 
+  const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-        <main>
-          <Box sx={{ ml: 3, mt: 15 }}>
-            <IconButton aria-label="back">
-              <ArrowBackIcon sx={{ color: "28282a" }} />
-            </IconButton>
-          </Box>
-          <Container
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: 1600,
-              //height: 900,
-            }}
-          >
-            <MyPaper sx={{ m: 2 }} elevation={15}>
-              <Grid container spacing={0}>
-                <Grid item xs={6}>
-                  <StyledDropzone
-                    onDrop={onDrop}
-                    selectedImages={selectedImages}
-                  ></StyledDropzone>
-                </Grid>
-                <Grid item xs={6}>
-                  <Container
+      <main>
+        <Box sx={{ ml: 3, mt: 15 }}>
+          <IconButton aria-label="back" onClick={() => navigate(-1)}>
+            <ArrowBackIcon sx={{ color: "28282a" }} />
+          </IconButton>
+        </Box>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: 1600,
+            //height: 900,
+          }}
+        >
+          <MyPaper sx={{ m: 2 }} elevation={15}>
+            <Grid container spacing={0}>
+              <Grid item xs={6}>
+                <StyledDropzone
+                  onDrop={onDrop}
+                  selectedImages={selectedImages}
+                ></StyledDropzone>
+              </Grid>
+              <Grid item xs={6}>
+                <Container
+                  sx={{
+                    display: "flex",
+                    ml: 2,
+                    flexDirection: "column",
+                    alignItems: "end",
+                  }}
+                >
+                  <Box
+                    //sx={{ ml: 2 }}
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      fullWidth
+                      label="Add a title"
+                      id="title"
+                      color="secondary"
+                      onChange={(newValue) =>
+                        setTitleValue(newValue.target.value)
+                      }
+                      variant="standard"
+                      inputProps={{ style: { fontSize: 40 } }}
+                      InputLabelProps={{ style: { fontSize: 30 } }}
+                    />
+                  </Box>
+                  <Box
                     sx={{
-                      display: "flex",
+                      width: "99%",
+                      maxWidth: "100%",
+                      mt: 3,
                       ml: 2,
-                      flexDirection: "column",
-                      alignItems: "end",
                     }}
                   >
-                    <Box
-                      //sx={{ ml: 2 }}
-                      component="form"
-                      noValidate
-                      autoComplete="off"
+                    <TextField
+                      fullWidth
+                      label="Add a description"
+                      id="description"
+                      color="secondary"
+                      onChange={(newValue) =>
+                        setDescriptionValue(newValue.target.value)
+                      }
+                      multiline
+                      rows={8}
+                    />
+                  </Box>
+                  <Box sx={{ mt: 3, ml: 2 }}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      size="large"
+                      component="a"
+                      //href="//"
+                      onClick={handleClick}
+                      sx={{ minWidth: 200 }}
                     >
-                      <TextField
-                        fullWidth
-                        label="Add a title"
-                        id="title"
-                        color="secondary"
-                        onChange={(newValue) =>
-                          setTitleValue(newValue.target.value)
-                        }
-                        variant="standard"
-                        inputProps={{ style: { fontSize: 40 } }}
-                        InputLabelProps={{ style: { fontSize: 30 } }}
-                      />
-                    </Box>
-                    <Box
-                      sx={{
-                        width: "99%",
-                        maxWidth: "100%",
-                        mt: 3,
-                        ml: 2,
-                      }}
-                    >
-                      <TextField
-                        fullWidth
-                        label="Add a description"
-                        id="description"
-                        color="secondary"
-                        onChange={(newValue) =>
-                          setDescriptionValue(newValue.target.value)
-                        }
-                        multiline
-                        rows={8}
-                      />
-                    </Box>
-                    <Box sx={{ mt: 3, ml: 2 }}>
-                      <Button
-                        color="secondary"
-                        variant="contained"
-                        size="large"
-                        component="a"
-                        //href="//"
-                        onClick={handleClick}
-                        sx={{ minWidth: 200 }}
-                      >
-                        Save
-                      </Button>
-                    </Box>
-                  </Container>
-                </Grid>
+                      Save
+                    </Button>
+                  </Box>
+                </Container>
               </Grid>
-            </MyPaper>
-          </Container>
-        </main>
+            </Grid>
+          </MyPaper>
+        </Container>
+      </main>
     </ThemeProvider>
   );
 }

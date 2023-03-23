@@ -306,7 +306,7 @@ export default function Pic() {
 
       <main>
         <Box sx={{ ml: 3, mt: 15 }}>
-          <IconButton aria-label="back">
+          <IconButton aria-label="back" onClick={() => navigate(-1)}>
             <ArrowBackIcon sx={{ color: "28282a" }} />
           </IconButton>
         </Box>
@@ -370,7 +370,20 @@ export default function Pic() {
                   >
                     {state.title}
                   </Typography>
-                  <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      component={"span"}
+                      variant="h6"
+                      //fontSize="11pt"
+                      fontWeight="500"
+                    >
+                      {state.num_likes}
+                    </Typography>
                     <IconButton
                       aria-label="add to favorites"
                       onClick={() =>
