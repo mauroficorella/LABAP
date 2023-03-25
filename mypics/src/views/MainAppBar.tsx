@@ -146,10 +146,6 @@ function MainAppBar() {
   const [notificationsArray, setNotificationsArray] = useState<any>([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
-  //console.log(notificationsArray);
-
-  //TODO: -triggerare creazione notifica su neo4j anche per i commenti (se un utente si commenta da solo non triggerare la notifica)
-
   useEffect(() => {
     axios
       .get("http://localhost:8000/notification/" + user.user_id)

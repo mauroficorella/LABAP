@@ -68,6 +68,10 @@ class Notification(BaseModel):
 class NotificationUpdate(BaseModel):
      notification_ids: list
 
+class PicUpdate(BaseModel):
+     user_id: str
+     profile_pic: str
+
 
 app = FastAPI()
 
@@ -194,12 +198,31 @@ async def check_user(checkuser_model: CheckUser): #ho messo user_model perché u
     session = neo4j_driver.session()
     query = (
             "MATCH (u) WHERE u:User and u.username = $u_name "
-            "SET u += { password: $u_pswd }"
+            "SET u += { password: $u_pswd } "
             "RETURN u"
             )
     result = session.run(query, u_id = str(uuid.uuid4()), u_name = checkuser_model.username, u_pswd = checkuser_model.password)
     try:
         return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
+@app.post("/updateprofilepic")
+async def update_profile_pic(pic_update: PicUpdate): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "SET u += { profile_pic: $u_pic } "
+            "RETURN u"
+            )
+    result = session.run(query, u_id = pic_update.user_id, u_pic = pic_update.profile_pic)
+    try:
+        return [{"user_id": record["u"]["user_id"]} 
                     for record in result]
 
     except Neo4jError as exception:
@@ -1023,7 +1046,7 @@ async def get_notifications(user_id: str):
             "WITH n, rn, u, p, u1 "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
             "WITH count(r) AS num_likes, u1, p, n, rn, u "
-            "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
+            "RETURN n, COUNT(rn) AS count_not_read, num_likes, p, u1, EXISTS((u)-[:PUBLISHED]->(p)) as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
     q2 = (
             "MATCH (u:User)-[rn:HAS_NOTIFICATION]->(n:Notification) WHERE u.user_id = $u_id AND n.read = True "
@@ -1034,7 +1057,7 @@ async def get_notifications(user_id: str):
             "WITH n, rn, u, p, u1 "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u) "
             "WITH count(r) AS num_likes, u1, p, n, rn, u "
-            "RETURN n, COUNT(rn) AS count_read, num_likes, p, u1, FALSE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
+            "RETURN n, COUNT(rn) AS count_read, num_likes, p, u1, EXISTS((u)-[:PUBLISHED]->(p)) as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved"
             )
 
 #TODO: AGGIUNGERE ANCHE I COMMENTI E LE PERSONE CHE HANNO PIACIUTO

@@ -26,7 +26,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function UserSettings() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   //questo serve per usare gli hooks e tornare alla pagina iniziale dopo l'eliminazione dell'account
   const { logout } = useAuth();
@@ -62,13 +62,52 @@ export default function UserSettings() {
   };
 
   const [openPic, setOpenPic] = React.useState(false);
+  const [fbImgUrl, setFbImgUrl] = useState("");
 
   const handleClickPic = () => {
     setOpenPic(true);
   };
 
   const handleClosePic = () => {
+    console.log("called handleClick");
+
+    var formData = new FormData();
+    formData.append("image", acceptedFiles[0]);
+
+    axios
+      .post("http://localhost:8000/uploadpic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        //console.log(response.data.fb_img_url);
+        console.log("TYPE" + response.data.type);
+        setFbImgUrl(response.data);
+        console.log("FBIMGURL: " + fbImgUrl);
+
+        axios
+          .post("http://localhost:8000/updateprofilepic", {
+            user_id: user.user_id,
+            profile_pic: fbImgUrl
+          })
+          .then(function () {
+            setUser({
+              username: user.username,
+              user_id: user.user_id,
+              profile_pic: fbImgUrl,
+              email: user.email,
+              password: user.password,
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     setOpenPic(false);
+
   };
 
   const [showPassword1, setShowPassword1] = useState(false);

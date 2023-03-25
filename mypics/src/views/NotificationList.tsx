@@ -262,7 +262,11 @@ export default function NotificationList(props: NotificationProps) {
                         primary={
                           <React.Fragment>
                             <Link
-                              to="/user-profile/"
+                              to={
+                                notification[0].notification_type === "follow"
+                                  ? "/user-profile/"
+                                  : "/pic/"
+                              }
                               state={
                                 notification[0].notification_type === "follow"
                                   ? notification.origin_user_id

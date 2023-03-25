@@ -241,6 +241,7 @@ export default function Pic() {
         console.log(response.data[0]);
 
         setComments([...comments, response.data[0]]);
+        setCommentText("");
       })
       .catch(function (error) {
         console.log(error);
@@ -287,13 +288,14 @@ export default function Pic() {
     }
   };
 
+  const [showAlertComment, setShowAlertComment] = React.useState(false);
   const handleDeleteComment = (comment_id: String) => {
     axios
       .delete("http://localhost:8000/comment/" + comment_id)
       .then(function (response) {
         console.log(response.data);
         console.log(response.data[0]);
-        //TODO: FAR USCIRE L'ALERT PRIMA DI CANGELLARE IL COMMENTO
+        setShowAlertComment(true);
         setComments(
           comments.filter((item: any) => item.comment_id !== comment_id)
         );
@@ -494,12 +496,6 @@ export default function Pic() {
                       }}
                     >
                       {" "}
-                      <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
-                          <EditIcon fontSize="small" />
-                        </ListItemIcon>
-                        Modify image
-                      </MenuItem>
                       <MenuItem onClick={handleClickOpenDialog}>
                         <ListItemIcon>
                           <DeleteIcon fontSize="small" />
@@ -557,6 +553,7 @@ export default function Pic() {
                     onChange={(newValue) =>
                       setCommentText(newValue.target.value)
                     }
+                    value={commentText}
                   />
                   <Box sx={{ ml: 1 }}>
                     <Button
@@ -746,6 +743,15 @@ export default function Pic() {
         <Snackbar open={showAlert} autoHideDuration={6000}>
           <Alert severity="success" color="success">
             Post deleted successfully!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showAlertComment}
+          autoHideDuration={3000}
+          onClose={() => setShowAlertComment(false)}
+        >
+          <Alert severity="success" color="success">
+            Comment deleted successfully!
           </Alert>
         </Snackbar>
       </main>
