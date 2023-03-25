@@ -125,7 +125,7 @@ export default function Pic() {
     const params = new URLSearchParams();
     params.append("destination_user_id", user_id);
     params.append("origin_user_id", user.user_id);
-    params.append("notification_type", "follow");
+    params.append("notification_type", "like");
     params.append("username", user.username);
     params.append("profile_pic", user.profile_pic);
     params.append("post_id", post_id);
@@ -249,28 +249,18 @@ export default function Pic() {
     const params = new URLSearchParams();
     params.append("destination_user_id", user_id);
     params.append("origin_user_id", user.user_id);
-    params.append("notification_type", "follow");
+    params.append("notification_type", "comment");
     params.append("username", user.username);
     params.append("profile_pic", user.profile_pic);
     params.append("post_id", post_id);
     params.append("post_title", post_title);
-
-    console.log({
-      destination_user_id: user_id,
-      origin_user_id: user.user_id,
-      notification_type: "like",
-      username: user.username,
-      profile_pic: user.profile_pic,
-      post_id: post_id,
-      post_title: post_title,
-    });
 
     if (!liked && user_id != user.user_id) {
       axios
         .post("http://localhost:8000/notification", {
           destination_user_id: user_id,
           origin_user_id: user.user_id,
-          notification_type: "like",
+          notification_type: "comment",
           username: user.username,
           profile_pic: user.profile_pic,
           post_id: post_id,
