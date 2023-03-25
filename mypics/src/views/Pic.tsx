@@ -255,7 +255,7 @@ export default function Pic() {
     params.append("post_id", post_id);
     params.append("post_title", post_title);
 
-    if (!liked && user_id != user.user_id) {
+    if (user_id != user.user_id) {
       axios
         .post("http://localhost:8000/notification", {
           destination_user_id: user_id,
@@ -285,16 +285,6 @@ export default function Pic() {
         "sono una persona che non capisce un cazzo ha ragione martina"
       );
     }
-    liked ? setLiked(false) : setLiked(true);
-
-    /*const params = new URLSearchParams();
-    params.append("origin_user_id", user.user_id);
-    params.append("destination_user_id", state.user_id);
-    params.append("notification_type", "comment");
-    params.append("post_id", state.post_id);
-    params.append("username", user.username);
-    params.append("profile_pic", user.profile_pic);
-    params.append("post_title", state.title);*/
   };
 
   const handleDeleteComment = (comment_id: String) => {
