@@ -148,10 +148,7 @@ function MainAppBar() {
 
   //console.log(notificationsArray);
 
-  //TODO: -triggerare creazione notifica su neo4j anche per i commenti e i likes (se un utente si mette mi piace o si commenta da solo non triggerare la notifica)
-  //TODO: -modificare struttura notifications list in base alla struttura che ci torna neo4j
-  //TODO: -far svuotare la lista e quindi togliere il numeretto quando si clicca sulla campanella per vedere le notifiche
-  //TODO: -quando apri le notifiche dobbiamo fare l'update su neo4j del flag e far diventare le notifiche lette
+  //TODO: -triggerare creazione notifica su neo4j anche per i commenti (se un utente si commenta da solo non triggerare la notifica)
 
   useEffect(() => {
     axios

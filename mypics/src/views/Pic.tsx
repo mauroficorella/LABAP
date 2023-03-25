@@ -141,7 +141,7 @@ export default function Pic() {
       post_title: post_title,
     });
 
-    if (!liked && (user_id != user.user_id)) {
+    if (!liked && user_id != user.user_id) {
       axios
         .post("http://localhost:8000/notification", {
           destination_user_id: user_id,
@@ -166,9 +166,10 @@ export default function Pic() {
         .catch(function (error) {
           console.log(error);
         });
-    }
-    else{
-      console.log("sono una persona che non capisce un cazzo ha ragione martina")
+    } else {
+      console.log(
+        "sono una persona che non capisce un cazzo ha ragione martina"
+      );
     }
     liked ? setLiked(false) : setLiked(true);
   };
@@ -224,7 +225,11 @@ export default function Pic() {
       });
   };
 
-  const handlePublish = () => {
+  const handlePublish = (
+    user_id: string,
+    post_id: string,
+    post_title: string
+  ) => {
     axios
       .post("http://localhost:8000/comment", {
         user_id: user.user_id,
@@ -242,22 +247,64 @@ export default function Pic() {
       });
 
     const params = new URLSearchParams();
+    params.append("destination_user_id", user_id);
+    params.append("origin_user_id", user.user_id);
+    params.append("notification_type", "follow");
+    params.append("username", user.username);
+    params.append("profile_pic", user.profile_pic);
+    params.append("post_id", post_id);
+    params.append("post_title", post_title);
+
+    console.log({
+      destination_user_id: user_id,
+      origin_user_id: user.user_id,
+      notification_type: "like",
+      username: user.username,
+      profile_pic: user.profile_pic,
+      post_id: post_id,
+      post_title: post_title,
+    });
+
+    if (!liked && user_id != user.user_id) {
+      axios
+        .post("http://localhost:8000/notification", {
+          destination_user_id: user_id,
+          origin_user_id: user.user_id,
+          notification_type: "like",
+          username: user.username,
+          profile_pic: user.profile_pic,
+          post_id: post_id,
+          post_title: post_title,
+        })
+        .then(function (response) {
+          console.log(response.data);
+          fetch(`${API.API_URL}/api/calc/sum`, {
+            method: "POST",
+            body: params,
+          }).then((res) => {
+            res.json().then((valentano) => {
+              console.log(valentano);
+            });
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      console.log(
+        "sono una persona che non capisce un cazzo ha ragione martina"
+      );
+    }
+    liked ? setLiked(false) : setLiked(true);
+
+    /*const params = new URLSearchParams();
     params.append("origin_user_id", user.user_id);
     params.append("destination_user_id", state.user_id);
     params.append("notification_type", "comment");
     params.append("post_id", state.post_id);
     params.append("username", user.username);
     params.append("profile_pic", user.profile_pic);
-    params.append("post_title", state.title);
-
-    fetch(`${API.API_URL}/api/calc/sum`, {
-      method: "POST",
-      body: params,
-    }).then((res) => {
-      res.json().then((valentano) => {
-        console.log(valentano);
-      });
-    });
+    params.append("post_title", state.title);*/
   };
 
   const handleDeleteComment = (comment_id: String) => {
@@ -536,7 +583,9 @@ export default function Pic() {
                       variant="contained"
                       color="secondary"
                       //size="small"
-                      onClick={handlePublish}
+                      onClick={() =>
+                        handlePublish(state.user_id, state.post_id, state.title)
+                      }
                     >
                       Publish
                     </Button>
