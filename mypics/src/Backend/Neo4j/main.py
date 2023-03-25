@@ -24,10 +24,6 @@ class User(BaseModel):
     email:str
     profile_pic:str
 
-class CheckUser(BaseModel):
-    username:str
-    password:str
-
 class LikeModel(BaseModel):
     user_id: str
     post_id: str
@@ -71,6 +67,18 @@ class NotificationUpdate(BaseModel):
 class PicUpdate(BaseModel):
      user_id: str
      profile_pic: str
+
+class UsernameUpdate(BaseModel):
+     user_id: str
+     username: str
+
+class PasswordUpdate(BaseModel):
+    user_id:str
+    password:str
+     
+class EmailUpdate(BaseModel):
+     user_id: str
+     email: str
 
 
 app = FastAPI()
@@ -193,17 +201,17 @@ async def check_user(checkuser_model: CheckUser): #ho messo user_model perché u
             raise
 
 @app.post("/updatepassword")
-async def check_user(checkuser_model: CheckUser): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+async def update_password(password_update: PasswordUpdate): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     query = (
-            "MATCH (u) WHERE u:User and u.username = $u_name "
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
             "SET u += { password: $u_pswd } "
             "RETURN u"
             )
-    result = session.run(query, u_id = str(uuid.uuid4()), u_name = checkuser_model.username, u_pswd = checkuser_model.password)
+    result = session.run(query, u_id = password_update.user_id, u_pswd = password_update.password)
     try:
-        return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"]} 
+        return [{"user_id": record["u"]["user_id"], "password": record["u"]["password"]} 
                     for record in result]
 
     except Neo4jError as exception:
@@ -221,6 +229,44 @@ async def update_profile_pic(pic_update: PicUpdate): #ho messo user_model perch�
             "RETURN u"
             )
     result = session.run(query, u_id = pic_update.user_id, u_pic = pic_update.profile_pic)
+    try:
+        return [{"user_id": record["u"]["user_id"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
+@app.post("/updateusername")
+async def update_username(username_update: UsernameUpdate): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "SET u += { username: $u_name } "
+            "RETURN u"
+            )
+    result = session.run(query, u_id = username_update.user_id, u_name = username_update.username)
+    try:
+        return [{"user_id": record["u"]["user_id"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
+@app.post("/updateemail")
+async def update_profile_pic(email_update: EmailUpdate): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "SET u += { email: $u_email } "
+            "RETURN u"
+            )
+    result = session.run(query, u_id = email_update.user_id, u_email = email_update.email)
     try:
         return [{"user_id": record["u"]["user_id"]} 
                     for record in result]
