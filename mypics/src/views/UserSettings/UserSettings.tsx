@@ -37,38 +37,7 @@ export default function UserSettings() {
     setOpenUsername(true);
   };
 
-  const handleCloseUsername = () => {
-    setOpenUsername(false);
-  };
-
-  const [openEmail, setOpenEmail] = React.useState(false);
-
-  const handleClickEmail = () => {
-    setOpenEmail(true);
-  };
-
-  const handleCloseEmail = () => {
-    setOpenEmail(false);
-  };
-
-  const [openPassword, setOpenPassword] = React.useState(false);
-
-  const handleClickPassword = () => {
-    setOpenPassword(true);
-  };
-
-  const handleClosePassword = () => {
-    setOpenPassword(false);
-  };
-
-  const [openPic, setOpenPic] = React.useState(false);
-  const [fbImgUrl, setFbImgUrl] = useState("");
-
-  const handleClickPic = () => {
-    setOpenPic(true);
-  };
-
-  const handleClosePic = () => {
+  const handleSaveUsername = () => {
     console.log("called handleClick");
 
     var formData = new FormData();
@@ -88,7 +57,161 @@ export default function UserSettings() {
         axios
           .post("http://localhost:8000/updateprofilepic", {
             user_id: user.user_id,
-            profile_pic: fbImgUrl
+            profile_pic: fbImgUrl,
+          })
+          .then(function () {
+            setUser({
+              username: user.username,
+              user_id: user.user_id,
+              profile_pic: user.profile_pic,
+              email: user.email,
+              password: user.password,
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setOpenUsername(false);
+  };
+
+  const handleCloseUsername = () => {
+    setOpenUsername(false);
+  };
+
+  const [openEmail, setOpenEmail] = React.useState(false);
+
+  const handleClickEmail = () => {
+    setOpenEmail(true);
+  };
+
+  const handleSaveEmail = () => {
+    console.log("called handleClick");
+
+    var formData = new FormData();
+    formData.append("image", acceptedFiles[0]);
+
+    axios
+      .post("http://localhost:8000/uploadpic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        //console.log(response.data.fb_img_url);
+        console.log("TYPE" + response.data.type);
+        setFbImgUrl(response.data);
+        console.log("FBIMGURL: " + fbImgUrl);
+
+        axios
+          .post("http://localhost:8000/updateprofilepic", {
+            user_id: user.user_id,
+            profile_pic: fbImgUrl,
+          })
+          .then(function () {
+            setUser({
+              username: user.username,
+              user_id: user.user_id,
+              profile_pic: user.profile_pic,
+              email: user.email,
+              password: user.password,
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setOpenEmail(false);
+  };
+
+  const handleCloseEmail = () => {
+    setOpenEmail(false);
+  };
+
+  const [openPassword, setOpenPassword] = React.useState(false);
+
+  const handleClickPassword = () => {
+    setOpenPassword(true);
+  };
+
+  const handleSavePassword = () => {
+    console.log("called handleClick");
+
+    var formData = new FormData();
+    formData.append("image", acceptedFiles[0]);
+
+    axios
+      .post("http://localhost:8000/uploadpic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        //console.log(response.data.fb_img_url);
+        console.log("TYPE" + response.data.type);
+        setFbImgUrl(response.data);
+        console.log("FBIMGURL: " + fbImgUrl);
+
+        axios
+          .post("http://localhost:8000/updateprofilepic", {
+            user_id: user.user_id,
+            profile_pic: fbImgUrl,
+          })
+          .then(function () {
+            setUser({
+              username: user.username,
+              user_id: user.user_id,
+              profile_pic: user.profile_pic,
+              email: user.email,
+              password: user.password,
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setOpenPassword(false);
+  };
+
+  const handleClosePassword = () => {
+    setOpenPassword(false);
+  };
+
+  const [openPic, setOpenPic] = React.useState(false);
+  const [fbImgUrl, setFbImgUrl] = useState("");
+
+  const handleClickPic = () => {
+    setOpenPic(true);
+  };
+
+  const handleSavePic = () => {
+    console.log("called handleClick");
+
+    var formData = new FormData();
+    formData.append("image", acceptedFiles[0]);
+
+    axios
+      .post("http://localhost:8000/uploadpic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then(function (response) {
+        console.log(response.data);
+        //console.log(response.data.fb_img_url);
+        console.log("TYPE" + response.data.type);
+        setFbImgUrl(response.data);
+        console.log("FBIMGURL: " + fbImgUrl);
+
+        axios
+          .post("http://localhost:8000/updateprofilepic", {
+            user_id: user.user_id,
+            profile_pic: fbImgUrl,
           })
           .then(function () {
             setUser({
@@ -107,7 +230,10 @@ export default function UserSettings() {
         console.log(error);
       });
     setOpenPic(false);
+  };
 
+  const handleClosePic = () => {
+    setOpenPic(false);
   };
 
   const [showPassword1, setShowPassword1] = useState(false);
@@ -213,7 +339,7 @@ export default function UserSettings() {
                 <Button
                   color="secondary"
                   variant="contained"
-                  onClick={handleClosePic}
+                  onClick={handleSavePic}
                 >
                   Save
                 </Button>
@@ -281,7 +407,7 @@ export default function UserSettings() {
                   <Button
                     color="secondary"
                     variant="contained"
-                    onClick={handleCloseUsername}
+                    onClick={handleSaveUsername}
                   >
                     Save
                   </Button>
@@ -349,7 +475,7 @@ export default function UserSettings() {
                   <Button
                     color="secondary"
                     variant="contained"
-                    onClick={handleCloseEmail}
+                    onClick={handleSaveEmail}
                   >
                     Save
                   </Button>
@@ -483,7 +609,7 @@ export default function UserSettings() {
                   <Button
                     color="secondary"
                     variant="contained"
-                    onClick={handleClosePassword}
+                    onClick={handleSavePassword}
                   >
                     Save
                   </Button>
