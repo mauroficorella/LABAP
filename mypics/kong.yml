@@ -21,10 +21,6 @@
      paths:
      - /checkuserandpass
      strip_path: false
-   - name: update-password
-     paths:
-     - /updatepassword
-     strip_path: false
    - name: create-remove-comment
      paths:
      - /comment
@@ -120,6 +116,22 @@
    - name: notification
      paths:
      - /notification
+     strip_path: false     
+   - name: update-profile-pic
+     paths:
+     - /updateprofilepic
+     strip_path: false     
+   - name: update-username
+     paths:
+     - /updateusername
+     strip_path: false     
+   - name: update-email
+     paths:
+     - /updateemail
+     strip_path: false
+   - name: update-password
+     paths:
+     - /updatepassword
      strip_path: false     
  - name: firebase-api
    url: http://host.docker.internal:80

@@ -75,6 +75,10 @@ class UsernameUpdate(BaseModel):
 class PasswordUpdate(BaseModel):
     user_id:str
     password:str
+
+class CheckUser(BaseModel):
+    username:str
+    password:str
      
 class EmailUpdate(BaseModel):
      user_id: str
@@ -190,7 +194,7 @@ async def check_user(checkuser_model: CheckUser): #ho messo user_model perch√© u
             "MATCH (u) WHERE u:User and u.username = $u_name and u.password = $u_pswd "
             "RETURN u"
             )
-    result = session.run(query, u_id = str(uuid.uuid4()), u_name = checkuser_model.username, u_pswd = checkuser_model.password)
+    result = session.run(query, u_name = checkuser_model.username, u_pswd = checkuser_model.password)
     try:
         return [{"user_id": record["u"]["user_id"], "username": record["u"]["username"], "password": record["u"]["password"], "email": record["u"]["email"], "profile_pic": record["u"]["profile_pic"]} 
                     for record in result]
@@ -230,7 +234,7 @@ async def update_profile_pic(pic_update: PicUpdate): #ho messo user_model perch√
             )
     result = session.run(query, u_id = pic_update.user_id, u_pic = pic_update.profile_pic)
     try:
-        return [{"user_id": record["u"]["user_id"]} 
+        return [{"profile_pic": record["u"]["profile_pic"]} 
                     for record in result]
 
     except Neo4jError as exception:

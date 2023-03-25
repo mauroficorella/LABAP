@@ -24,6 +24,8 @@ import Fab from "@mui/material/Fab";
 import { ProfilePicDropzone } from "./ProfilePicDropzone";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 export default function UserSettings() {
   const { user, setUser } = useAuth();
@@ -32,6 +34,7 @@ export default function UserSettings() {
   const { logout } = useAuth();
 
   const [openUsername, setOpenUsername] = React.useState(false);
+  const [usernameText, setUsernameText] = React.useState("");
 
   const handleClickUsername = () => {
     setOpenUsername(true);
@@ -39,127 +42,85 @@ export default function UserSettings() {
 
   const handleSaveUsername = () => {
     console.log("called handleClick");
-
-    var formData = new FormData();
-    formData.append("image", acceptedFiles[0]);
-
     axios
-      .post("http://localhost:8000/uploadpic", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post("http://localhost:8000/updateusername", {
+        user_id: user.user_id,
+        username: usernameText,
       })
-      .then(function (response) {
-        console.log(response.data);
-        //console.log(response.data.fb_img_url);
-        console.log("TYPE" + response.data.type);
-        setFbImgUrl(response.data);
-        console.log("FBIMGURL: " + fbImgUrl);
-
-        axios
-          .post("http://localhost:8000/updateprofilepic", {
-            user_id: user.user_id,
-            profile_pic: fbImgUrl,
-          })
-          .then(function () {
-            setUser({
-              username: user.username,
-              user_id: user.user_id,
-              profile_pic: user.profile_pic,
-              email: user.email,
-              password: user.password,
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      .then(function () {
+        setUser({
+          username: usernameText,
+          user_id: user.user_id,
+          profile_pic: user.profile_pic,
+          email: user.email,
+          password: user.password,
+        });
       })
       .catch(function (error) {
         console.log(error);
       });
+    setUsernameText("");
     setOpenUsername(false);
   };
 
   const handleCloseUsername = () => {
+    setUsernameText("");
     setOpenUsername(false);
   };
 
   const [openEmail, setOpenEmail] = React.useState(false);
+  const [emailText, setEmailText] = React.useState("");
 
   const handleClickEmail = () => {
     setOpenEmail(true);
   };
 
   const handleSaveEmail = () => {
-    console.log("called handleClick");
-
-    var formData = new FormData();
-    formData.append("image", acceptedFiles[0]);
-
     axios
-      .post("http://localhost:8000/uploadpic", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post("http://localhost:8000/updateemail", {
+        user_id: user.user_id,
+        email: emailText,
       })
-      .then(function (response) {
-        console.log(response.data);
-        //console.log(response.data.fb_img_url);
-        console.log("TYPE" + response.data.type);
-        setFbImgUrl(response.data);
-        console.log("FBIMGURL: " + fbImgUrl);
-
-        axios
-          .post("http://localhost:8000/updateprofilepic", {
-            user_id: user.user_id,
-            profile_pic: fbImgUrl,
-          })
-          .then(function () {
-            setUser({
-              username: user.username,
-              user_id: user.user_id,
-              profile_pic: user.profile_pic,
-              email: user.email,
-              password: user.password,
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+      .then(function () {
+        setUser({
+          username: user.username,
+          user_id: user.user_id,
+          profile_pic: user.profile_pic,
+          email: emailText,
+          password: user.password,
+        });
       })
       .catch(function (error) {
         console.log(error);
       });
+    setEmailText("");
     setOpenEmail(false);
   };
 
   const handleCloseEmail = () => {
+    setEmailText("");
     setOpenEmail(false);
   };
 
   const [openPassword, setOpenPassword] = React.useState(false);
+  const [passwordText, setPasswordText] = React.useState("");
+  const [oldPasswordText, setOldPasswordText] = React.useState("");
+  const [confirmPasswordText, setConfirmPasswordText] = React.useState("");
+  const [showAlertOldPassword, setShowAlertOldPassword] = React.useState(false);
+  const [showAlertConfirmPassword, setShowAlertConfirmPassword] =
+    React.useState(false);
 
   const handleClickPassword = () => {
     setOpenPassword(true);
   };
 
   const handleSavePassword = () => {
-    console.log("called handleClick");
-
-    var formData = new FormData();
-    formData.append("image", acceptedFiles[0]);
-
-    axios
-      .post("http://localhost:8000/uploadpic", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then(function (response) {
-        console.log(response.data);
-        //console.log(response.data.fb_img_url);
-        console.log("TYPE" + response.data.type);
-        setFbImgUrl(response.data);
-        console.log("FBIMGURL: " + fbImgUrl);
-
+    if (oldPasswordText == user.password) {
+      if (confirmPasswordText == passwordText) {
         axios
-          .post("http://localhost:8000/updateprofilepic", {
+          .post("http://localhost:8000/updatepassword", {
             user_id: user.user_id,
-            profile_pic: fbImgUrl,
+            password: passwordText,
           })
           .then(function () {
             setUser({
@@ -167,20 +128,34 @@ export default function UserSettings() {
               user_id: user.user_id,
               profile_pic: user.profile_pic,
               email: user.email,
-              password: user.password,
+              password: passwordText,
             });
           })
           .catch(function (error) {
             console.log(error);
           });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    setOpenPassword(false);
+        setPasswordText("");
+        setConfirmPasswordText("");
+        setOldPasswordText("");
+        setShowPassword1(false);
+        setShowPassword2(false);
+        setShowPassword3(false);
+        setOpenPassword(false);
+      } else {
+        setShowAlertConfirmPassword(true);
+      }
+    } else {
+      setShowAlertOldPassword(true);
+    }
   };
 
   const handleClosePassword = () => {
+    setPasswordText("");
+    setConfirmPasswordText("");
+    setOldPasswordText("");
+    setShowPassword1(false);
+    setShowPassword2(false);
+    setShowPassword3(false);
     setOpenPassword(false);
   };
 
@@ -206,18 +181,18 @@ export default function UserSettings() {
         //console.log(response.data.fb_img_url);
         console.log("TYPE" + response.data.type);
         setFbImgUrl(response.data);
-        console.log("FBIMGURL: " + fbImgUrl);
+        //console.log("FBIMGURL: " + fbImgUrl);
 
         axios
           .post("http://localhost:8000/updateprofilepic", {
             user_id: user.user_id,
-            profile_pic: fbImgUrl,
+            profile_pic: response.data,
           })
-          .then(function () {
+          .then(function (response) {
             setUser({
               username: user.username,
               user_id: user.user_id,
-              profile_pic: fbImgUrl,
+              profile_pic: response.data[0].profile_pic,
               email: user.email,
               password: user.password,
             });
@@ -229,10 +204,14 @@ export default function UserSettings() {
       .catch(function (error) {
         console.log(error);
       });
+    setAcceptedFiles([]);
+    setSelectedImages([]);
     setOpenPic(false);
   };
 
   const handleClosePic = () => {
+    setAcceptedFiles([]);
+    setSelectedImages([]);
     setOpenPic(false);
   };
 
@@ -391,9 +370,13 @@ export default function UserSettings() {
                     margin="dense"
                     id="username"
                     label="New username"
-                    type="email"
+                    type="username"
                     fullWidth
                     variant="standard"
+                    onChange={(newValue) =>
+                      setUsernameText(newValue.target.value)
+                    }
+                    value={usernameText}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -462,6 +445,8 @@ export default function UserSettings() {
                     type="email"
                     fullWidth
                     variant="standard"
+                    onChange={(newValue) => setEmailText(newValue.target.value)}
+                    value={emailText}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -509,7 +494,7 @@ export default function UserSettings() {
                   fontSize="15pt"
                   sx={{ mb: 0.5 }} //TODO: la password è da nascondere
                 >
-                  {user.password}
+                  ********
                 </Typography>
                 <Divider light />
               </Container>
@@ -533,9 +518,13 @@ export default function UserSettings() {
                     margin="dense"
                     id="old-password"
                     label="Old password"
-                    type="password"
+                    type={showPassword1 ? "text" : "password"}
                     fullWidth
                     variant="standard"
+                    onChange={(newValue) =>
+                      setOldPasswordText(newValue.target.value)
+                    }
+                    value={oldPasswordText}
                     InputProps={{
                       // <-- This is where the toggle button is added.
                       endAdornment: (
@@ -556,9 +545,13 @@ export default function UserSettings() {
                     margin="dense"
                     id="password"
                     label="New password"
-                    type="password"
+                    type={showPassword2 ? "text" : "password"}
                     fullWidth
                     variant="standard"
+                    onChange={(newValue) =>
+                      setPasswordText(newValue.target.value)
+                    }
+                    value={passwordText}
                     InputProps={{
                       // <-- This is where the toggle button is added.
                       endAdornment: (
@@ -579,9 +572,13 @@ export default function UserSettings() {
                     margin="dense"
                     id="confirm-password"
                     label="Confirm password"
-                    type="password"
+                    type={showPassword3 ? "text" : "password"}
                     fullWidth
                     variant="standard"
+                    onChange={(newValue) =>
+                      setConfirmPasswordText(newValue.target.value)
+                    }
+                    value={confirmPasswordText}
                     InputProps={{
                       // <-- This is where the toggle button is added.
                       endAdornment: (
@@ -647,6 +644,24 @@ export default function UserSettings() {
             </Button>
           </Container>
         </SettingsForm>
+        <Snackbar
+          open={showAlertOldPassword}
+          autoHideDuration={3000}
+          onClose={() => setShowAlertOldPassword(false)}
+        >
+          <Alert severity="error" color="error">
+            Old password is not correct!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showAlertConfirmPassword}
+          autoHideDuration={3000}
+          onClose={() => setShowAlertConfirmPassword(false)}
+        >
+          <Alert severity="error" color="error">
+            Inserted passwords do not match!
+          </Alert>
+        </Snackbar>
       </main>
     </ThemeProvider>
   );

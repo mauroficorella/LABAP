@@ -16,6 +16,7 @@ import { StyledDropzone } from "./Dropzone";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { Link as LinkButton } from "react-router-dom";
 //import { DropzoneArea } from "material-ui-dropzone";
 
 const MyPaper = styled(Paper)({
@@ -201,11 +202,16 @@ export default function Homepage() {
                       variant="contained"
                       size="large"
                       component="a"
-                      //href="//"
-                      onClick={handleClick}
                       sx={{ minWidth: 200 }}
                     >
-                      Save
+                      <LinkButton
+                        onClick={handleClick}
+                        to="/user-profile/"
+                        state={user.user_id}
+                        style={{ color: "white", textDecoration: "none" }}
+                      >
+                        Save
+                      </LinkButton>
                     </Button>
                   </Box>
                 </Container>

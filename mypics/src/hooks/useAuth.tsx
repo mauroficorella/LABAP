@@ -32,6 +32,7 @@ export const AuthProvider = (props: React.HTMLAttributes<HTMLDivElement>) => {
   const value = useMemo(
     () => ({
       user,
+      setUser,
       login,
       logout,
     }),
