@@ -21,18 +21,36 @@ export default function StandardImageList(props: ImageListProps) {
   var url: string;
 
   useEffect(() => {
-    console.log(props.user_id)
+    console.log(props.user_id);
 
-    if (props.list_type == "profile") {
-      url = "http://localhost:8000/published/" + props.user_id;
-    } else if (props.list_type == "saved") {
+    if (props.list_type == "profile" && typeof props.user_id !== "undefined") {
+      url = "http://localhost:8000/published";
+      console.log({
+        user_id: props.user_id,
+        logged_user_id: user.user_id,
+      });
+      axios
+        .post(url, {
+          user_id: props.user_id,
+          logged_user_id: user.user_id,
+        })
+        .then(function (response) {
+          setItemData(response.data);
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else if (
+      props.list_type == "saved" &&
+      typeof props.user_id !== "undefined"
+    ) {
       url = "http://localhost:8000/saved/" + props.user_id;
+      axios.get(url).then((response) => {
+        setItemData(response.data);
+        //console.log(response.data);
+      });
     }
-
-    axios.get(url).then((response) => {
-      setItemData(response.data);
-      //console.log(response.data);
-    });
   }, [props]);
 
   return (

@@ -85,8 +85,18 @@ function parseDate(dateData: any) {
     "December",
   ];
   var month_index = parseInt(month, 10) - 1;
+  const minute_str = minute.toString().padStart(2, "0");
   var date_string =
-    day + " " + months[month_index] + " " + year + ", " + hour + ":" + minute;
+    day +
+    " " +
+    months[month_index] +
+    " " +
+    year +
+    ", " +
+    hour +
+    ":" +
+    minute_str;
+
   return date_string;
 }
 
@@ -104,6 +114,7 @@ export default function Pic() {
   const [saved, setSaved] = useState(state.saved);
   const [published, setPublished] = useState(state.published);
   const [commentText, setCommentText] = useState("");
+  const [numLikes, setNumLikes] = useState(state.numLikes);
 
   const addOrRemoveLike = (
     user_id: string,
@@ -172,6 +183,7 @@ export default function Pic() {
       );
     }
     liked ? setLiked(false) : setLiked(true);
+    liked ? setNumLikes(numLikes - 1) : setNumLikes(numLikes + 1);
   };
 
   const addOrRemoveSaved = () => {
@@ -323,6 +335,8 @@ export default function Pic() {
         console.log("COMMENTS");
         console.log(response.data[0].comments);
         setComments(response.data[0].comments);
+        setNumLikes(response.data[0].num_likes);
+        setLiked(response.data[0].liked);
         console.log("-------------------STATE-----------------");
         console.log(state);
         setLoading(false); //stop loading when data is fetched
@@ -411,7 +425,7 @@ export default function Pic() {
                       //fontSize="11pt"
                       fontWeight="500"
                     >
-                      {state.num_likes}
+                      {numLikes}
                     </Typography>
                     <IconButton
                       aria-label="add to favorites"

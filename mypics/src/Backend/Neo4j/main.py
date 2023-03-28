@@ -84,6 +84,10 @@ class EmailUpdate(BaseModel):
      user_id: str
      email: str
 
+class PublishedPost(BaseModel):
+     user_id: str
+     logged_user_id: str
+
 
 app = FastAPI()
 
@@ -549,19 +553,21 @@ async def get_all_saved(user_id: str):
             raise
 
 
-@app.get("/published/{user_id}") #ritorno tutti i post pubblicati da uno specifico utente
-async def get_all_published(user_id: str):
+@app.post("/published") #ritorno tutti i post pubblicati da uno specifico utente
+async def get_all_published(published_post: PublishedPost):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
+    print(published_post.logged_user_id + " " + published_post.user_id)
     query = (
             "MATCH (u:User)-[:PUBLISHED]->(p:Post) WHERE u.user_id = $u_id "
+            "MATCH (lu:User) WHERE lu.user_id = $lu_id "
             "OPTIONAL MATCH (p)<-[r:LIKES]-(u1:User) "
-            "WITH count(r) AS num_likes, u, p "
-            "RETURN u, p, num_likes, TRUE as published, EXISTS((u)-[:LIKES]->(p)) as liked, EXISTS((u)-[:SAVED]->(p)) as saved "
+            "WITH count(r) AS num_likes, u, p, lu "
+            "RETURN u, p, num_likes, EXISTS((lu)-[:PUBLISHED]->(p)) as published, EXISTS((lu)-[:LIKES]->(p)) as liked, EXISTS((lu)-[:SAVED]->(p)) as saved "
             "ORDER BY p.datetime DESC"
             )
     try:
-        result = session.run(query, u_id = user_id)
+        result = session.run(query, u_id = published_post.user_id, lu_id = published_post.logged_user_id)
         return [{"post_id": record["p"]["post_id"],
                  "fb_img_url": record["p"]["fb_img_url"],
                  "title": record["p"]["title"],
