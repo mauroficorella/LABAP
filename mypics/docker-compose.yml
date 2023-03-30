@@ -81,7 +81,7 @@ services:
     volumes:
       - "./:/kong/declarative/"
   deepdetect:
-    build: ./src/Backend/Deepdetect
+    image: jolibrain/deepdetect_cpu
     ports:
       - "8080:8080"
 
