@@ -17,6 +17,10 @@ services:
     build: ./src/Backend/Elasticsearch
     ports:
       - "82:82"
+  notifications:
+    build: .
+    ports:
+      - "5555:5555"
   es01:
     image: "docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2"
     ports:
@@ -76,6 +80,10 @@ services:
       - "8445:8445"
     volumes:
       - "./:/kong/declarative/"
+  deepdetect:
+    build: ./src/Backend/Deepdetect
+    ports:
+      - "8080:8080"
 
 volumes:
   es-data-es01:

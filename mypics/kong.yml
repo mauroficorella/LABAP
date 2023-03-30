@@ -155,3 +155,22 @@
      paths:
      - /addservice
      strip_path: false
+ - name: rabbitmq
+   url: http://host.docker.internal:5555
+   routes:
+   - name: calc
+     paths:
+     - /calc
+     strip_path: false
+   - name: calc-sum
+     paths:
+     - /api/calc/sum
+     strip_path: false
+   - name: receive
+     paths:
+     - /api/receive
+     strip_path: false
+   - name: stop-handler
+     paths:
+     - /api/stop_handler
+     strip_path: false
