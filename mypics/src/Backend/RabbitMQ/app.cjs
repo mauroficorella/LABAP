@@ -7,7 +7,7 @@ var router = express.Router();
 var server = require("http").Server(app);
 var socketIO = require("socket.io")(server, {
   cors: {
-    origin: "*",
+    origin: "*"
   },
 });
 
@@ -168,6 +168,6 @@ router.route("/stop_handler").get((req, res) => {
   res.send(response);
 });
 
-server.listen(5555, "localhost", () => {
+server.listen(5555, "0.0.0.0", () => {
   console.log("Running at at localhost:5555");
 });

@@ -3,8 +3,16 @@ version: "3.9"
 networks:
   kong-net:
     driver: bridge
+  valentano-net:
+
 
 services:
+  frontend:
+    build: .
+    networks:
+        - valentano-net
+    ports:
+      - "3000:3000"
   social:
     build: ./src/Backend/Neo4j
     ports:
@@ -18,7 +26,9 @@ services:
     ports:
       - "82:82"
   notifications:
-    build: .
+    build: ./src/Backend/RabbitMQ
+    networks:
+        - valentano-net
     ports:
       - "5555:5555"
   es01:
