@@ -13,7 +13,7 @@ import axios from "axios";
 function ForgotPassword() {
   async function updatePassword(values: FormData) {
     await axios
-      .post("http://localhost:8000/updatepassword", {
+      .post("http://localhost:8000/forgotpassword", {
         username: values.get("username"),
         password: values.get("password"),
       })

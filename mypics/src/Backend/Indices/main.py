@@ -1,7 +1,6 @@
 import json
 import requests
 
-
 def run_script():
 
     requests.get("http://host.docker.internal:82/addservice")
@@ -12,9 +11,9 @@ def run_script():
     
     arr = []
     print(data1)
-    #if not(data1["error"]):
-    for elem in data1["hits"]["hits"]:
-        arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
+    if "error" not in data1: #va qui dentro quando il c'è già qualcosa, se non c'è niente lo skippa
+        for elem in data1["hits"]["hits"]:
+            arr.append(elem["_source"]["uri"].replace("&amp;", "&"))
     
     print("ARRAY---------")
     print(arr)

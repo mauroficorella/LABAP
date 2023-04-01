@@ -133,6 +133,10 @@
      paths:
      - /updatepassword
      strip_path: false     
+   - name: forgot-password
+     paths:
+     - /forgotpassword
+     strip_path: false     
  - name: firebase-api
    url: http://host.docker.internal:80
    routes:
