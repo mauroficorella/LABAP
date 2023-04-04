@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.12.17)  30 MAR 2023 15:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.12.17)  4 APR 2023 17:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -487,17 +487,12 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has b
 <to be read again> 
                    \relax 
 l.69 \newpage
-              [1]
-Overfull \hbox (16.64485pt too wide) in paragraph at lines 100--101
-[]\OT1/cmr/m/n/10.95 Microservice for im-ages man-age-ment: han-dles the up-load/visualization/modification/deletion/saving
- []
-
-[2] [3]
+              [1] [2] [3]
 <images/sign-up.png, id=107, 762.59906pt x 401.24907pt>
 File: images/sign-up.png Graphic file (type png)
 <use images/sign-up.png>
 Package pdftex.def Info: images/sign-up.png  used on input line 154.
-(pdftex.def)             Requested size: 307.2929pt x 161.68456pt.
+(pdftex.def)             Requested size: 343.13931pt x 180.54204pt.
 
 Overfull \hbox (7.3208pt too wide) in paragraph at lines 162--168
  [][] 
@@ -507,86 +502,81 @@ Overfull \hbox (7.3208pt too wide) in paragraph at lines 162--168
 File: images/login.png Graphic file (type png)
 <use images/login.png>
 Package pdftex.def Info: images/login.png  used on input line 171.
-(pdftex.def)             Requested size: 307.2929pt x 161.84373pt.
+(pdftex.def)             Requested size: 358.50317pt x 188.81361pt.
 
-Overfull \hbox (7.3208pt too wide) in paragraph at lines 179--185
+Overfull \hbox (7.3208pt too wide) in paragraph at lines 179--187
  [][] 
  []
 
 <images/settings.png, id=110, 761.09344pt x 400.49625pt>
 File: images/settings.png Graphic file (type png)
 <use images/settings.png>
-Package pdftex.def Info: images/settings.png  used on input line 188.
+Package pdftex.def Info: images/settings.png  used on input line 190.
 (pdftex.def)             Requested size: 307.2929pt x 161.7051pt.
 [4 <./images/sign-up.png> <./images/login.png>]
-Underfull \hbox (badness 3758) in paragraph at lines 202--202
+Underfull \hbox (badness 3758) in paragraph at lines 205--205
 []|\OT1/cmr/m/n/10.95 Visualize their pro-file and
  []
 
 
-Overfull \hbox (7.3208pt too wide) in paragraph at lines 196--207
+Overfull \hbox (7.3208pt too wide) in paragraph at lines 198--210
  [][] 
  []
 
 <images/home.png, id=117, 761.84625pt x 401.24907pt>
 File: images/home.png Graphic file (type png)
 <use images/home.png>
-Package pdftex.def Info: images/home.png  used on input line 210.
-(pdftex.def)             Requested size: 307.2929pt x 161.84373pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 222--222
-[]|\OT1/cmr/m/n/10.95 Express my ap-pre-ci-a-tion
- []
-
-
-Underfull \hbox (badness 5878) in paragraph at lines 224--224
-[]|\OT1/cmr/m/n/10.95 Remove an up-loaded
- []
-
-
-Overfull \hbox (7.3208pt too wide) in paragraph at lines 218--226
+Package pdftex.def Info: images/home.png  used on input line 213.
+(pdftex.def)             Requested size: 358.50317pt x 188.81361pt.
+[5 <./images/settings.png>]
+Overfull \hbox (7.3208pt too wide) in paragraph at lines 221--229
  [][] 
  []
 
-<images/pic.png, id=118, 762.59906pt x 400.49625pt>
+<images/pic.png, id=123, 762.59906pt x 400.49625pt>
 File: images/pic.png Graphic file (type png)
 <use images/pic.png>
-Package pdftex.def Info: images/pic.png  used on input line 229.
-(pdftex.def)             Requested size: 307.2929pt x 161.38121pt.
-[5 <./images/settings.png> <./images/home.png>]
-Overfull \hbox (7.3208pt too wide) in paragraph at lines 237--243
+Package pdftex.def Info: images/pic.png  used on input line 232.
+(pdftex.def)             Requested size: 358.50317pt x 188.27603pt.
+
+Overfull \hbox (7.3208pt too wide) in paragraph at lines 240--246
  [][] 
  []
 
-<images/addPic.png, id=125, 761.09344pt x 398.99063pt>
+<images/addPic.png, id=124, 761.09344pt x 398.99063pt>
 File: images/addPic.png Graphic file (type png)
 <use images/addPic.png>
-Package pdftex.def Info: images/addPic.png  used on input line 246.
+Package pdftex.def Info: images/addPic.png  used on input line 249.
 (pdftex.def)             Requested size: 307.2929pt x 161.09718pt.
-<images/profile.png, id=126, 761.84625pt x 400.49625pt>
+[6 <./images/home.png> <./images/pic.png>]
+Overfull \hbox (7.32079pt too wide) in paragraph at lines 257--266
+ [][] 
+ []
+
+<images/profile.png, id=132, 761.84625pt x 400.49625pt>
 File: images/profile.png Graphic file (type png)
 <use images/profile.png>
-Package pdftex.def Info: images/profile.png  used on input line 254.
-(pdftex.def)             Requested size: 230.46576pt x 121.15201pt.
-<images/user.png, id=127, 761.84625pt x 401.24907pt>
+Package pdftex.def Info: images/profile.png  used on input line 269.
+(pdftex.def)             Requested size: 358.50317pt x 188.45937pt.
+<images/user.png, id=133, 761.84625pt x 401.24907pt>
 File: images/user.png Graphic file (type png)
 <use images/user.png>
-Package pdftex.def Info: images/user.png  used on input line 255.
-(pdftex.def)             Requested size: 230.46576pt x 121.37975pt.
-[6 <./images/pic.png> <./images/addPic.png>] [7 <./images/profile.png> <./images/user.png>] [8] [9] [10] (./main.aux)
+Package pdftex.def Info: images/user.png  used on input line 270.
+(pdftex.def)             Requested size: 358.50317pt x 188.81361pt.
+[7 <./images/addPic.png> <./images/profile.png> <./images/user.png>] [8] [9] [10] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 043F0857B2C10EEC0987B90B75E47CBE;2062.
+(rerunfilecheck)             Checksum: D59B2E6ABCE7716460EF369ED5FBD928;2085.
  ) 
 Here is how much of TeX's memory you used:
  10783 strings out of 478353
  166335 string characters out of 5852100
- 486824 words of memory out of 5000000
+ 489824 words of memory out of 5000000
  28722 multiletter control sequences out of 15000+600000
  411770 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,11n,63p,434b,394s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,11n,63p,434b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (11 pages, 289882 bytes).
+Output written on main.pdf (11 pages, 292208 bytes).
 PDF statistics:
  186 PDF objects out of 1000 (max. 8388607)
  144 compressed objects within 2 object streams
