@@ -278,11 +278,48 @@ Each element of this list represents a different Docker container of the system 
 
 \section{Effort estimation}
 
+\subsection{Function Points} 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/FP.png}
+\end{figure}
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=0.25\textwidth]{images/UFP.png}
+\end{figure}
+
+\noindent
+Considering Java as main language, this is equivalent to 6148 SLOC.
+
+\newpage
+
+\subsection{CoCoMo II} 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/cocomo.png}
+\end{figure}
+
 % System architecture ---------------------------------------------------------------
 
 \newpage
 
 \section{System architecture}
+The system architecture is based on microservices, each running on its own Docker container and each accessing its own data. These containers are orchestrated through Docker Compose.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/architecture.png}
+    \caption{Overview of system architecture}
+\end{figure}
+\begin{itemize}
+    \item \textbf{Frontend:} developed in React (based on TypeScript, HTML and CSS). Users interact with the system through this layer.
+    \item \textbf{API Gateway:} we use Kong Gateway which is a lightweight, fast, and flexible cloud-native API gateway that serves as a reverse proxy that lets us manage, configure, and route requests to our APIs exposed by the microservices.
+    \item \textbf{Microservice for social part:} exposes APIs to manage all social aspects of the system (i.e. user registration, likes, comments, new posts).
+    \item \textbf{Microservice for images management:} exposes APIs to upload images on the Firebase cloud storage.
+    \item \textbf{Microservice for search:} we use Elasticsearch as search engine and Kibana, which provides search and data visualization capabilities for data indexed in Elasticsearch. Moreover we use Deepdetect deep learning platform which offers pre-trained models for classifing images' based on represented subjects and to be able to search for images based on them through Elasticsearch.
+    \item \textbf{Microservice for notifications:} we use RabbitMQ message oriented middleware through CloudAMQP, which provides managed RabbitMQ servers in the cloud, in order to be able to access all the different queues in the cloud from any device.
+    \item \textbf{Database:} we use Neo4j NoSQL graph database in order to store all the system data. In particular we use Neo4j AuraDB that offers a database instance in the cloud with which all the above mentioned microservices can communicate. 
+\end{itemize}
+We developed the backend microservices using Python and all of them expose a REST interface that leverages on FastAPI framework. 
 
 % Sprint analytics --------------------------------------------------------------------
 

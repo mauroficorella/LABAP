@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1680620702 "c:/Users/eowyn/Desktop/LABAP/Documentation/Booklet/main.tex" "main.pdf" "main" 1680620704
-  "c:/Users/eowyn/Desktop/LABAP/Documentation/Booklet/main.tex" 1680620701 10314 71cc8cb657a97a05168a5a56d2845a7d ""
+["pdflatex"] 1680795728 "c:/Users/eowyn/Desktop/LABAP/Documentation/Booklet/main.tex" "main.pdf" "main" 1680795730
+  "c:/Users/eowyn/Desktop/LABAP/Documentation/Booklet/main.tex" 1680795726 12822 3f8708323596376df4b6a967a1e4fd6c ""
   "c:/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1639747784 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1639748301 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm" 1639748081 1536 02c06700a42be0f5a28664c7273f82e7 ""
@@ -99,8 +99,12 @@
   "c:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1639750382 4414272 53976978d6fc5587d004941f8db6c1a9 ""
   "c:/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1639750442 2820088 b5961bed4618ff17c6b6a1f80de994df ""
   "c:/texlive/2021/texmf.cnf" 1639750366 713 e69b156964470283e0530f5060668171 ""
+  "images/FP.png" 1680785814 114138 ee77bf6e7c113065e496ff023388d1b7 ""
   "images/Logo.jpg" 1680012707 41544 0ba7ae298d696641668b4290947de0aa ""
+  "images/UFP.png" 1680785847 2390 60774248c1e908c59b87a6245ee0fc7b ""
   "images/addPic.png" 1680179709 39237 7ae9b00940780d9eeb335180d319941b ""
+  "images/architecture.png" 1680795420 191380 87a123deae62ddd257691d7de39e1fea ""
+  "images/cocomo.png" 1680788965 136184 1df89f1fba2e737913a11b9968cb48ae ""
   "images/home.png" 1680179615 23895 507a8f1d23267cb75111895a795b605a ""
   "images/login.png" 1680012707 21042 d94ba006b2ed5f73ac935873466e6967 ""
   "images/pic.png" 1680180176 30566 c3e01248e80b5cc4397fc26e5020a2e5 ""
@@ -108,10 +112,10 @@
   "images/settings.png" 1680180562 35378 6ac237bc8b08528f44ccc67488533b03 ""
   "images/sign-up.png" 1680012707 17528 971353608c57bb760b0d641d4baa04f0 ""
   "images/user.png" 1680180227 25112 2396e1944cb849ddf6f6bf9a14f2039a ""
-  "main.aux" 1680620704 2587 909a97a72de0df6a93c848993f637756 "pdflatex"
-  "main.out" 1680620704 2085 d59b2e6abce7716460ef369ed5fbd928 "pdflatex"
-  "main.tex" 1680620701 10314 71cc8cb657a97a05168a5a56d2845a7d ""
-  "main.toc" 1680620704 1244 b0c69123f7bfc74c8195cbe5591146e2 "pdflatex"
+  "main.aux" 1680795730 2969 853d5dfbe0a6e9fea033a193c895bda5 "pdflatex"
+  "main.out" 1680795730 2327 5be00ced2b909065137f8ddf7bfd1f2b "pdflatex"
+  "main.tex" 1680795726 12822 3f8708323596376df4b6a967a1e4fd6c ""
+  "main.toc" 1680795730 1401 567633d0f580e6bdc6b7f18779e46a97 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
