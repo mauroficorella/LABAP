@@ -24,6 +24,10 @@ class User(BaseModel):
     email:str
     profile_pic:str
 
+class ForgotPassword(BaseModel):
+     username: str
+     password: str
+
 class LikeModel(BaseModel):
     user_id: str
     post_id: str
@@ -84,7 +88,7 @@ class EmailUpdate(BaseModel):
      user_id: str
      email: str
 
-class PublishedPost(BaseModel):
+class PublishedPosts(BaseModel):
      user_id: str
      logged_user_id: str
 
@@ -218,6 +222,25 @@ async def update_password(password_update: PasswordUpdate): #ho messo user_model
             "RETURN u"
             )
     result = session.run(query, u_id = password_update.user_id, u_pswd = password_update.password)
+    try:
+        return [{"user_id": record["u"]["user_id"], "password": record["u"]["password"]} 
+                    for record in result]
+
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
+@app.post("/forgotpassword")
+async def update_password(password_update: ForgotPassword): #ho messo user_model perché user era già la variabile per l'utente di neo4j che mi serve nel driver
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.username = $u_name "
+            "SET u += { password: $u_pswd } "
+            "RETURN u"
+            )
+    result = session.run(query, u_name = password_update.username, u_pswd = password_update.password)
     try:
         return [{"user_id": record["u"]["user_id"], "password": record["u"]["password"]} 
                     for record in result]
@@ -554,7 +577,7 @@ async def get_all_saved(user_id: str):
 
 
 @app.post("/published") #ritorno tutti i post pubblicati da uno specifico utente
-async def get_all_published(published_post: PublishedPost):
+async def get_all_published(published_post: PublishedPosts):
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
     session = neo4j_driver.session()
     print(published_post.logged_user_id + " " + published_post.user_id)

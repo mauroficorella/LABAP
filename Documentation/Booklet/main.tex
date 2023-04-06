@@ -91,17 +91,16 @@ Interactive dashboard to look for images uploaded by other users.
      \item Image visualization page with description and comments
      \item Image upload page
     \end{itemize}
-    \item \textbf{API layer}: RESTful Web Server acting as a gateway secured with authentication    
+    \item \textbf{API gateway}: to take an application user's request, route it to one or more backend services, gather the appropriate data and deliver it to the user in a single, combined package    
     \item \textbf{Logic layer}: 
     \begin{itemize}
-     \item Communication with the API gateway is done through RPC
      \item Microservice for user management: handles registration/authentication/access to the user profile
-     \item Microservice for notifications: allows the user to be notified about new likes or new comments on his images
-     \item Microservice for images management: handles the upload/visualization/modification/deletion/saving of images
-     \item Microservice for social part: allows the user to like/comment an image and follow another user
-     \item Microservice for images search: handles the search of an image
+     \item Microservice for notifications: allows the user to be notified about new likes or new comments on his images and new followers
+     \item Microservice for images management: handles the upload and deletion of images
+     \item Microservice for social part: allows the user to like/comment/save an image and follow another user
+     \item Microservice for search: handles the search of an image or an user
     \end{itemize}
-    \item \textbf{Persistence layer}: PostgreSQL database
+    \item \textbf{Persistence layer}: NoSQL database
 \end{itemize}
 Each element of this list represents a different Docker container of the system and all the containers are orchestrated using Docker Compose.
 
@@ -115,16 +114,17 @@ Each element of this list represents a different Docker container of the system 
 \begin{itemize}
     \item User can register to the app
     \item User can login into the app
-    \item User can search for an image
+    \item User can search for an image 
+    \item User can search for an user
     \item User can visualize the home page containing most popular images and the images published by followed users 
     \item User can upload an image
     \item User can save an image
-    \item User can edit an uploaded image
     \item User can remove an uploaded image
-    \item User can like/dislike an image
+    \item User can like an image
     \item User can comment an image
-    \item User can get notified if another user likes/dislikes one of its images
+    \item User can get notified if another user likes one of its images
     \item User can get notified if another user leave a comment on one of its images
+    \item User can get notified for a new follower
     \item User can follow/unfollow another user
     \item User can access its own profile to visualize his images and the ones that he saved from other users
     \item User can access its own profile to manage it
@@ -137,10 +137,10 @@ Each element of this list represents a different Docker container of the system 
 
 \newpage
 
-\section{User stories and prototypes}
+\section{User stories and mockups}
 
 \subsection{Sign-up}
-\begin{table}[h!]
+\begin{table}[H]
     \centering
     \begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|p{4cm}|}
     \hline
@@ -149,15 +149,15 @@ Each element of this list represents a different Docker container of the system 
     Guest & Register to the system & Create my profile & Everyone \\ \hline
     \end{tabular}
 \end{table}
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=0.6\textwidth]{images/sign-up.png}}
+    \fbox{\includegraphics[width=0.67\textwidth]{images/sign-up.png}}
     %\caption{Caption}
     %\label{fig:my_label}
 \end{figure}
 
 \subsection{Login}
-\begin{table}[h!]
+\begin{table}[H]
     \centering
     \begin{tabular}{|p{4.5cm}|p{4cm}|p{4cm}|p{4cm}|}
     \hline
@@ -166,23 +166,111 @@ Each element of this list represents a different Docker container of the system 
     Non-logged registered user & Login into the system & Use system's services & Everyone \\ \hline
     \end{tabular}
 \end{table}
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=0.6\textwidth]{images/login.png}}
+    \fbox{\includegraphics[width=0.7\textwidth]{images/login.png}}
     %\caption{Caption}
     %\label{fig:my_label}
 \end{figure}
 
-\subsection{Logout}
-\begin{table}[h!]
+\subsection{User settings}
+\begin{table}[H]
     \centering
-    \begin{tabular}{|p{4.5cm}|p{4cm}|p{4cm}|p{4cm}|}
+    \begin{tabular}{|p{4cm}|p{4.5cm}|p{5cm}|p{3cm}|}
     \hline
     \rowcolor[HTML]{EFEFEF} 
-    AS A                   & I WANT TO              & SO THAT I CAN & ADDED BY \\ \hline
-    Logged registered user & Logout from the system &               & Everyone \\ \hline
+    AS A                    & I WANT TO                      & SO THAT I CAN                     & ADDED BY \\ \hline
+    Logged registered user  & Logout from the system         & Login as another user             & Everyone \\ \hline
+    Logged user             & Delete my profile              & No longer access the system       & Everyone \\ \hline
+    Logged user             & Access my profile settings     & Manage it                         & Everyone \\ \hline
     \end{tabular}
 \end{table}
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.6\textwidth]{images/settings.png}}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+
+\subsection{Main}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{4cm}|p{4.5cm}|p{5cm}|p{3cm}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF} 
+    AS A        & I WANT TO                        & SO THAT I CAN                                  & ADDED BY \\ \hline
+    Logged user & Access the homepage              & Discover the most popular images               & Everyone \\ \hline
+    Logged user & Access the homepage              & Discover images published by followed users    & Everyone \\ \hline
+    Logged user & Search for images                & Visualize them                                 & Everyone \\ \hline
+    Logged user & Search for other users           & Visualize their profile and their images       & Everyone \\ \hline
+    Logged user & Get notified                     & Know if another user liked or commented one of my image or followed me & Everyone \\ \hline
+    Logged user & Access other user's profile page & Visualize his details and published images     & Everyone \\ \hline
+    Logged user & Visualize image                  & Visualize its details and comments             & Everyone \\ \hline
+    \end{tabular}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.7\textwidth]{images/home.png}}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+
+\subsection{Pic}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{3.3cm}|p{4.5cm}|p{5.7cm}|p{3cm}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF} 
+    AS A        & I WANT TO                & SO THAT I CAN                       & ADDED BY \\ \hline
+    Logged user & Like an image            & Express my appreciation about it    & Everyone \\ \hline
+    Logged user & Save an image            & Discover the most popular images    & Everyone \\ \hline
+    Logged user & Remove an uploaded image & Deny to other users to visualize it & Everyone \\ \hline    
+    \end{tabular}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.7\textwidth]{images/pic.png}}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+
+\subsection{Upload pic}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{4.5cm}|p{4cm}|p{5cm}|p{3cm}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF} 
+    AS A        & I WANT TO             & SO THAT I CAN                         & ADDED BY \\ \hline
+    Logged user & Upload an image       & Share it with other users             & Everyone \\ \hline    
+    \end{tabular}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.6\textwidth]{images/addPic.png}}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
+
+\subsection{User profile}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{3.5cm}|p{4cm}|p{6cm}|p{3cm}|}
+    \hline
+    \rowcolor[HTML]{EFEFEF} 
+    AS A        & I WANT TO             & SO THAT I CAN                         & ADDED BY \\ \hline
+    Logged user & Access my profile     & Visualize all my published images     & Everyone \\ \hline 
+    Logged user & Access my profile     & Visualize all my saved images         & Everyone \\ \hline 
+    Logged user & Access user profile   & Visualize followers/followed users    & Everyone \\ \hline 
+    Logged user & Follow another user   & Stay updated about his new images     & Everyone \\ \hline    
+    \end{tabular}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.7\textwidth]{images/profile.png}}
+    \fbox{\includegraphics[width=0.7\textwidth]{images/user.png}}
+    %\caption{Caption}
+    %\label{fig:my_label}
+\end{figure}
 
 % Effort estimation ----------------------------------------------------------------
 

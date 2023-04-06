@@ -61,6 +61,8 @@ export default function Homepage() {
       });
   }
 
+  const navigate = useNavigate();
+
   function handleClick() {
     console.log("called handleClick");
 
@@ -99,7 +101,7 @@ export default function Homepage() {
   function savePostInDB(fb_img_url: string) {
     console.log("executing savePostInDB");
     if (titleValue != "") {
-      console.log("savePostInDB if");
+      console.log("valentano: ", fb_img_url);
       axios
         .post("http://localhost:8000/post", {
           fb_img_url: fb_img_url,
@@ -108,6 +110,7 @@ export default function Homepage() {
           user_id: user.user_id,
         })
         .then(function (response) {
+          navigate("/user-profile/", { state : user.user_id })
           console.log(response.data);
         })
         .catch(function (error) {
@@ -121,7 +124,7 @@ export default function Homepage() {
     }
   }
 
-  const navigate = useNavigate();
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -203,15 +206,9 @@ export default function Homepage() {
                       size="large"
                       component="a"
                       sx={{ minWidth: 200 }}
+                      onClick={handleClick}
                     >
-                      <LinkButton
-                        onClick={handleClick}
-                        to="/user-profile/"
-                        state={user.user_id}
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
                         Save
-                      </LinkButton>
                     </Button>
                   </Box>
                 </Container>

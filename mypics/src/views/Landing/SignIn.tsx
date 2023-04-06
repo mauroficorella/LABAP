@@ -115,10 +115,6 @@ function SignIn() {
                 ),
               }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="secondary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth

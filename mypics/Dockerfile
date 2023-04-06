@@ -1,7 +1,12 @@
+# ==== CONFIGURE ====
 FROM node:latest
+# Set the working directory to /app inside the container
 WORKDIR /mypics
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
-RUN npm ci
-COPY ./app.cjs ./connection.cjs ./index.cjs /mypics/
-CMD ["node", "app.cjs"]
+# Copy app files
+COPY . .
+# ==== BUILD =====
+# Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
+RUN npm ci 
+EXPOSE 3000
+# Start the app
+CMD [ "npm", "start" ]

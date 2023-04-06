@@ -1,7 +1,8 @@
 FROM node:latest
-WORKDIR /mypics
-COPY package.json ./package.json
-COPY package-lock.json ./package-lock.json
+WORKDIR /RabbitMQ
+COPY ./package.json /
+COPY ./package-lock.json /
 RUN npm ci
-COPY ./app.cjs /src/Backend/RabbitMQ/
-CMD ["node", "app.cjs"]
+COPY ./app.js ./connection.js ./index.js /
+EXPOSE 5555
+CMD ["npm", "start"]
