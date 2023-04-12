@@ -9,12 +9,12 @@ Final Project for the "Laboratory of Advanced Programming" course, master degree
 1. Docker
 2. Docker Compose v2
 
+From mypics folder run the following command:
 ```bash
 docker compose up
 ```
 
 You can check if the containers are running using:
-
 ```bash
 docker ps
 ```
