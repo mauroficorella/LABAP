@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1681309289 "/Users/mauroficorella/Developer/GitHub/LABAP/Documentation/Booklet/main.tex" "main.pdf" "main" 1681309291 0
-  "/Users/mauroficorella/Developer/GitHub/LABAP/Documentation/Booklet/main.tex" 1681309289 14521 81c4a9645dfd88aebdd034b347a8b4dd ""
+["pdflatex"] 1681374612 "/Users/mauroficorella/Developer/GitHub/LABAP/Documentation/Booklet/main.tex" "main.pdf" "main" 1681374614 0
+  "/Users/mauroficorella/Developer/GitHub/LABAP/Documentation/Booklet/main.tex" 1681374611 14521 81c4a9645dfd88aebdd034b347a8b4dd ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm" 1136768653 1536 02c06700a42be0f5a28664c7273f82e7 ""
@@ -107,7 +107,7 @@
   "images/burndown1.png" 1681308316 22697 ffc30ad6771d81495ad7cf555ec03f7e ""
   "images/burndown2.png" 1681308316 23306 f654c7851bf4ee817d94698e6a8e344b ""
   "images/burndown3.png" 1681308316 22562 0900b9fc1b72ebf6d83b21202b02f57c ""
-  "images/burndownchart.png" 1681308954 75016 f14948ff8789449c4cd43b169051032e ""
+  "images/burndownchart.png" 1681374573 65032 785a8aaaeaac25fffb6ea22ef1edc0bc ""
   "images/cocomo.png" 1680887750 136184 ef763446ceec0cf7c300123a3db36eab ""
   "images/home.png" 1680887750 23895 49308d33ffb13788e156e0e01c10c592 ""
   "images/login.png" 1680887750 21042 b2868bda100ba78c498e26549a9d0b0f ""
@@ -122,10 +122,10 @@
   "images/sprint5.png" 1681308316 41835 86502e39964afd5b3617dadbd4b37974 ""
   "images/sprint6.png" 1681308316 32463 66a786bc18fd18f076f523aa5de6eaf4 ""
   "images/user.png" 1680887750 25112 58d7ee0b22c768d768072de46b32be99 ""
-  "main.aux" 1681309291 3906 f2604ad4a7c99ab99338722d5ec6ee5f "pdflatex"
-  "main.out" 1681309291 3966 1e2c27daddd8e21673a8941a09b693df "pdflatex"
-  "main.tex" 1681309289 14521 81c4a9645dfd88aebdd034b347a8b4dd ""
-  "main.toc" 1681309291 2142 f13a14646a09ef60aac0d159e2e05d89 "pdflatex"
+  "main.aux" 1681374614 3906 f2604ad4a7c99ab99338722d5ec6ee5f "pdflatex"
+  "main.out" 1681374614 3966 1e2c27daddd8e21673a8941a09b693df "pdflatex"
+  "main.tex" 1681374611 14521 81c4a9645dfd88aebdd034b347a8b4dd ""
+  "main.toc" 1681374614 2142 f13a14646a09ef60aac0d159e2e05d89 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
