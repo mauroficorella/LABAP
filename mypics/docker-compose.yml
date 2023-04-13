@@ -83,7 +83,7 @@ services:
     volumes:
       - "./:/kong/declarative/"
   deepdetect:
-    image: jolibrain/deepdetect_cpu
+    image: docker.jolibrain.com/deepdetect_cpu
     ports:
       - "8080:8080"
 
