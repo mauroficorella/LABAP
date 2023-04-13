@@ -112,7 +112,7 @@ export default function UserProfile() {
 
     if (Object.keys(userData).length !== 0 && followBtn === false) {
       axios
-        .post("http://localhost:8000/notification", {
+        .post("http://localhost:8000/follow_notification", {
           destination_user_id: userData.user_id,
           origin_user_id: user.user_id,
           notification_type: "follow",

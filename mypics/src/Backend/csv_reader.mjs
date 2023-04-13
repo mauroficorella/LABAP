@@ -242,6 +242,6 @@ async function randomizeLike() {
     });*/
 }
 
-parsePost();
+//parsePost();
 
-//randomizeFollow()
+randomizeFollow()

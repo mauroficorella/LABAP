@@ -117,6 +117,10 @@
      paths:
      - /notification
      strip_path: false     
+   - name: follow-notification
+     paths:
+     - /follow_notification
+     strip_path: false     
    - name: update-profile-pic
      paths:
      - /updateprofilepic

@@ -1112,6 +1112,26 @@ async def create_notification(notification: Notification):
                 query=query, exception=exception))
             raise
     
+@app.post("/follow_notification")
+async def create_follow_notification(notification: Notification): 
+    neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
+    session = neo4j_driver.session()
+    query = (
+            "MATCH (u) WHERE u:User and u.user_id = $u_id "
+            "CREATE (n:Notification { notification_id: $n_id, origin_user_id: $o_id, notification_type: $n_type, origin_username: $o_username, origin_profile_pic: $o_profile_pic, read: False,  post_id: $p_id, post_title: $p_title}) "
+            "CREATE (u)-[:HAS_NOTIFICATION]->(n) "
+            "RETURN n"
+            )
+
+    result = session.run(query, n_id = str(uuid.uuid4()), u_id = notification.destination_user_id, o_id = notification.origin_user_id, n_type = notification.notification_type, o_username = notification.username, o_profile_pic = notification.profile_pic, p_id = notification.post_id, p_title = notification.post_title)
+    try:
+        return [{"notification_id": record["n"]["notification_id"]} 
+                    for record in result]
+    except Neo4jError as exception:
+            logging.error("{query} raised an error: \n {exception}".format(
+                query=query, exception=exception))
+            raise
+    
 @app.get("/notification/{user_id}")
 async def get_notifications(user_id: str): 
     neo4j_driver = GraphDatabase.driver(uri=uri, auth=(user,password))
